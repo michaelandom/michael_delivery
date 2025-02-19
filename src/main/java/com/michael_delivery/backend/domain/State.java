@@ -1,0 +1,85 @@
+package com.michael_delivery.backend.domain;
+
+import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.OffsetDateTime;
+import java.util.Set;
+
+
+@Entity
+@Table(name = "States")
+@EntityListeners(AuditingEntityListener.class)
+public class State {
+
+    @Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long stateId;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, length = 10)
+    private String code;
+
+    @Column
+    private String logo;
+
+
+    @OneToMany(mappedBy = "stateName")
+    private Set<ServiceArea> stateNameServiceAreas;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private OffsetDateTime updatedAt;
+
+    public Long getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(final Long stateId) {
+        this.stateId = stateId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(final String code) {
+        this.code = code;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(final String logo) {
+        this.logo = logo;
+    }
+
+
+    public Set<ServiceArea> getStateNameServiceAreas() {
+        return stateNameServiceAreas;
+    }
+
+    public void setStateNameServiceAreas(final Set<ServiceArea> stateNameServiceAreas) {
+        this.stateNameServiceAreas = stateNameServiceAreas;
+    }
+
+
+}
