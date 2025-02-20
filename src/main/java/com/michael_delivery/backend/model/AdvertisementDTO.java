@@ -1,20 +1,25 @@
 package com.michael_delivery.backend.model;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
+
 public class AdvertisementDTO {
 
     private Long advertisementId;
 
-    @NotNull
-    @Size
+    @NotBlank(message = "Title is required")
+    @Size(min = 3, max = 255, message = "Title must be between 3 and 255 characters")
     private String title;
 
-    @NotNull
+    @NotBlank(message = "Content is required")
     private String content;
 
 
-    @NotNull
+    @URL(message = "Must be a valid URL")
+    @Pattern(regexp = "^(https?):\\/\\/[^\\s/$.?#].[^\\s]*$", message = "URL must start with http:// or https://")
     private String imageUrl;
 
     public Long getAdvertisementId() {
