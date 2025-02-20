@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/api/eventss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/events", produces = MediaType.APPLICATION_JSON_VALUE)
 public class EventsResource {
 
     private final EventsService eventsService;

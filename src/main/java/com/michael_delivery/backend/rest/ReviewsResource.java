@@ -22,7 +22,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/reviewss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/reviews", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ReviewsResource {
 
     private final ReviewsService reviewsService;
@@ -40,7 +40,7 @@ public class ReviewsResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewsDTO>> getAllReviewss() {
+    public ResponseEntity<List<ReviewsDTO>> getAllReviews() {
         return ResponseEntity.ok(reviewsService.findAll());
     }
 

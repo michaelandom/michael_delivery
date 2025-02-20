@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/vehicless", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/vehicles", produces = MediaType.APPLICATION_JSON_VALUE)
 public class VehiclesResource {
 
     private final VehiclesService vehiclesService;
@@ -31,7 +31,7 @@ public class VehiclesResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<VehiclesDTO>> getAllVehicless() {
+    public ResponseEntity<List<VehiclesDTO>> getAllVehicles() {
         return ResponseEntity.ok(vehiclesService.findAll());
     }
 

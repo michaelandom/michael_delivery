@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/api/groupss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/groups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupsResource {
 
     private final GroupsService groupsService;

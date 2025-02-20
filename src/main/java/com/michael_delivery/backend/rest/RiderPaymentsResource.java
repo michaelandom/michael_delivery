@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/riderPaymentss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/riderPayments", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RiderPaymentsResource {
 
     private final RiderPaymentsService riderPaymentsService;
@@ -31,7 +31,7 @@ public class RiderPaymentsResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<RiderPaymentsDTO>> getAllRiderPaymentss() {
+    public ResponseEntity<List<RiderPaymentsDTO>> getAllRiderPayments() {
         return ResponseEntity.ok(riderPaymentsService.findAll());
     }
 

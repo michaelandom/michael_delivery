@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/couponss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/coupons", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CouponsResource {
 
     private final CouponsService couponsService;
@@ -33,7 +33,7 @@ public class CouponsResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<CouponsDTO>> getAllCouponss() {
+    public ResponseEntity<List<CouponsDTO>> getAllCoupons() {
         return ResponseEntity.ok(couponsService.findAll());
     }
 

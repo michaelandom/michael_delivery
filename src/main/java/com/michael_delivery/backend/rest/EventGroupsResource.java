@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/eventGroupss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/eventGroups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class EventGroupsResource {
 
     private final EventGroupsService eventGroupsService;
@@ -35,7 +35,7 @@ public class EventGroupsResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventGroupsDTO>> getAllEventGroupss() {
+    public ResponseEntity<List<EventGroupsDTO>> getAllEventGroups() {
         return ResponseEntity.ok(eventGroupsService.findAll());
     }
 

@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/riderAnswerss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/riderAnswers", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RiderAnswersResource {
 
     private final RiderAnswersService riderAnswersService;

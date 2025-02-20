@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/sizeAndWeightDescriptionss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/sizeAndWeightDescriptions", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SizeAndWeightDescriptionsResource {
 
     private final SizeAndWeightDescriptionsService sizeAndWeightDescriptionsService;
@@ -34,7 +34,7 @@ public class SizeAndWeightDescriptionsResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<SizeAndWeightDescriptionsDTO>> getAllSizeAndWeightDescriptionss() {
+    public ResponseEntity<List<SizeAndWeightDescriptionsDTO>> getAllSizeAndWeightDescriptions() {
         return ResponseEntity.ok(sizeAndWeightDescriptionsService.findAll());
     }
 

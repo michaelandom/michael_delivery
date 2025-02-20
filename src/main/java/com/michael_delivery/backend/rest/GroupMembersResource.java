@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/groupMemberss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/groupMembers", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupMembersResource {
 
     private final GroupMembersService groupMembersService;

@@ -22,7 +22,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/orderss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/orders", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OrdersResource {
 
     private final OrdersService ordersService;
@@ -38,7 +38,7 @@ public class OrdersResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrdersDTO>> getAllOrderss() {
+    public ResponseEntity<List<OrdersDTO>> getAllOrders() {
         return ResponseEntity.ok(ordersService.findAll());
     }
 

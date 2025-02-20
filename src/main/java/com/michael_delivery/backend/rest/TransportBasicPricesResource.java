@@ -21,7 +21,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/transportBasicPricess", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/transportBasicPrices", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TransportBasicPricesResource {
 
     private final TransportBasicPricesService transportBasicPricesService;

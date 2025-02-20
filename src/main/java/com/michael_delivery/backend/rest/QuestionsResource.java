@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/api/questionss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/questions", produces = MediaType.APPLICATION_JSON_VALUE)
 public class QuestionsResource {
 
     private final QuestionsService questionsService;
@@ -25,7 +25,7 @@ public class QuestionsResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<QuestionsDTO>> getAllQuestionss() {
+    public ResponseEntity<List<QuestionsDTO>> getAllQuestions() {
         return ResponseEntity.ok(questionsService.findAll());
     }
 

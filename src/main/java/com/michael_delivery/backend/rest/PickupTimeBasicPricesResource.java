@@ -21,7 +21,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/pickupTimeBasicPricess", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/pickupTimeBasicPrices", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PickupTimeBasicPricesResource {
 
     private final PickupTimeBasicPricesService pickupTimeBasicPricesService;
@@ -35,7 +35,7 @@ public class PickupTimeBasicPricesResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<PickupTimeBasicPricesDTO>> getAllPickupTimeBasicPricess() {
+    public ResponseEntity<List<PickupTimeBasicPricesDTO>> getAllPickupTimeBasicPrices() {
         return ResponseEntity.ok(pickupTimeBasicPricesService.findAll());
     }
 

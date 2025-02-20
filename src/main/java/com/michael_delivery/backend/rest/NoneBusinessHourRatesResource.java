@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/noneBusinessHourRatess", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/noneBusinessHourRates", produces = MediaType.APPLICATION_JSON_VALUE)
 public class NoneBusinessHourRatesResource {
 
     private final NoneBusinessHourRatesService noneBusinessHourRatesService;

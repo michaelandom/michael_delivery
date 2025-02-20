@@ -24,7 +24,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/userss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsersResource {
 
     private final UsersService usersService;
@@ -43,7 +43,7 @@ public class UsersResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsersDTO>> getAllUserss() {
+    public ResponseEntity<List<UsersDTO>> getAllUsers() {
         return ResponseEntity.ok(usersService.findAll());
     }
 

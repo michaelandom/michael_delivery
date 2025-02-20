@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/groupPermissionss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/groupPermissions", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupPermissionsResource {
 
     private final GroupPermissionsService groupPermissionsService;

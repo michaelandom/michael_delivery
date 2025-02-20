@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/riderss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/riders", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RidersResource {
 
     private final RidersService ridersService;
@@ -33,7 +33,7 @@ public class RidersResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<RidersDTO>> getAllRiderss() {
+    public ResponseEntity<List<RidersDTO>> getAllRiders() {
         return ResponseEntity.ok(ridersService.findAll());
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/api/faqs", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/faq", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FaqResource {
 
     private final FaqService faqService;

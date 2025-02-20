@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/api/permissionss", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/permissions", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PermissionsResource {
 
     private final PermissionsService permissionsService;
@@ -25,7 +25,7 @@ public class PermissionsResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<PermissionsDTO>> getAllPermissionss() {
+    public ResponseEntity<List<PermissionsDTO>> getAllPermissions() {
         return ResponseEntity.ok(permissionsService.findAll());
     }
 
