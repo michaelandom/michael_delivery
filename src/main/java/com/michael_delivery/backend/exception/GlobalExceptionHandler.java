@@ -6,8 +6,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +35,19 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ErrorResponse> handleDuplicateVehicleType(SQLIntegrityConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ErrorResponse errorResponse = new ErrorResponse(
+                OffsetDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage(),
+                errors,
+                ""
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 }
 

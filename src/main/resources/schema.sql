@@ -713,7 +713,7 @@ CREATE TABLE IF NOT EXISTS `Rider_Commissions` (
 
 CREATE TABLE IF NOT EXISTS `Vehicle_Basic_Prices` (
                                                       `vehicle_basic_price_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                                      `vehicle_type` ENUM('BICYCLE', 'MOTORBIKE', 'CAR') UNIQUE NOT NULL,
+                                                      `vehicle_type` ENUM('BICYCLE', 'MOTORBIKE', 'CAR')  NOT NULL,
     `price` FLOAT NOT NULL,
     `is_latest` BOOLEAN DEFAULT TRUE,
     `previous_id` BIGINT ,

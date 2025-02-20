@@ -14,10 +14,10 @@ public class PickupTimeBasicPricesDTO {
 
     private Long pickupTimeBasicPriceId;
 
-    @NotBlank(message = "pickupTime is required")
+    @NotNull
     private PickupTimeType pickupTime;
 
-    @NotBlank(message = "vehicleType is required")
+    @NotNull
     private VehicleType vehicleType;
 
     @NotNull

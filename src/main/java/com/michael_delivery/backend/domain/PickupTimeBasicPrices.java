@@ -21,6 +21,7 @@ public class PickupTimeBasicPrices {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pickupTimeBasicPriceId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PickupTimeType pickupTime;
 

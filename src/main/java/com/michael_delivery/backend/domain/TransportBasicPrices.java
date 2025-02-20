@@ -20,6 +20,7 @@ public class TransportBasicPrices {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transportBasicPriceId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private VehicleType vehicleType;
 
@@ -32,16 +33,16 @@ public class TransportBasicPrices {
     @Column(nullable = false)
     private Double pricePerMinute;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "pickuptime_asap_price")
     private Double pickuptimeAsapPrice;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "pickuptime_2hours_price")
     private Double pickuptime2hoursPrice;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "pickuptime_today_price")
     private Double pickuptimeTodayPrice;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "pickuptime_otherday_price")
     private Double pickuptimeOtherdayPrice;
 
     @Column(columnDefinition = "tinyint", length = 1)

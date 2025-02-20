@@ -13,7 +13,7 @@ public class TransportBasicPricesDTO {
 
     private Long transportBasicPriceId;
 
-    @NotBlank(message = "vehicleType is required")
+    @NotNull
     private VehicleType vehicleType;
 
     @NotNull
