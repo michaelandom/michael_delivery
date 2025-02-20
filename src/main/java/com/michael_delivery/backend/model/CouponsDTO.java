@@ -1,80 +1,58 @@
-package com.michael_delivery.backend.domain;
+package com.michael_delivery.backend.model;
 
 import com.michael_delivery.backend.enums.CouponType;
 import com.michael_delivery.backend.enums.DiscountType;
 import com.michael_delivery.backend.enums.UserImportType;
-import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
-import java.util.Set;
 
 
-@Entity
-@Table(name = "Coupons")
-@EntityListeners(AuditingEntityListener.class)
-public class Coupons {
+public class CouponsDTO {
 
-    @Id
-    @Column(nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long couponId;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+
+    @NotBlank(message = "Discount Type is required")
     private DiscountType discountType;
 
-    @Column
     private Double discountAmount;
 
-    @Column
     private Double discountPercentage;
 
-    @Column
     private Double maximumDiscountAmount;
 
-    @Column(nullable = false)
+    @NotBlank(message = "minimumPurchasePrice is required")
     private Double minimumPurchasePrice;
 
-    @Column(nullable = false)
+    @NotBlank(message = "startDate is required")
     private OffsetDateTime startDate;
 
-    @Column(nullable = false)
+    @NotBlank(message = "endDate is required")
     private OffsetDateTime endDate;
 
-    @Column(nullable = false)
+    @NotBlank(message = "issuedTo is required")
+    @Size(max = 255)
     private CouponType issuedTo;
 
-    @Column(nullable = false)
+    @NotBlank(message = "UserImportType is required")
     private UserImportType howUserWasAdded;
 
-    @Column
+    @Size(max = 255)
     private String code;
 
-    @Column(nullable = false)
+    @NotBlank(message = "numberOfIssuedCoupons is required")
     private Long numberOfIssuedCoupons;
 
-    @Column(nullable = false)
+    @NotBlank(message = "numberOfUsedCoupons is required")
     private Long numberOfUsedCoupons;
 
-    @Column(columnDefinition = "longtext")
     private String excelFile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_id", nullable = false)
-    private Users createdBy;
 
-    @OneToMany(mappedBy = "coupon")
-    private Set<UserCoupon> couponUserCoupons;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+    @NotBlank(message = "createdBy is required")
+    private Long createdBy;
 
     public Long getCouponId() {
         return couponId;
@@ -140,13 +118,6 @@ public class Coupons {
         this.endDate = endDate;
     }
 
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(final OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 
     public CouponType getIssuedTo() {
         return issuedTo;
@@ -196,29 +167,13 @@ public class Coupons {
         this.excelFile = excelFile;
     }
 
-    public OffsetDateTime getUpdatedAt() {
-        return updatedAt;
-    }
 
-    public void setUpdatedAt(final OffsetDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Users getCreatedBy() {
+    public Long getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(final Users createdBy) {
+    public void setCreatedBy(final Long createdBy) {
         this.createdBy = createdBy;
     }
-
-    public Set<UserCoupon> getCouponUserCoupons() {
-        return couponUserCoupons;
-    }
-
-    public void setCouponUserCoupons(final Set<UserCoupon> couponUserCoupons) {
-        this.couponUserCoupons = couponUserCoupons;
-    }
-
 
 }
