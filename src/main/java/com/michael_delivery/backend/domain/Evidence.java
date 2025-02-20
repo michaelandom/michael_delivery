@@ -64,8 +64,8 @@ public class Evidence {
         return urls;
     }
 
-    public void setUrls(final String url) {
-        this.urls.add(url);
+    public void setUrls(final List<String> url) {
+        this.urls.addAll(url);
     }
 
     public String getRecipientName() {

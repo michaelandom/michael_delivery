@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.SuspensionReasonType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,7 +26,7 @@ public class Suspensions {
     private Boolean isSystemSuspenstion;
 
     @Column
-    private String reasonType;
+    private SuspensionReasonType reasonType;
 
     @Column(nullable = false)
     private OffsetDateTime startingFrom;
@@ -77,11 +78,11 @@ public class Suspensions {
         this.isSystemSuspenstion = isSystemSuspenstion;
     }
 
-    public String getReasonType() {
+    public SuspensionReasonType getReasonType() {
         return reasonType;
     }
 
-    public void setReasonType(final String reasonType) {
+    public void setReasonType(final SuspensionReasonType reasonType) {
         this.reasonType = reasonType;
     }
 

@@ -2,6 +2,7 @@ package com.michael_delivery.backend.domain;
 
 import com.michael_delivery.backend.enums.AccountStatusType;
 import com.michael_delivery.backend.enums.AccountType;
+import com.michael_delivery.backend.enums.GenderType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -35,7 +36,7 @@ public class Users {
     private LocalDate dateOfBirth;
 
     @Column(nullable = false)
-    private String gender;
+    private GenderType gender;
 
     @Column
     private String email;
@@ -182,11 +183,11 @@ public class Users {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getGender() {
+    public GenderType getGender() {
         return gender;
     }
 
-    public void setGender(final String gender) {
+    public void setGender(final GenderType gender) {
         this.gender = gender;
     }
 

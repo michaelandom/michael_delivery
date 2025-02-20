@@ -61,8 +61,8 @@ public class NoteDestination {
         return photoUrls;
     }
 
-    public void setPhotoUrls(final String photos) {
-        this.photoUrls.add(photos);
+    public void setPhotoUrls(final List<String> photoUrl) {
+        this.photoUrls.addAll(photoUrl);
     }
 
 

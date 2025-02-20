@@ -62,9 +62,9 @@ public class Reference {
         return orderIds;
     }
 
-    public void setOrderIds(final String orderIds) {
-        this.orderIds = orderIds;
-    }
+//    public void setOrderIds(final List<String> orderIds) {
+//        this.orderIds = orderIds;
+//    }
 
     public Double getAmount() {
         return amount;
@@ -100,6 +100,9 @@ public class Reference {
 
     public Map getResultJson() {
         return resultJson;
+    }
+    public void setResultJson(Map resultJson) {
+        this.resultJson = resultJson;
     }
 
 

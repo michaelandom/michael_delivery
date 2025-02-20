@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.VehicleType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,7 +21,7 @@ public class TransportBasicPrices {
     private Long transportBasicPriceId;
 
     @Column(nullable = false)
-    private String vehicleType;
+    private VehicleType vehicleType;
 
     @Column(nullable = false)
     private Double basicPrice;
@@ -70,11 +71,11 @@ public class TransportBasicPrices {
         this.transportBasicPriceId = transportBasicPriceId;
     }
 
-    public String getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(final String vehicleType) {
+    public void setVehicleType(final VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 

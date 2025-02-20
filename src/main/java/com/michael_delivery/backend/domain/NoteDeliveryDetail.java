@@ -60,8 +60,8 @@ public class NoteDeliveryDetail {
 
     public List<String> getPhotoUrls() {return photoUrls;}
 
-    public void setPhotoUrls(final String photoUrl) {
-        this.photoUrls.add(photoUrl);
+    public void setPhotoUrls(final List<String> photoUrl) {
+        this.photoUrls.addAll(photoUrl);
     }
 
 

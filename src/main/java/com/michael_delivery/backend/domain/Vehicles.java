@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.VehicleType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,7 +23,7 @@ public class Vehicles {
     private Boolean isCurrentVehicle;
 
     @Column(nullable = false)
-    private String vehicleType;
+    private VehicleType vehicleType;
 
     @Column(length = 4)
     private String modelYear;
@@ -83,11 +84,11 @@ public class Vehicles {
         this.isCurrentVehicle = isCurrentVehicle;
     }
 
-    public String getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(final String vehicleType) {
+    public void setVehicleType(final VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 

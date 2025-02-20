@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.PickupTimeType;
 import com.michael_delivery.backend.enums.VehicleType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,7 +22,7 @@ public class PickupTimeBasicPrices {
     private Long pickupTimeBasicPriceId;
 
     @Column(nullable = false)
-    private String pickupTime;
+    private PickupTimeType pickupTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -56,11 +57,11 @@ public class PickupTimeBasicPrices {
         this.pickupTimeBasicPriceId = pickupTimeBasicPriceId;
     }
 
-    public String getPickupTime() {
+    public PickupTimeType getPickupTime() {
         return pickupTime;
     }
 
-    public void setPickupTime(final String pickupTime) {
+    public void setPickupTime(final PickupTimeType pickupTime) {
         this.pickupTime = pickupTime;
     }
 

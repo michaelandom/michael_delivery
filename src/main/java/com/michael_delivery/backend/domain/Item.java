@@ -71,16 +71,16 @@ public class Item {
         return itemClassification;
     }
 
-    public void setItemClassification(final ItemClassificationType itemClassification) {
-        this.itemClassification.add(itemClassification);
+    public void setItemClassification(final List<ItemClassificationType> itemClassification) {
+        this.itemClassification.addAll(itemClassification);
     }
 
-    public List<String> getPhotos() {
+    public List<String> getPhotoUrls() {
         return photoUrls;
     }
 
-    public void setPhotos(final String photoUrl) {
-        this.photoUrls.add(photoUrl);
+    public void setPhotoUrls(final List<String> photoUrl) {
+        this.photoUrls.addAll(photoUrl);
     }
 
 

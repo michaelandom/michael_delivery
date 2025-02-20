@@ -6,6 +6,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Entity
@@ -127,13 +129,13 @@ public class PaymentWebhookPayload {
         this.success = success;
     }
 
-    public String getPayload() {
-        return payload;
+    public Map getPayload() {
+        return new HashMap();
     }
 
-    public void setPayload(final String payload) {
-        this.payload = payload;
-    }
+//    public void setPayload(final String payload) {
+//        this.payload = payload;
+//    }
 
     public OffsetDateTime getCreatedAt() {
         return createdAt;
