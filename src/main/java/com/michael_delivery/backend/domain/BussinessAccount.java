@@ -70,11 +70,11 @@ public class BussinessAccount {
         this.companyName = companyName;
     }
 
-    public String getLogo() {
+    public String getLogoUrl() {
         return logoUrl;
     }
 
-    public void setLogo(final String logoUrl) {
+    public void setLogoUrl(final String logoUrl) {
         this.logoUrl = logoUrl;
     }
 

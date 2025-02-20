@@ -124,12 +124,12 @@ public class CancellationRequest {
         this.reason = reason;
     }
 
-    public List<String> getPhotos() {
+    public List<String> getPhotoUrls() {
         return photoUrls;
     }
 
-    public void setPhotos(final String photoUrl) {
-        this.photoUrls.add(photoUrl);
+    public void setPhotoUrls(final List<String> photoUrl) {
+        this.photoUrls.addAll(photoUrl);
     }
 
     public String getRemark() {
