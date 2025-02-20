@@ -1,64 +1,37 @@
-package com.michael_delivery.backend.domain;
+package com.michael_delivery.backend.model;
 
 import com.michael_delivery.backend.enums.CancellationStatusType;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
 
-@Entity
-@Table(name = "CancellationRiderRequests")
-@EntityListeners(AuditingEntityListener.class)
-public class CancellationRiderRequest {
+public class CancellationRiderRequestDTO {
 
-    @Id
-    @Column(nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cancellationRiderRequestId;
 
-    @Enumerated(EnumType.STRING)
-    @Column
-    private CancellationStatusType status = CancellationStatusType.PENDING;
+    private CancellationStatusType status;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Reason is required")
     private String reason;
 
-    @Lob
-    @Column(columnDefinition = "JSON")
-    @Type(JsonType.class)
     private List<String> photoUrls;
 
-    @Column(columnDefinition = "longtext")
     private String remark;
 
-    @Column
     private OffsetDateTime responseAt;
 
-    @Column
+    @Size(max = 255)
     private String responseBy;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Orders order;
+    @NotNull
+    private Long order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cancelled_by_id")
-    private Users cancelledBy;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+    private Long cancelledBy;
 
     public Long getCancellationRiderRequestId() {
         return cancellationRiderRequestId;
@@ -116,22 +89,20 @@ public class CancellationRiderRequest {
         this.responseBy = responseBy;
     }
 
-
-    public Orders getOrder() {
+    public Long getOrder() {
         return order;
     }
 
-    public void setOrder(final Orders order) {
+    public void setOrder(final Long order) {
         this.order = order;
     }
 
-    public Users getCancelledBy() {
+    public Long getCancelledBy() {
         return cancelledBy;
     }
 
-    public void setCancelledBy(final Users cancelledBy) {
+    public void setCancelledBy(final Long cancelledBy) {
         this.cancelledBy = cancelledBy;
     }
-
 
 }
