@@ -1,32 +1,36 @@
 package com.michael_delivery.backend.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class EvidenceDTO {
 
     private Long evidenceId;
 
-    private List<String> urls;
+    @NotEmpty(message = "URLs list cannot be empty")
+    private List<@Pattern(regexp = URL_PATTERN,
+            message = "Invalid URL format") String> urls;
 
+    @NotBlank(message = "Recipient name is required")
+    @Size(min = 2, max = 100, message = "Recipient name must be between 2 and 100 characters")
     private String recipientName;
 
+    @NotNull(message = "Date of birth is required")
+    @Past(message = "Date of birth must be in the past")
     private OffsetDateTime recipientDob;
+
 
     private String note;
 
+    @NotNull(message = "Time is required")
     private OffsetDateTime time;
 
-    private OffsetDateTime createdAt;
-
-    private OffsetDateTime updatedAt;
-
-    @NotBlank(message = "destination is required")
+    @NotNull
     private Long destination;
 
     public Long getEvidenceId() {
@@ -42,7 +46,7 @@ public class EvidenceDTO {
     }
 
     public void setUrls(final List<String> url) {
-        this.urls.addAll(url);
+        this.urls=url;
     }
 
     public String getRecipientName() {
@@ -75,22 +79,6 @@ public class EvidenceDTO {
 
     public void setTime(final OffsetDateTime time) {
         this.time = time;
-    }
-
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(final OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public OffsetDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(final OffsetDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public Long getDestination() {

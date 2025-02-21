@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
+
 public class AdvertisementDTO {
 
     private Long advertisementId;
@@ -19,7 +21,7 @@ public class AdvertisementDTO {
 
 
     @URL(message = "Must be a valid URL")
-    @Pattern(regexp = "^(https?):\\/\\/[^\\s/$.?#].[^\\s]*$", message = "URL must start with http:// or https://")
+    @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
     private String imageUrl;
 
     public Long getAdvertisementId() {

@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
 
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
+
 
 public class AnnouncementDTO {
     private Long announcementId;
@@ -21,7 +23,7 @@ public class AnnouncementDTO {
     private String content;
 
     @URL(message = "Must be a valid URL")
-    @Pattern(regexp = "^(https?):\\/\\/[^\\s/$.?#].[^\\s]*$", message = "URL must start with http:// or https://")
+    @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
     private String imageUrl;
 
     public Long getAnnouncementId() {

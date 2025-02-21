@@ -13,7 +13,7 @@ public class ExtrFeeDTO {
 
     private String message;
 
-    @NotBlank(message = "amount is required")
+    @NotNull
     private Double amount;
 
     @NotBlank(message = "cardNumber is required")
