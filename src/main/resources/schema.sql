@@ -126,10 +126,11 @@ CREATE TABLE IF NOT EXISTS `Events` (
                                         `start_date` DATETIME NOT NULL,
                                         `end_date` DATETIME,
                                         `send_push_notification` BOOLEAN NOT NULL DEFAULT FALSE,
-                                        `banner_image` TEXT NOT NULL,
+                                        `banner_image_url` TEXT NOT NULL,
                                         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                         `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE IF NOT EXISTS `Event_Groups` (
                                               `event_group_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -145,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `Faq` (
                                      `id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                      `question` TEXT NOT NULL,
                                      `answer` TEXT NOT NULL,
-                                     `isForRider` BOOLEAN DEFAULT FALSE,
+                                     `is_for_rider` BOOLEAN DEFAULT FALSE,
                                      `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                      `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
 );

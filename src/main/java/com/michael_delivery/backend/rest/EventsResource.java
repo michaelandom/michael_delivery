@@ -25,7 +25,7 @@ public class EventsResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventsDTO>> getAllEventss() {
+    public ResponseEntity<List<EventsDTO>> getAllEvents() {
         return ResponseEntity.ok(eventsService.findAll());
     }
 

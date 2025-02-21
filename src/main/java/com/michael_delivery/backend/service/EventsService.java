@@ -26,9 +26,9 @@ public class EventsService {
     }
 
     public List<EventsDTO> findAll() {
-        final List<Events> eventses = eventsRepository.findAll(Sort.by("eventId"));
-        return eventses.stream()
-                .map(events -> mapToDTO(events, new EventsDTO()))
+        final List<Events> events = eventsRepository.findAll(Sort.by("eventId"));
+        return events.stream()
+                .map(event -> mapToDTO(event, new EventsDTO()))
                 .toList();
     }
 
@@ -74,7 +74,7 @@ public class EventsService {
         events.setStartDate(eventsDTO.getStartDate());
         events.setEndDate(eventsDTO.getEndDate());
         events.setSendPushNotification(eventsDTO.getSendPushNotification());
-        events.setBannerImageUrl(eventsDTO.getBannerImage());
+        events.setBannerImageUrl(eventsDTO.getBannerImageUrl());
         return events;
     }
 

@@ -2,8 +2,12 @@ package com.michael_delivery.backend.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
+
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class EventsDTO {
@@ -16,16 +20,18 @@ public class EventsDTO {
     private String link;
 
     private String contents;
-    @NotBlank(message = "startDate is required")
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime startDate;
 
     private OffsetDateTime endDate;
 
-    @NotBlank(message = "sendPushNotification is required")
+    @NotNull(message = "sendPushNotification is required")
     private Boolean sendPushNotification;
 
-    @NotBlank(message = "bannerImage is required")
-    private String bannerImage;
+    @NotBlank(message = "bannerImageUrl is required")
+    @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
+    private String bannerImageUrl;
 
 
     public Long getEventId() {
@@ -84,12 +90,12 @@ public class EventsDTO {
         this.sendPushNotification = sendPushNotification;
     }
 
-    public String getBannerImage() {
-        return bannerImage;
+    public String getBannerImageUrl() {
+        return bannerImageUrl;
     }
 
-    public void setBannerImageUrl(final String bannerImage) {
-        this.bannerImage = bannerImage;
+    public void setBannerImageUrl(final String bannerImageUrl) {
+        this.bannerImageUrl = bannerImageUrl;
     }
 
 }
