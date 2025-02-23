@@ -1,5 +1,9 @@
 package com.michael_delivery.backend.model;
 
+import com.michael_delivery.backend.enums.AppNameType;
+import com.michael_delivery.backend.interfaces.EnumValid;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,9 +15,10 @@ public class AppVersionDTO {
 
     private Integer appVersionId;
 
-    @NotBlank(message = "appName is required")
-    @Size(min = 3, max = 255, message = "appName must be between 3 and 255 characters")
-    private String appName;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @EnumValid(enumClass = AppNameType.class,message = "Invalid appName value")
+    private AppNameType appName;
 
     @NotNull
     private Boolean updateType;
@@ -30,11 +35,11 @@ public class AppVersionDTO {
         this.appVersionId = appVersionId;
     }
 
-    public String getAppName() {
+    public AppNameType getAppName() {
         return appName;
     }
 
-    public void setAppName(final String appName) {
+    public void setAppName(final AppNameType appName) {
         this.appName = appName;
     }
 

@@ -36,7 +36,7 @@ public class AppVersionResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createAppVersion(
-            @RequestBody @Valid final AppVersionDTO appVersionDTO) {
+            @Valid @RequestBody final AppVersionDTO appVersionDTO) {
         final Integer createdAppVersionId = appVersionService.create(appVersionDTO);
         return new ResponseEntity<>(createdAppVersionId, HttpStatus.CREATED);
     }

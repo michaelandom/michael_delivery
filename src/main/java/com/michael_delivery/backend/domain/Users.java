@@ -79,13 +79,14 @@ public class Users {
     @JoinColumn(name = "sso_provider_id")
     private SsoProvider ssoProvider;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "billing_address_id")
-    private BillingAddress billingAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bussiness_account_id")
     private BussinessAccount bussinessAccount;
+
+    @OneToMany(mappedBy = "user")
+    private Set<BillingAddress> userBillingAddresses;
+
 
     @OneToMany(mappedBy = "user")
     private Set<GroupMembers> userGroupMembers;
@@ -288,12 +289,12 @@ public class Users {
         this.ssoProvider = ssoProvider;
     }
 
-    public BillingAddress getBillingAddress() {
-        return billingAddress;
+    public Set<BillingAddress> getUserBillingAddresses() {
+        return userBillingAddresses;
     }
 
-    public void setBillingAddress(final BillingAddress billingAddress) {
-        this.billingAddress = billingAddress;
+    public void setUserBillingAddresses(Set<BillingAddress> userBillingAddresses) {
+        this.userBillingAddresses = userBillingAddresses;
     }
 
     public BussinessAccount getBussinessAccount() {

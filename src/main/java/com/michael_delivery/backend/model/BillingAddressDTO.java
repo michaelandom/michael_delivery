@@ -1,6 +1,7 @@
 package com.michael_delivery.backend.model;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
@@ -27,6 +28,17 @@ public class BillingAddressDTO {
 
     @Size( max = 255, message = "Billing suburb must be max of 255 characters")
     private String billingSuburb;
+
+    @NotNull
+    private Long userId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long user) {
+        this.userId = user;
+    }
 
     public Long getBillingAddressId() {
         return billingAddressId;

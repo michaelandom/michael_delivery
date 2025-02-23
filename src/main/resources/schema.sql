@@ -5,38 +5,24 @@ CREATE TABLE IF NOT EXISTS `Sso_Providers` (
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
     );
 
-CREATE TABLE IF NOT EXISTS `Billing_Address` (
-                                                 `billing_address_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                                 `billing_email` VARCHAR(255),
-    `billing_street_address` TEXT,
-    `billing_street_address_2` TEXT,
-    `billing_state` VARCHAR(255),
-    `billing_postcode` VARCHAR(10), -- Use VARCHAR for postal codes
-    `billing_suburb` VARCHAR(255),
+CREATE TABLE IF NOT EXISTS `Bussiness_Accounts` (
+    `bussiness_account_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `company_ABN` VARCHAR(20) NOT NULL,
+    `company_name` VARCHAR(255) NOT NULL,
+    `logo_url` TEXT,
+    `is_active` BOOLEAN NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
     );
 
-CREATE TABLE IF NOT EXISTS `Bussiness_Accounts` (
-                                                    `bussiness_account_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                                    `company_ABN` VARCHAR(20) NOT NULL,
-    `company_name` VARCHAR(255) NOT NULL,
-    `logo_url` TEXT,
-    `is_active` BOOLEAN NOT NULL,
-    `billing_address_id` BIGINT ,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`billing_address_id`) REFERENCES `Billing_Address`(`billing_address_id`) ON DELETE CASCADE
-    );
-
 CREATE TABLE IF NOT EXISTS `Users` (
-                                       `user_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                       `username` VARCHAR(100) NOT NULL UNIQUE,
+    `user_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `username` VARCHAR(100) NOT NULL UNIQUE,
     `first_name` VARCHAR(255) NOT NULL,
     `last_name` VARCHAR(255) NOT NULL,
     `date_of_birth` DATE NOT NULL,
     `gender` ENUM('MALE', 'FEMALE', 'OTHER') NOT NULL,
-    `email` VARCHAR(255) UNIQUE,
+    `email` VARCHAR(255) NOT NULL UNIQUE,
     `email_verified` BOOLEAN NOT NULL DEFAULT FALSE,
     `phone` VARCHAR(20),
     `phone_verified` BOOLEAN NOT NULL DEFAULT FALSE,
@@ -44,7 +30,6 @@ CREATE TABLE IF NOT EXISTS `Users` (
     `last_login` DATETIME,
     `account_type` ENUM('STANDARD', 'SSO') NOT NULL DEFAULT 'STANDARD',
     `sso_provider_id` BIGINT,
-    `billing_address_id` BIGINT,
     `bussiness_account_id` BIGINT,
     `request_for_delete_at` DATETIME,
     `deactivated_date` DATETIME,
@@ -53,13 +38,27 @@ CREATE TABLE IF NOT EXISTS `Users` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`sso_provider_id`) REFERENCES `Sso_Providers`(`sso_provider_id`),
-    FOREIGN KEY (`billing_address_id`) REFERENCES `Billing_Address`(`billing_address_id`),
     FOREIGN KEY (`bussiness_account_id`) REFERENCES `Bussiness_Accounts`(`bussiness_account_id`)
     );
 
+
+CREATE TABLE IF NOT EXISTS `Billing_Address` (
+    `billing_address_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `billing_email` VARCHAR(255),
+    `billing_street_address` TEXT,
+    `billing_street_address2` TEXT,
+    `billing_state` VARCHAR(255),
+    `billing_postcode` VARCHAR(10), -- Use VARCHAR for postal codes
+    `billing_suburb` VARCHAR(255),
+    `user_id` BIGINT NOT NULL UNIQUE,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE
+    );
+
 CREATE TABLE IF NOT EXISTS `Groups` (
-                                        `group_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                        `name` VARCHAR(255) NOT NULL UNIQUE,
+    `group_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL UNIQUE,
     `description` TEXT NOT NULL,
     `group_type` ENUM('PERMISSION','EVENT') NOT NULL DEFAULT 'PERMISSION',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

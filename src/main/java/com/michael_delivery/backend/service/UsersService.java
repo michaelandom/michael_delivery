@@ -16,7 +16,6 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final SsoProviderRepository ssoProviderRepository;
-    private final BillingAddressRepository billingAddressRepository;
     private final BussinessAccountRepository bussinessAccountRepository;
     private final GroupMembersRepository groupMembersRepository;
     private final PasswordResetRepository passwordResetRepository;
@@ -32,10 +31,10 @@ public class UsersService {
     private final CancellationRiderRequestRepository cancellationRiderRequestRepository;
     private final UserFavoriteAddressRepository userFavoriteAddressRepository;
     private final NoneBusinessHourRatesRepository noneBusinessHourRatesRepository;
+    private final BillingAddressRepository billingAddressRepository;
 
     public UsersService(final UsersRepository usersRepository,
             final SsoProviderRepository ssoProviderRepository,
-            final BillingAddressRepository billingAddressRepository,
             final BussinessAccountRepository bussinessAccountRepository,
             final GroupMembersRepository groupMembersRepository,
             final PasswordResetRepository passwordResetRepository,
@@ -45,6 +44,7 @@ public class UsersService {
             final RidersRepository ridersRepository,
             final PenalitiesRepository penalitiesRepository,
             final SuspensionsRepository suspensionsRepository,
+                        final BillingAddressRepository billingAddressRepository,
             final OrdersRepository ordersRepository, final ReviewsRepository reviewsRepository,
             final CancellationRequestRepository cancellationRequestRepository,
             final CancellationRiderRequestRepository cancellationRiderRequestRepository,
@@ -52,8 +52,8 @@ public class UsersService {
             final NoneBusinessHourRatesRepository noneBusinessHourRatesRepository) {
         this.usersRepository = usersRepository;
         this.ssoProviderRepository = ssoProviderRepository;
-        this.billingAddressRepository = billingAddressRepository;
         this.bussinessAccountRepository = bussinessAccountRepository;
+        this.billingAddressRepository = billingAddressRepository;
         this.groupMembersRepository = groupMembersRepository;
         this.passwordResetRepository = passwordResetRepository;
         this.deleteRequestRepository = deleteRequestRepository;
@@ -116,7 +116,6 @@ public class UsersService {
         usersDTO.setProfilePicture(users.getProfilePicture());
         usersDTO.setAccountStatus(users.getAccountStatus());
         usersDTO.setSsoProvider(users.getSsoProvider() == null ? null : users.getSsoProvider().getSsoProviderId());
-        usersDTO.setBillingAddress(users.getBillingAddress() == null ? null : users.getBillingAddress().getBillingAddressId());
         usersDTO.setBussinessAccount(users.getBussinessAccount() == null ? null : users.getBussinessAccount().getBussinessAccountId());
         return usersDTO;
     }
@@ -138,9 +137,6 @@ public class UsersService {
         final SsoProvider ssoProvider = usersDTO.getSsoProvider() == null ? null : ssoProviderRepository.findById(usersDTO.getSsoProvider())
                 .orElseThrow(() -> new NotFoundException("ssoProvider not found"));
         users.setSsoProvider(ssoProvider);
-        final BillingAddress billingAddress = usersDTO.getBillingAddress() == null ? null : billingAddressRepository.findById(usersDTO.getBillingAddress())
-                .orElseThrow(() -> new NotFoundException("billingAddress not found"));
-        users.setBillingAddress(billingAddress);
         final BussinessAccount bussinessAccount = usersDTO.getBussinessAccount() == null ? null : bussinessAccountRepository.findById(usersDTO.getBussinessAccount())
                 .orElseThrow(() -> new NotFoundException("bussinessAccount not found"));
         users.setBussinessAccount(bussinessAccount);
@@ -179,6 +175,12 @@ public class UsersService {
         if (createdByCoupons != null) {
             referencedWarning.setKey("users.coupons.createdBy.referenced");
             referencedWarning.addParam(createdByCoupons.getCouponId());
+            return referencedWarning;
+        }
+        final BillingAddress userBillingAddress = billingAddressRepository.findFirstByUser(users);
+        if (userBillingAddress != null) {
+            referencedWarning.setKey("users.billingAddress.user.referenced");
+            referencedWarning.addParam(userBillingAddress.getBillingAddressId());
             return referencedWarning;
         }
         final UserCoupon userUserCoupon = userCouponRepository.findFirstByUser(users);

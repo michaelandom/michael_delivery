@@ -31,12 +31,24 @@ public class BussinessAccount {
     @Column(nullable = false, columnDefinition = "tinyint", length = 1)
     private Boolean isActive;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "billing_address_id")
-    private BillingAddress billingAddress;
-
     @OneToMany(mappedBy = "bussinessAccount")
     private Set<Users> bussinessAccountUsers;
+
+    public Set<Users> getBussinessAccountUsers() {
+        return bussinessAccountUsers;
+    }
+
+    public void setBussinessAccountUsers(Set<Users> bussinessAccountUsers) {
+        this.bussinessAccountUsers = bussinessAccountUsers;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -85,23 +97,5 @@ public class BussinessAccount {
     public void setIsActive(final Boolean isActive) {
         this.isActive = isActive;
     }
-
-
-    public BillingAddress getBillingAddress() {
-        return billingAddress;
-    }
-
-    public void setBillingAddress(final BillingAddress billingAddress) {
-        this.billingAddress = billingAddress;
-    }
-
-    public Set<Users> getBussinessAccountUsers() {
-        return bussinessAccountUsers;
-    }
-
-    public void setBussinessAccountUsers(final Set<Users> bussinessAccountUsers) {
-        this.bussinessAccountUsers = bussinessAccountUsers;
-    }
-
 
 }

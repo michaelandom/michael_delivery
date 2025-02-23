@@ -37,13 +37,9 @@ public class BillingAddress {
     @Column
     private String billingSuburb;
 
-    
-
-    @OneToMany(mappedBy = "billingAddress")
-    private Set<BussinessAccount> billingAddressBussinessAccounts;
-
-    @OneToMany(mappedBy = "billingAddress")
-    private Set<Users> billingAddressUsers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
+    private Users user;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -109,23 +105,12 @@ public class BillingAddress {
         this.billingSuburb = billingSuburb;
     }
 
-
-    public Set<BussinessAccount> getBillingAddressBussinessAccounts() {
-        return billingAddressBussinessAccounts;
+    public Users getUsers() {
+        return user;
     }
 
-    public void setBillingAddressBussinessAccounts(
-            final Set<BussinessAccount> billingAddressBussinessAccounts) {
-        this.billingAddressBussinessAccounts = billingAddressBussinessAccounts;
+    public void setUsers(final Users user) {
+        this.user = user;
     }
-
-    public Set<Users> getBillingAddressUsers() {
-        return billingAddressUsers;
-    }
-
-    public void setBillingAddressUsers(final Set<Users> billingAddressUsers) {
-        this.billingAddressUsers = billingAddressUsers;
-    }
-
 
 }

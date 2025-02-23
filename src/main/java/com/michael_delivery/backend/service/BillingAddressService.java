@@ -69,6 +69,8 @@ public class BillingAddressService {
         billingAddressDTO.setBillingState(billingAddress.getBillingState());
         billingAddressDTO.setBillingPostcode(billingAddress.getBillingPostcode());
         billingAddressDTO.setBillingSuburb(billingAddress.getBillingSuburb());
+        billingAddressDTO.setUserId(billingAddress.getUsers() == null ? null : billingAddress.getUsers().getUserId());
+
         return billingAddressDTO;
     }
 
@@ -80,26 +82,14 @@ public class BillingAddressService {
         billingAddress.setBillingState(billingAddressDTO.getBillingState());
         billingAddress.setBillingPostcode(billingAddressDTO.getBillingPostcode());
         billingAddress.setBillingSuburb(billingAddressDTO.getBillingSuburb());
+        final Users user = billingAddressDTO.getUserId() == null ? null : usersRepository.findById(billingAddressDTO.getUserId())
+                .orElseThrow(() -> {
+                    System.out.println("user not found");
+                   return new NotFoundException("user not found");
+                });
+        billingAddress.setUsers(user);
         return billingAddress;
     }
 
-    public ReferencedWarning getReferencedWarning(final Long billingAddressId) {
-        final ReferencedWarning referencedWarning = new ReferencedWarning();
-        final BillingAddress billingAddress = billingAddressRepository.findById(billingAddressId)
-                .orElseThrow(NotFoundException::new);
-        final BussinessAccount billingAddressBussinessAccount = bussinessAccountRepository.findFirstByBillingAddress(billingAddress);
-        if (billingAddressBussinessAccount != null) {
-            referencedWarning.setKey("billingAddress.bussinessAccount.billingAddress.referenced");
-            referencedWarning.addParam(billingAddressBussinessAccount.getBussinessAccountId());
-            return referencedWarning;
-        }
-        final Users billingAddressUsers = usersRepository.findFirstByBillingAddress(billingAddress);
-        if (billingAddressUsers != null) {
-            referencedWarning.setKey("billingAddress.users.billingAddress.referenced");
-            referencedWarning.addParam(billingAddressUsers.getUserId());
-            return referencedWarning;
-        }
-        return null;
-    }
 
 }

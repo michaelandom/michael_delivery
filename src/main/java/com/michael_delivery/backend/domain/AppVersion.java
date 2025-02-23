@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.AppNameType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -18,8 +19,9 @@ public class AppVersion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer appVersionId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String appName;
+    private AppNameType appName;
 
     @Column(nullable = false, columnDefinition = "tinyint", length = 1)
     private Boolean updateType;
@@ -44,11 +46,11 @@ public class AppVersion {
         this.appVersionId = appVersionId;
     }
 
-    public String getAppName() {
+    public AppNameType getAppName() {
         return appName;
     }
 
-    public void setAppName(final String appName) {
+    public void setAppName(final AppNameType appName) {
         this.appName = appName;
     }
 

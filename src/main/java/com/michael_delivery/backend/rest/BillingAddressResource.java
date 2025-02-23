@@ -50,15 +50,11 @@ public class BillingAddressResource {
         billingAddressService.update(billingAddressId, billingAddressDTO);
         return ResponseEntity.ok(billingAddressId);
     }
-
+    
     @DeleteMapping("/{billingAddressId}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteBillingAddress(
             @PathVariable(name = "billingAddressId") final Long billingAddressId) {
-        final ReferencedWarning referencedWarning = billingAddressService.getReferencedWarning(billingAddressId);
-        if (referencedWarning != null) {
-            throw new ReferencedException(referencedWarning);
-        }
         billingAddressService.delete(billingAddressId);
         return ResponseEntity.noContent().build();
     }

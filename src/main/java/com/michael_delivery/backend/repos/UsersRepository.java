@@ -11,8 +11,5 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     Users findFirstBySsoProvider(SsoProvider ssoProvider);
 
-    Users findFirstByBillingAddress(BillingAddress billingAddress);
-
     Users findFirstByBussinessAccount(BussinessAccount bussinessAccount);
-
 }
