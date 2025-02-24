@@ -1,5 +1,8 @@
 package com.michael_delivery.backend.model;
 
+import com.michael_delivery.backend.enums.AddressType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -21,14 +24,15 @@ public class UserFavoriteAddressDTO {
 
     private String nickName;
 
-    @NotBlank(message = "latitude is required")
+    @NotNull(message = "latitude is required")
     private Double latitude;
 
-    @NotBlank(message = "longitude is required")
+    @NotNull(message = "longitude is required")
     private Double longitude;
 
-    @NotBlank(message = "addressType is required")
-    private String addressType;
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "addressType is required")
+    private AddressType addressType;
 
     @NotNull
     private Long user;
@@ -89,11 +93,11 @@ public class UserFavoriteAddressDTO {
         this.longitude = longitude;
     }
 
-    public String getAddressType() {
+    public AddressType getAddressType() {
         return addressType;
     }
 
-    public void setAddressType(final String addressType) {
+    public void setAddressType(final AddressType addressType) {
         this.addressType = addressType;
     }
 

@@ -25,6 +25,7 @@ public class Suspensions {
     @Column(columnDefinition = "tinyint", length = 1)
     private Boolean isSystemSuspenstion;
 
+    @Enumerated(EnumType.STRING)
     @Column
     private SuspensionReasonType reasonType;
 

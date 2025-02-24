@@ -22,6 +22,7 @@ public class Vehicles {
     @Column(columnDefinition = "tinyint", length = 1)
     private Boolean isCurrentVehicle;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private VehicleType vehicleType;
 

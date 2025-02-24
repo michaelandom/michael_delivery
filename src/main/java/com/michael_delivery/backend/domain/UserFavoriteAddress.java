@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.AddressType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -36,8 +37,9 @@ public class UserFavoriteAddress {
     @Column(nullable = false)
     private Double longitude;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String addressType;
+    private AddressType addressType;
 
     
 
@@ -109,11 +111,11 @@ public class UserFavoriteAddress {
         this.longitude = longitude;
     }
 
-    public String getAddressType() {
+    public AddressType getAddressType() {
         return addressType;
     }
 
-    public void setAddressType(final String addressType) {
+    public void setAddressType(final AddressType addressType) {
         this.addressType = addressType;
     }
 

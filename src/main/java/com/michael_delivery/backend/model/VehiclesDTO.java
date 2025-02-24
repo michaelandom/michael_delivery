@@ -2,9 +2,12 @@ package com.michael_delivery.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.michael_delivery.backend.enums.VehicleType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
 
@@ -13,10 +16,10 @@ public class VehiclesDTO {
 
     private Long vehicleId;
 
-    @JsonProperty("isCurrentVehicle")
     private Boolean isCurrentVehicle;
 
-    @NotBlank(message = "vehicleType is required")
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "vehicleType is required")
     private VehicleType vehicleType;
 
     @Size(max = 4)
@@ -31,14 +34,15 @@ public class VehiclesDTO {
 
     private String insurancePolicy;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime driverLicenseValidFrom;
-
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime driverLicenseValidTo;
-
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime insurancePolicyValidFrom;
-
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime insurancePolicyValidTo;
-
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime expiryDate;
 
     @NotNull
