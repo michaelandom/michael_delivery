@@ -1,14 +1,20 @@
 package com.michael_delivery.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.michael_delivery.backend.enums.AccountStatusType;
 import com.michael_delivery.backend.enums.AccountType;
 import com.michael_delivery.backend.enums.GenderType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+
+import static com.michael_delivery.backend.util.ValidationConstants.StrongPasswordValidator.STRONG_PASSWORD_REGEX;
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class UsersDTO {
@@ -24,10 +30,10 @@ public class UsersDTO {
     @NotBlank(message = "lastName is required")
     private String lastName;
 
-    @NotBlank(message = "dateOfBirth is required")
+    @NotNull(message = "dateOfBirth is required")
     private LocalDate dateOfBirth;
 
-    @NotBlank(message = "gender is required")
+    @NotNull(message = "gender is required")
     private GenderType gender;
 
     private String email;
@@ -36,16 +42,31 @@ public class UsersDTO {
 
     private OffsetDateTime lastLogin;
 
-    @NotBlank(message = "accountType is required")
+    @NotNull(message = "accountType is required")
     private AccountType accountType;
 
     private OffsetDateTime requestForDeleteAt;
 
     private OffsetDateTime deactivatedDate;
 
+    @URL(message = "Must be a valid URL")
+    @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
     private String profilePicture;
 
-    @NotBlank(message = "accountStatus is required")
+    @Pattern(regexp = STRONG_PASSWORD_REGEX, message = "Password must be at least 8 characters long, " +
+            "contain one uppercase letter, one lowercase letter, " +
+            "one digit, and one special character.")
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @NotNull(message = "accountStatus is required")
     private AccountStatusType accountStatus;
 
     private Long ssoProvider;

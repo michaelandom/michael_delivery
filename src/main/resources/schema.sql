@@ -785,6 +785,8 @@ CREATE TABLE IF NOT EXISTS `None_Business_Hour_Rates` (
     END
     ) STORED,
     UNIQUE (`unique_start_time_end_time_check`),
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`created_by`) REFERENCES `Users`(`user_id`) ON DELETE SET NULL
     );
 
@@ -800,7 +802,8 @@ CREATE TABLE IF NOT EXISTS `Payment_Webhook_Payload` (
     `amount` JSON NOT NULL,
     `success` BOOLEAN NOT NULL,
     `payload` JSON NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
     );
 
 

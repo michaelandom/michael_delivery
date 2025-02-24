@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
 
@@ -15,16 +16,16 @@ public class PeakTimeRateDTO {
    @NotNull
     private Boolean isWeekend;
 
-    @NotBlank(message = "startTime is required")
-    private String startTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime startTime;
 
-    @NotBlank(message = "endTime is required")
-    private String endTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime endTime;
 
-    @NotBlank(message = "rate is required")
+    @NotNull
     private Double rate;
 
-    @NotBlank(message = "isLatest is required")
+    @NotNull
     private Boolean isLatest;
 
     private Boolean isDeleted;
@@ -47,19 +48,19 @@ public class PeakTimeRateDTO {
         this.isWeekend = isWeekend;
     }
 
-    public String getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(final String startTime) {
+    public void setStartTime(final OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public OffsetDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(final String endTime) {
+    public void setEndTime(final OffsetDateTime endTime) {
         this.endTime = endTime;
     }
 

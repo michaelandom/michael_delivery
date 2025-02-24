@@ -4,19 +4,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.OffsetDateTime;
 
 
 public class NoneBusinessHourRatesDTO {
 
     private Long noneBusinessHourRateId;
 
-    @NotBlank(message = "startTime is required")
-    private String startTime;
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime startTime;
 
-    @NotBlank(message = "endTime is required")
-    private String endTime;
 
-    @NotBlank(message = "rate is required")
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime endTime;
+
+    @NotNull(message = "rate is required")
     private Double rate;
 
     @NotNull
@@ -32,19 +38,19 @@ public class NoneBusinessHourRatesDTO {
         this.noneBusinessHourRateId = noneBusinessHourRateId;
     }
 
-    public String getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(final String startTime) {
+    public void setStartTime(final OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public OffsetDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(final String endTime) {
+    public void setEndTime(final OffsetDateTime endTime) {
         this.endTime = endTime;
     }
 

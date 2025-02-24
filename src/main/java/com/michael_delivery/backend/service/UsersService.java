@@ -1,13 +1,19 @@
 package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.enums.AccountType;
 import com.michael_delivery.backend.model.UsersDTO;
 import com.michael_delivery.backend.repos.*;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.validation.ValidationException;
+import javax.validation.executable.ValidateOnExecution;
+import javax.ws.rs.BadRequestException;
 import java.util.List;
 
 
@@ -32,6 +38,7 @@ public class UsersService {
     private final UserFavoriteAddressRepository userFavoriteAddressRepository;
     private final NoneBusinessHourRatesRepository noneBusinessHourRatesRepository;
     private final BillingAddressRepository billingAddressRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UsersService(final UsersRepository usersRepository,
             final SsoProviderRepository ssoProviderRepository,
@@ -68,6 +75,7 @@ public class UsersService {
         this.cancellationRiderRequestRepository = cancellationRiderRequestRepository;
         this.userFavoriteAddressRepository = userFavoriteAddressRepository;
         this.noneBusinessHourRatesRepository = noneBusinessHourRatesRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public List<UsersDTO> findAll() {
@@ -90,12 +98,54 @@ public class UsersService {
     }
 
     public void update(final Long userId, final UsersDTO usersDTO) {
-        final Users users = usersRepository.findById(userId)
-                .orElseThrow(NotFoundException::new);
+        final Users users = getUserById(userId);
         mapToEntity(usersDTO, users);
         usersRepository.save(users);
     }
 
+    public Long setInitialPassword(final Long userId, final String password) {
+        Users users = getUserById(userId);
+
+        if (!users.getPasswordHash().isEmpty()) {
+            throw new BadRequestException("Password already set.");
+        }
+
+        if (users.getAccountType().equals(AccountType.SSO)) {
+            throw new BadRequestException("You are not allowed to set your password.");
+        }
+
+        String hashedPassword = passwordEncoder.encode(password);
+        users.setPasswordHash(hashedPassword);
+        usersRepository.save(users);
+
+        return users.getUserId();
+    }
+
+    public boolean changePassword(final Long userId, final String oldPassword, final String newPassword) {
+        Users users = getUserById(userId);
+
+        if (users.getAccountType().equals(AccountType.SSO)) {
+            throw new BadRequestException("You are not allowed to change the password.");
+        }
+
+        if (!passwordEncoder.matches(oldPassword, users.getPasswordHash())) {
+            throw new BadRequestException("Old password does not match.");
+        }
+
+        if (oldPassword.equals(newPassword)) {
+            throw new BadRequestException("Old and new password cannot be the same.");
+        }
+
+        String newHashedPassword = passwordEncoder.encode(newPassword);
+        users.setPasswordHash(newHashedPassword);
+        usersRepository.save(users);
+
+        return true;
+    }
+    private Users getUserById(Long userId) {
+        return usersRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+    }
     public void delete(final Long userId) {
         usersRepository.deleteById(userId);
     }
@@ -145,8 +195,7 @@ public class UsersService {
 
     public ReferencedWarning getReferencedWarning(final Long userId) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
-        final Users users = usersRepository.findById(userId)
-                .orElseThrow(NotFoundException::new);
+        final Users users = getUserById(userId);
         final GroupMembers userGroupMembers = groupMembersRepository.findFirstByUser(users);
         if (userGroupMembers != null) {
             referencedWarning.setKey("users.groupMembers.user.referenced");

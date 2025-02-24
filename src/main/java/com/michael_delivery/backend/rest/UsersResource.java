@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.model.ChangePasswordDTO;
+import com.michael_delivery.backend.model.SetPasswordDTO;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.BillingAddress;
 import com.michael_delivery.backend.domain.BussinessAccount;
@@ -51,6 +53,21 @@ public class UsersResource {
     public ResponseEntity<UsersDTO> getUsers(@PathVariable(name = "userId") final Long userId) {
         return ResponseEntity.ok(usersService.get(userId));
     }
+
+    @PostMapping("/{userId}/password")
+    public ResponseEntity<Long> setPassword(@PathVariable Long userId,
+                                            @RequestBody SetPasswordDTO request) {
+        return ResponseEntity.ok(usersService.setInitialPassword(userId,request.getPassword()));
+    }
+
+
+    @PutMapping("/{userId}/password")
+    public ResponseEntity<Boolean> changePassword(@PathVariable Long userId,
+                                            @RequestBody ChangePasswordDTO request) {
+        return ResponseEntity.ok(usersService.changePassword(userId,request.getOldPassword(),request.getNewPassword()));
+    }
+
+
 
     @PostMapping
     @ApiResponse(responseCode = "201")

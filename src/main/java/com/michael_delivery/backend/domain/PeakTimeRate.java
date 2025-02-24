@@ -23,10 +23,10 @@ public class PeakTimeRate {
     private Boolean isWeekend;
 
     @Column(nullable = false)
-    private String startTime;
+    private OffsetDateTime startTime;
 
     @Column(nullable = false)
-    private String endTime;
+    private OffsetDateTime endTime;
 
     @Column(nullable = false)
     private Double rate;
@@ -70,19 +70,19 @@ public class PeakTimeRate {
         this.isWeekend = isWeekend;
     }
 
-    public String getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(final String startTime) {
+    public void setStartTime(final OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public OffsetDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(final String endTime) {
+    public void setEndTime(final OffsetDateTime endTime) {
         this.endTime = endTime;
     }
 

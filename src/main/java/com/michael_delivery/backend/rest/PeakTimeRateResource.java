@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public class PeakTimeRateResource {
     }
 
     @GetMapping("/previousValues")
-    public ResponseEntity<Map<Long, String>> getPreviousValues() {
+    public ResponseEntity<Map<Long, OffsetDateTime>> getPreviousValues() {
         return ResponseEntity.ok(peakTimeRateRepository.findAll(Sort.by("peakTimeRateId"))
                 .stream()
                 .collect(CustomCollectors.toSortedMap(PeakTimeRate::getPeakTimeRateId, PeakTimeRate::getStartTime)));

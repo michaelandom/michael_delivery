@@ -35,6 +35,7 @@ public class Users {
     @Column(nullable = false)
     private LocalDate dateOfBirth;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private GenderType gender;
 
@@ -42,16 +43,16 @@ public class Users {
     private String email;
 
     @Column(nullable = false, columnDefinition = "tinyint", length = 1)
-    private Boolean emailVerified;
+    private Boolean emailVerified = false;
 
     @Column(length = 20)
     private String phone;
 
     @Column(nullable = false, columnDefinition = "tinyint", length = 1)
-    private Boolean phoneVerified;
+    private Boolean phoneVerified = false;
 
     @Column(nullable = false, columnDefinition = "longtext")
-    private String passwordHash;
+    private String passwordHash = "";
 
     @Column
     private OffsetDateTime lastLogin;
