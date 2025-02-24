@@ -43,9 +43,11 @@ public class Coupons {
     @Column(nullable = false)
     private OffsetDateTime endDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CouponType issuedTo;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserImportType howUserWasAdded;
 
@@ -59,10 +61,10 @@ public class Coupons {
     private Long numberOfUsedCoupons;
 
     @Column(columnDefinition = "longtext")
-    private String excelFile;
+    private String excelFileUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_id", nullable = false)
+    @JoinColumn(name = "created_by", nullable = false)
     private Users createdBy;
 
     @OneToMany(mappedBy = "coupon")
@@ -188,12 +190,12 @@ public class Coupons {
         this.numberOfUsedCoupons = numberOfUsedCoupons;
     }
 
-    public String getExcelFile() {
-        return excelFile;
+    public String getExcelFileUrl() {
+        return excelFileUrl;
     }
 
-    public void setExcelFile(final String excelFile) {
-        this.excelFile = excelFile;
+    public void setExcelFileUrl(final String excelFileUrl) {
+        this.excelFileUrl = excelFileUrl;
     }
 
     public OffsetDateTime getUpdatedAt() {

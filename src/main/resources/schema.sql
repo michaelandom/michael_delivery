@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `Coupons` (
     `code` VARCHAR(255) NULL,
     `number_of_issued_coupons` BIGINT NOT NULL DEFAULT 0,
     `number_of_used_coupons` BIGINT NOT NULL DEFAULT 0,
-    `excel_file` TEXT NULL,
+    `excel_file_url` TEXT NULL,
     `created_by` BIGINT NOT NULL,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`created_by`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE

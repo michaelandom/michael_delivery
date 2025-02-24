@@ -3,18 +3,25 @@ package com.michael_delivery.backend.model;
 import com.michael_delivery.backend.enums.CouponType;
 import com.michael_delivery.backend.enums.DiscountType;
 import com.michael_delivery.backend.enums.UserImportType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
+
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class CouponsDTO {
 
     private Long couponId;
 
-    @NotBlank(message = "Discount Type is required")
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Discount Type is required")
     private DiscountType discountType;
 
     private Double discountAmount;
@@ -23,35 +30,38 @@ public class CouponsDTO {
 
     private Double maximumDiscountAmount;
 
-    @NotBlank(message = "minimumPurchasePrice is required")
+    @NotNull(message = "minimumPurchasePrice is required")
     private Double minimumPurchasePrice;
 
-    @NotBlank(message = "startDate is required")
+    @NotNull(message = "startDate is required")
     private OffsetDateTime startDate;
 
-    @NotBlank(message = "endDate is required")
+    @NotNull(message = "endDate is required")
     private OffsetDateTime endDate;
 
-    @NotBlank(message = "issuedTo is required")
-    @Size(max = 255)
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "issuedTo is required")
     private CouponType issuedTo;
 
-    @NotBlank(message = "UserImportType is required")
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "UserImportType is required")
     private UserImportType howUserWasAdded;
 
     @Size(max = 255)
     private String code;
 
-    @NotBlank(message = "numberOfIssuedCoupons is required")
+    @NotNull(message = "numberOfIssuedCoupons is required")
     private Long numberOfIssuedCoupons;
 
-    @NotBlank(message = "numberOfUsedCoupons is required")
+    @NotNull(message = "numberOfUsedCoupons is required")
     private Long numberOfUsedCoupons;
 
-    private String excelFile;
+    @URL(message = "Must be a valid URL")
+    @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
+    private String excelFileUrl;
 
 
-    @NotBlank(message = "createdBy is required")
+    @NotNull(message = "createdBy is required")
     private Long createdBy;
 
     public Long getCouponId() {
@@ -159,12 +169,12 @@ public class CouponsDTO {
         this.numberOfUsedCoupons = numberOfUsedCoupons;
     }
 
-    public String getExcelFile() {
-        return excelFile;
+    public String getExcelFileUrl() {
+        return excelFileUrl;
     }
 
-    public void setExcelFile(final String excelFile) {
-        this.excelFile = excelFile;
+    public void setExcelFileUrl(final String excelFile) {
+        this.excelFileUrl = excelFileUrl;
     }
 
 

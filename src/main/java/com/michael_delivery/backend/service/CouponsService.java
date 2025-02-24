@@ -74,7 +74,7 @@ public class CouponsService {
         couponsDTO.setCode(coupons.getCode());
         couponsDTO.setNumberOfIssuedCoupons(coupons.getNumberOfIssuedCoupons());
         couponsDTO.setNumberOfUsedCoupons(coupons.getNumberOfUsedCoupons());
-        couponsDTO.setExcelFile(coupons.getExcelFile());
+        couponsDTO.setExcelFileUrl(coupons.getExcelFileUrl());
         couponsDTO.setCreatedBy(coupons.getCreatedBy() == null ? null : coupons.getCreatedBy().getUserId());
         return couponsDTO;
     }
@@ -92,7 +92,7 @@ public class CouponsService {
         coupons.setCode(couponsDTO.getCode());
         coupons.setNumberOfIssuedCoupons(couponsDTO.getNumberOfIssuedCoupons());
         coupons.setNumberOfUsedCoupons(couponsDTO.getNumberOfUsedCoupons());
-        coupons.setExcelFile(couponsDTO.getExcelFile());
+        coupons.setExcelFileUrl(couponsDTO.getExcelFileUrl());
         final Users createdBy = couponsDTO.getCreatedBy() == null ? null : usersRepository.findById(couponsDTO.getCreatedBy())
                 .orElseThrow(() -> new NotFoundException("createdBy not found"));
         coupons.setCreatedBy(createdBy);
