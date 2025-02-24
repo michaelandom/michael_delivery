@@ -43,7 +43,7 @@ public class Suspensions {
     private Riders rider;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "suspened_by_id")
+    @JoinColumn(name = "suspened_by")
     private Users suspenedBy;
 
     @CreatedDate
