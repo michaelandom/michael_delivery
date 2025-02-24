@@ -68,7 +68,6 @@ public class BussinessAccountService {
         bussinessAccountDTO.setCompanyName(bussinessAccount.getCompanyName());
         bussinessAccountDTO.setLogoUrl(bussinessAccount.getLogoUrl());
         bussinessAccountDTO.setIsActive(bussinessAccount.getIsActive());
-//        bussinessAccountDTO.setBillingAddress(bussinessAccount.getBillingAddress() == null ? null : bussinessAccount.getBillingAddress().getBillingAddressId());
         return bussinessAccountDTO;
     }
 
@@ -78,9 +77,6 @@ public class BussinessAccountService {
         bussinessAccount.setCompanyName(bussinessAccountDTO.getCompanyName());
         bussinessAccount.setLogoUrl(bussinessAccountDTO.getLogoUrl());
         bussinessAccount.setIsActive(bussinessAccountDTO.getIsActive());
-        final BillingAddress billingAddress = bussinessAccountDTO.getBillingAddress() == null ? null : billingAddressRepository.findById(bussinessAccountDTO.getBillingAddress())
-                .orElseThrow(() -> new NotFoundException("billingAddress not found"));
-//        bussinessAccount.setBillingAddress(billingAddress);
         return bussinessAccount;
     }
 

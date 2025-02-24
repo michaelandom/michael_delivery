@@ -19,6 +19,7 @@ public class NoneBusinessHourRatesDTO {
     @NotBlank(message = "rate is required")
     private Double rate;
 
+    @NotNull
     private Boolean isLatest;
 
     private Long createdBy;

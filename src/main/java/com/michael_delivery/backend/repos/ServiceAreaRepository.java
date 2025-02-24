@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ServiceAreaRepository extends JpaRepository<ServiceArea, Long> {
 
-    ServiceArea findFirstByStateName(State state);
+    ServiceArea findFirstByState(State state);
 
 }

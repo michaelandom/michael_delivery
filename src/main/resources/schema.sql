@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS `Sso_Providers` (
     );
 
 CREATE TABLE IF NOT EXISTS `Bussiness_Accounts` (
-    `bussiness_account_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `company_ABN` VARCHAR(20) NOT NULL,
+                                                    `bussiness_account_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                                    `company_ABN` VARCHAR(20) NOT NULL,
     `company_name` VARCHAR(255) NOT NULL,
     `logo_url` TEXT,
     `is_active` BOOLEAN NOT NULL,
@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS `Bussiness_Accounts` (
     );
 
 CREATE TABLE IF NOT EXISTS `Users` (
-    `user_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `username` VARCHAR(100) NOT NULL UNIQUE,
+                                       `user_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                       `username` VARCHAR(100) NOT NULL UNIQUE,
     `first_name` VARCHAR(255) NOT NULL,
     `last_name` VARCHAR(255) NOT NULL,
     `date_of_birth` DATE NOT NULL,
@@ -41,24 +41,44 @@ CREATE TABLE IF NOT EXISTS `Users` (
     FOREIGN KEY (`bussiness_account_id`) REFERENCES `Bussiness_Accounts`(`bussiness_account_id`)
     );
 
+CREATE TABLE IF NOT EXISTS `States` (
+                                        `state_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                        `name` VARCHAR(255) NOT NULL UNIQUE,
+    `code` VARCHAR(10) NOT NULL,
+    `logo_url` TEXT,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE IF NOT EXISTS `Service_Areas` (
+                                               `service_area_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                               `name` VARCHAR(255) NOT NULL UNIQUE,
+    `code` VARCHAR(255),
+    `is_active` BOOLEAN DEFAULT FALSE,
+    `state_id` BIGINT NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`state_id`) REFERENCES `States`(`state_id`) ON DELETE CASCADE
+    );
 
 CREATE TABLE IF NOT EXISTS `Billing_Address` (
-    `billing_address_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `billing_email` VARCHAR(255),
+                                                 `billing_address_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                                 `billing_email` VARCHAR(255),
     `billing_street_address` TEXT,
     `billing_street_address2` TEXT,
-    `billing_state` VARCHAR(255),
+    `billing_state_id` BIGINT,
     `billing_postcode` VARCHAR(10), -- Use VARCHAR for postal codes
     `billing_suburb` VARCHAR(255),
     `user_id` BIGINT NOT NULL UNIQUE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE
+    FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`billing_state_id`) REFERENCES `States`(`state_id`) ON DELETE CASCADE
     );
 
 CREATE TABLE IF NOT EXISTS `Groups` (
-    `group_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL UNIQUE,
+                                        `group_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                        `name` VARCHAR(255) NOT NULL UNIQUE,
     `description` TEXT NOT NULL,
     `group_type` ENUM('PERMISSION','EVENT') NOT NULL DEFAULT 'PERMISSION',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -768,26 +788,6 @@ CREATE TABLE IF NOT EXISTS `None_Business_Hour_Rates` (
     FOREIGN KEY (`created_by`) REFERENCES `Users`(`user_id`) ON DELETE SET NULL
     );
 
-
-CREATE TABLE IF NOT EXISTS `States` (
-                                        `state_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                        `name` VARCHAR(255) UNIQUE NOT NULL,
-    `code` VARCHAR(10) NOT NULL,
-    `logo` VARCHAR(255),
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
-    );
-
-CREATE TABLE IF NOT EXISTS `Service_Areas` (
-                                               `service_area_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                               `name` VARCHAR(255) NOT NULL,
-    `code` VARCHAR(255),
-    `is_active` BOOLEAN DEFAULT FALSE,
-    `state_name` VARCHAR(255) NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`state_name`) REFERENCES `States`(`name`) ON DELETE CASCADE
-    );
 
 CREATE TABLE IF NOT EXISTS `Payment_Webhook_Payload` (
                                                          `payment_webhook_payload_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,

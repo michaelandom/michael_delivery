@@ -26,10 +26,10 @@ public class State {
     private String code;
 
     @Column
-    private String logo;
+    private String logoUrl;
 
 
-    @OneToMany(mappedBy = "stateName")
+    @OneToMany(mappedBy = "state")
     private Set<ServiceArea> stateNameServiceAreas;
 
     @CreatedDate
@@ -64,12 +64,12 @@ public class State {
         this.code = code;
     }
 
-    public String getLogo() {
-        return logo;
+    public String getLogoUrl() {
+        return logoUrl;
     }
 
-    public void setLogo(final String logo) {
-        this.logo = logo;
+    public void setLogoUrl(final String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 
 

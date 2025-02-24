@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.exception;
 
+import com.michael_delivery.backend.util.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -66,6 +67,20 @@ public class GlobalExceptionHandler {
                 ""
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        ErrorResponse errorResponse = new ErrorResponse(
+                OffsetDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                errors,
+                request.getDescription(false).replace("uri=","")
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
 

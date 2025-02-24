@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.enums.SizeAndWeightType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.SizeAndWeightDescriptions;
@@ -74,7 +75,7 @@ public class ItemResource {
     }
 
     @GetMapping("/sizeWeightDescriptionValues")
-    public ResponseEntity<Map<Long, String>> getSizeWeightDescriptionValues() {
+    public ResponseEntity<Map<Long, SizeAndWeightType>> getSizeWeightDescriptionValues() {
         return ResponseEntity.ok(sizeAndWeightDescriptionsRepository.findAll(Sort.by("sizeWeightDescriptionId"))
                 .stream()
                 .collect(CustomCollectors.toSortedMap(SizeAndWeightDescriptions::getSizeWeightDescriptionId, SizeAndWeightDescriptions::getSize)));

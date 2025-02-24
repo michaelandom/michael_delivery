@@ -31,9 +31,6 @@ public class BussinessAccountDTO {
     @NotNull
     private Boolean isActive;
 
-
-    private Long billingAddress;
-
     public Long getBussinessAccountId() {
         return bussinessAccountId;
     }
@@ -72,14 +69,6 @@ public class BussinessAccountDTO {
 
     public void setIsActive(final Boolean isActive) {
         this.isActive = isActive;
-    }
-
-    public Long getBillingAddress() {
-        return billingAddress;
-    }
-
-    public void setBillingAddress(final Long billingAddress) {
-        this.billingAddress = billingAddress;
     }
 
 }

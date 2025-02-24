@@ -2,9 +2,13 @@ package com.michael_delivery.backend.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
+
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class StateDTO {
@@ -17,7 +21,9 @@ public class StateDTO {
     @NotBlank(message = "code is required")
     private String code;
 
-    private String logo;
+    @URL(message = "Must be a valid URL")
+    @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
+    private String logoUrl;
 
     public Long getStateId() {
         return stateId;
@@ -43,12 +49,12 @@ public class StateDTO {
         this.code = code;
     }
 
-    public String getLogo() {
-        return logo;
+    public String getLogoUrl() {
+        return logoUrl;
     }
 
-    public void setLogo(final String logo) {
-        this.logo = logo;
+    public void setLogoUrl(final String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 
 }

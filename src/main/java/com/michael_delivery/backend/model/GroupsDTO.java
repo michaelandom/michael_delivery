@@ -1,6 +1,8 @@
 package com.michael_delivery.backend.model;
 
 import com.michael_delivery.backend.enums.GroupType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,7 +20,8 @@ public class GroupsDTO {
     @NotBlank(message = "description is required")
     private String description;
 
-    @NotBlank(message = "groupType is required")
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "groupType is required")
     private GroupType groupType;
 
     public Long getGroupId() {

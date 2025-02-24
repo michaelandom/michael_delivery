@@ -83,10 +83,8 @@ public class BillingAddressService {
         billingAddress.setBillingPostcode(billingAddressDTO.getBillingPostcode());
         billingAddress.setBillingSuburb(billingAddressDTO.getBillingSuburb());
         final Users user = billingAddressDTO.getUserId() == null ? null : usersRepository.findById(billingAddressDTO.getUserId())
-                .orElseThrow(() -> {
-                    System.out.println("user not found");
-                   return new NotFoundException("user not found");
-                });
+                .orElseThrow(() -> new NotFoundException("User Not Found")
+                );
         billingAddress.setUsers(user);
         return billingAddress;
     }

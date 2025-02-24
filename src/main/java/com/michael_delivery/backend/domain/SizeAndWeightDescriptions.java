@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.SizeAndWeightType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,8 +20,9 @@ public class SizeAndWeightDescriptions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sizeWeightDescriptionId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String size;
+    private SizeAndWeightType size;
 
     @Column(nullable = false, columnDefinition = "longtext")
     private String sizeDescription;
@@ -30,10 +32,7 @@ public class SizeAndWeightDescriptions {
 
     @Column(columnDefinition = "tinyint", length = 1)
     private Boolean isLatest;
-    
 
-    @Column(unique = true, length = 50)
-    private String uniqueSizeCheck;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_id")
@@ -61,11 +60,11 @@ public class SizeAndWeightDescriptions {
         this.sizeWeightDescriptionId = sizeWeightDescriptionId;
     }
 
-    public String getSize() {
+    public SizeAndWeightType getSize() {
         return size;
     }
 
-    public void setSize(final String size) {
+    public void setSize(final SizeAndWeightType size) {
         this.size = size;
     }
 
@@ -93,14 +92,6 @@ public class SizeAndWeightDescriptions {
         this.isLatest = isLatest;
     }
 
-
-    public String getUniqueSizeCheck() {
-        return uniqueSizeCheck;
-    }
-
-    public void setUniqueSizeCheck(final String uniqueSizeCheck) {
-        this.uniqueSizeCheck = uniqueSizeCheck;
-    }
 
     public SizeAndWeightDescriptions getPrevious() {
         return previous;

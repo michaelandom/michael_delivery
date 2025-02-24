@@ -21,7 +21,7 @@ public class ServiceAreaDTO {
 
 
     @NotNull
-    private Long stateName;
+    private Long stateId;
 
     public Long getServiceAreaId() {
         return serviceAreaId;
@@ -55,12 +55,12 @@ public class ServiceAreaDTO {
         this.isActive = isActive;
     }
 
-    public Long getStateName() {
-        return stateName;
+    public Long getStateId() {
+        return stateId;
     }
 
-    public void setStateName(final Long stateName) {
-        this.stateName = stateName;
+    public void setStateId(final Long stateId) {
+        this.stateId = stateId;
     }
 
 }

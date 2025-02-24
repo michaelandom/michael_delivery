@@ -29,8 +29,8 @@ public class ServiceArea {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_name_id", nullable = false)
-    private State stateName;
+    @JoinColumn(name = "state_id", nullable = false)
+    private State state;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -73,12 +73,12 @@ public class ServiceArea {
     }
 
 
-    public State getStateName() {
-        return stateName;
+    public State getState() {
+        return state;
     }
 
-    public void setStateName(final State stateName) {
-        this.stateName = stateName;
+    public void setState(final State state) {
+        this.state = state;
     }
 
 

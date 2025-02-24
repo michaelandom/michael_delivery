@@ -1,6 +1,9 @@
 package com.michael_delivery.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.michael_delivery.backend.enums.SizeAndWeightType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,8 +15,9 @@ public class SizeAndWeightDescriptionsDTO {
 
     private Long sizeWeightDescriptionId;
 
-    @NotBlank(message = "size is required")
-    private String size;
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "size is required")
+    private SizeAndWeightType size;
 
     @NotBlank(message = "sizeDescription is required")
     private String sizeDescription;
@@ -21,7 +25,7 @@ public class SizeAndWeightDescriptionsDTO {
     @NotBlank(message = "weight is required")
     private String weight;
 
-    @NotBlank
+    @NotNull
     private Boolean isLatest;
 
     private Long previous;
@@ -34,11 +38,11 @@ public class SizeAndWeightDescriptionsDTO {
         this.sizeWeightDescriptionId = sizeWeightDescriptionId;
     }
 
-    public String getSize() {
+    public SizeAndWeightType getSize() {
         return size;
     }
 
-    public void setSize(final String size) {
+    public void setSize(final SizeAndWeightType size) {
         this.size = size;
     }
 

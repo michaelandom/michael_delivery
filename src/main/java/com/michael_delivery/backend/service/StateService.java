@@ -59,14 +59,14 @@ public class StateService {
         stateDTO.setStateId(state.getStateId());
         stateDTO.setName(state.getName());
         stateDTO.setCode(state.getCode());
-        stateDTO.setLogo(state.getLogo());
+        stateDTO.setLogoUrl(state.getLogoUrl());
         return stateDTO;
     }
 
     private State mapToEntity(final StateDTO stateDTO, final State state) {
         state.setName(stateDTO.getName());
         state.setCode(stateDTO.getCode());
-        state.setLogo(stateDTO.getLogo());
+        state.setLogoUrl(stateDTO.getLogoUrl());
         return state;
     }
 
@@ -74,9 +74,9 @@ public class StateService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final State state = stateRepository.findById(stateId)
                 .orElseThrow(NotFoundException::new);
-        final ServiceArea stateNameServiceArea = serviceAreaRepository.findFirstByStateName(state);
+        final ServiceArea stateNameServiceArea = serviceAreaRepository.findFirstByState(state);
         if (stateNameServiceArea != null) {
-            referencedWarning.setKey("state.serviceArea.stateName.referenced");
+            referencedWarning.setKey("state.serviceArea.state.referenced");
             referencedWarning.addParam(stateNameServiceArea.getServiceAreaId());
             return referencedWarning;
         }

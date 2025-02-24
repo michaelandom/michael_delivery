@@ -60,7 +60,7 @@ public class ServiceAreaService {
         serviceAreaDTO.setName(serviceArea.getName());
         serviceAreaDTO.setCode(serviceArea.getCode());
         serviceAreaDTO.setIsActive(serviceArea.getIsActive());
-        serviceAreaDTO.setStateName(serviceArea.getStateName() == null ? null : serviceArea.getStateName().getStateId());
+        serviceAreaDTO.setStateId(serviceArea.getState() == null ? null : serviceArea.getState().getStateId());
         return serviceAreaDTO;
     }
 
@@ -69,9 +69,9 @@ public class ServiceAreaService {
         serviceArea.setName(serviceAreaDTO.getName());
         serviceArea.setCode(serviceAreaDTO.getCode());
         serviceArea.setIsActive(serviceAreaDTO.getIsActive());
-        final State stateName = serviceAreaDTO.getStateName() == null ? null : stateRepository.findById(serviceAreaDTO.getStateName())
-                .orElseThrow(() -> new NotFoundException("stateName not found"));
-        serviceArea.setStateName(stateName);
+        final State state = serviceAreaDTO.getStateId() == null ? null : stateRepository.findById(serviceAreaDTO.getStateId())
+                .orElseThrow(() -> new NotFoundException("State Not Found"));
+        serviceArea.setState(state);
         return serviceArea;
     }
 
