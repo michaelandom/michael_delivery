@@ -1,9 +1,12 @@
 package com.michael_delivery.backend.model;
 
 import com.michael_delivery.backend.enums.PickupTimeType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -13,10 +16,10 @@ public class DeliveryDetailDTO {
 
     private Long deliveryDetailId;
 
-    @NotBlank(message = "pickupLatitude is required")
+    @NotNull(message = "pickupLatitude is required")
     private Double pickupLatitude;
 
-    @NotBlank(message = "pickupLongitude is required")
+    @NotNull(message = "pickupLongitude is required")
     private Double pickupLongitude;
 
     @NotBlank(message = "pickupAddressText is required")
@@ -24,16 +27,18 @@ public class DeliveryDetailDTO {
 
     private Integer estimatedTime;
 
-    @NotBlank(message = "pickupTime is required")
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "pickupTime is required")
     private PickupTimeType pickupTime;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime pickupDateTime;
-
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime pickedUpDateTime;
-
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime desiredArrivalDateTime;
 
-    private String pickedUpBy;
+    private Long pickedUpBy;
 
     private String pickedUpNotes;
 
@@ -119,11 +124,11 @@ public class DeliveryDetailDTO {
         this.desiredArrivalDateTime = desiredArrivalDateTime;
     }
 
-    public String getPickedUpBy() {
+    public Long getPickedUpBy() {
         return pickedUpBy;
     }
 
-    public void setPickedUpBy(final String pickedUpBy) {
+    public void setPickedUpBy(final Long pickedUpBy) {
         this.pickedUpBy = pickedUpBy;
     }
 
@@ -156,7 +161,7 @@ public class DeliveryDetailDTO {
     }
 
     public void setPickupPhotos(final List<String> pickupPhoto) {
-        this.pickupPhotos.addAll(pickupPhoto);
+        this.pickupPhotos=pickupPhoto;
     }
 
     public Long getOrder() {

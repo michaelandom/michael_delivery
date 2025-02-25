@@ -12,7 +12,7 @@ public class ReviewsDTO {
 
     private String review;
 
-    @NotBlank(message = "rate is required")
+    @NotNull(message = "rate is required")
     private Integer rate;
 
     @NotNull

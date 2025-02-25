@@ -72,7 +72,7 @@ public class Item {
     }
 
     public void setItemClassification(final List<ItemClassificationType> itemClassification) {
-        this.itemClassification.addAll(itemClassification);
+        this.itemClassification=itemClassification;
     }
 
     public List<String> getPhotoUrls() {
@@ -80,7 +80,7 @@ public class Item {
     }
 
     public void setPhotoUrls(final List<String> photoUrl) {
-        this.photoUrls.addAll(photoUrl);
+        this.photoUrls=photoUrl;
     }
 
 

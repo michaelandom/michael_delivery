@@ -3,10 +3,14 @@ package com.michael_delivery.backend.model;
 import com.michael_delivery.backend.enums.CancellationStatusType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class CancellationRiderRequestDTO {
@@ -18,7 +22,7 @@ public class CancellationRiderRequestDTO {
     @NotBlank(message = "Reason is required")
     private String reason;
 
-    private List<String> photoUrls;
+    private List<@Pattern(regexp = URL_PATTERN, message = "Invalid URL format") String> photoUrls;
 
     private String remark;
 
@@ -62,7 +66,7 @@ public class CancellationRiderRequestDTO {
     }
 
     public void setPhotoUrls(final List<String> photoUrl) {
-        this.photoUrls.addAll(photoUrl);
+        this.photoUrls=photoUrl;
     }
 
     public String getRemark() {

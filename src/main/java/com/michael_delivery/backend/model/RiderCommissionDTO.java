@@ -12,13 +12,13 @@ public class RiderCommissionDTO {
 
     private Long riderCommissionId;
 
-    @NotBlank(message = "basicCommission is required")
+    @NotNull(message = "basicCommission is required")
     private Double basicCommission;
 
-    @NotBlank(message = "overtimeRate is required")
+    @NotNull(message = "overtimeRate is required")
     private Double overtimeRate;
 
-    @NotBlank(message = "holidayRate is required")
+    @NotNull(message = "holidayRate is required")
     private Double holidayRate;
 
     @NotNull

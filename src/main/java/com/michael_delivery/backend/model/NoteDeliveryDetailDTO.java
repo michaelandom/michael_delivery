@@ -40,7 +40,7 @@ public class NoteDeliveryDetailDTO {
     }
 
     public void setPhotoUrls(final List<String> photoUrls) {
-        this.photoUrls.addAll(photoUrls);
+        this.photoUrls=photoUrls;
     }
 
    public Long getDeliveryDetail() {

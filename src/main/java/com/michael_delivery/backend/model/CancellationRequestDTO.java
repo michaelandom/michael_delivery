@@ -5,20 +5,24 @@ import com.michael_delivery.backend.enums.CancellationType;
 import com.michael_delivery.backend.enums.CancelledByType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class CancellationRequestDTO {
 
     private Long cancellationRequestId;
 
-    @NotBlank(message = "Type is required")
+    @NotNull(message = "Type is required")
     private CancellationType type;
 
-    @NotBlank(message = "Status is required")
+    @NotNull(message = "Status is required")
     private CancellationStatusType status;
 
     private Double cancellationFee;
@@ -29,12 +33,12 @@ public class CancellationRequestDTO {
     private String reason;
 
 
-    private List<String> photoUrls;
-
+    private List<@Pattern(regexp = URL_PATTERN,
+            message = "Invalid URL format") String> photoUrls;
     @NotNull
     private String remark;
 
-    @NotBlank(message = "companyAbn is required")
+    @NotNull(message = "companyAbn is required")
     private CancelledByType cancelledByType;
 
     private OffsetDateTime paidAt;
@@ -98,7 +102,7 @@ public class CancellationRequestDTO {
     }
 
     public void setPhotoUrls(final  List<String> photoUrls) {
-        this.photoUrls.addAll(photoUrls);
+        this.photoUrls=photoUrls;
     }
 
     public String getRemark() {

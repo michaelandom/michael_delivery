@@ -12,8 +12,8 @@ public class QuestionOptionsDTO {
 
     private Long questionOptionId;
 
-    @NotBlank(message = "option is required")
-    private String option;
+    @NotBlank(message = "questionOption is required")
+    private String questionOption;
 
     private String description;
 
@@ -32,12 +32,12 @@ public class QuestionOptionsDTO {
         this.questionOptionId = questionOptionId;
     }
 
-    public String getOption() {
-        return option;
+    public String getQuestionOption() {
+        return questionOption;
     }
 
-    public void setOption(final String option) {
-        this.option = option;
+    public void setQuestionOption(final String questionOption) {
+        this.questionOption = questionOption;
     }
 
     public String getDescription() {

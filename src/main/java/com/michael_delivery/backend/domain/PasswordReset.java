@@ -29,7 +29,7 @@ public class PasswordReset {
     private Users user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reseated_by_id")
+    @JoinColumn(name = "reseated_by")
     private Users reseatedBy;
 
     @CreatedDate

@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.RiderStatusType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -40,8 +41,9 @@ public class Riders {
     @Column(columnDefinition = "tinyint", length = 1)
     private Boolean profileCompleted;
 
+    @Enumerated(EnumType.STRING)
     @Column
-    private String status;
+    private RiderStatusType status;
 
     @Column
     private OffsetDateTime lastLocationTime;
@@ -193,11 +195,11 @@ public class Riders {
         this.profileCompleted = profileCompleted;
     }
 
-    public String getStatus() {
+    public RiderStatusType getStatus() {
         return status;
     }
 
-    public void setStatus(final String status) {
+    public void setStatus(final RiderStatusType status) {
         this.status = status;
     }
 

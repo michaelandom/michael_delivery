@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `Billing_Address` (
     FOREIGN KEY (`billing_state_id`) REFERENCES `States`(`state_id`) ON DELETE CASCADE
     );
 
-CREATE TABLE IF NOT EXISTS `Groups` (
+CREATE TABLE IF NOT EXISTS `Ma_Groups` (
                                         `group_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                         `name` VARCHAR(255) NOT NULL UNIQUE,
     `description` TEXT NOT NULL,
@@ -91,7 +91,8 @@ CREATE TABLE IF NOT EXISTS `Group_Members` (
                                                `user_id` BIGINT NOT NULL,
                                                `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                                `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-                                               FOREIGN KEY (`group_id`) REFERENCES `Groups`(`group_id`) ON DELETE CASCADE,
+                                               UNIQUE (`group_id`,`user_id`),
+    FOREIGN KEY (`group_id`) REFERENCES `Ma_Groups`(`group_id`) ON DELETE CASCADE,
     FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE
     );
 
@@ -110,7 +111,8 @@ CREATE TABLE IF NOT EXISTS `Group_Permissions` (
                                                    `permission_id` BIGINT NOT NULL,
                                                    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                                    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-                                                   FOREIGN KEY (`group_id`) REFERENCES `Groups`(`group_id`) ON DELETE CASCADE,
+                                                   UNIQUE (`group_id`,`permission_id`),
+                                                   FOREIGN KEY (`group_id`) REFERENCES `Ma_Groups`(`group_id`) ON DELETE CASCADE,
     FOREIGN KEY (`permission_id`) REFERENCES `Permissions`(`permission_id`) ON DELETE CASCADE
     );
 
@@ -157,7 +159,8 @@ CREATE TABLE IF NOT EXISTS `Event_Groups` (
                                               `group_id` BIGINT NOT NULL,
                                               `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                               `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-                                              FOREIGN KEY (`group_id`) REFERENCES `Groups`(`group_id`) ON DELETE CASCADE,
+                                              UNIQUE (`group_id`,`event_id`),
+    FOREIGN KEY (`group_id`) REFERENCES `Ma_Groups`(`group_id`) ON DELETE CASCADE,
     FOREIGN KEY (`event_id`) REFERENCES `Events`(`event_id`) ON DELETE CASCADE
     );
 
@@ -197,6 +200,7 @@ CREATE TABLE IF NOT EXISTS `User_Coupons` (
                                               `user_id` BIGINT NOT NULL,
                                               `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                               `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+                                              UNIQUE (`coupon_id`,`user_id`),
                                               FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE,
     FOREIGN KEY (`coupon_id`) REFERENCES `Coupons`(`coupon_id`) ON DELETE CASCADE
     );
@@ -295,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `Suspensions` (
 
 CREATE TABLE IF NOT EXISTS `Questions` (
                                            `question_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                           `image` VARCHAR(255),
+                                           `image_url` VARCHAR(255),
     `question_text` VARCHAR(255) NOT NULL,
     `description` TEXT,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -305,7 +309,7 @@ CREATE TABLE IF NOT EXISTS `Questions` (
 CREATE TABLE IF NOT EXISTS `Question_Options` (
                                                   `question_option_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                                   `question_id` BIGINT NOT NULL,
-                                                  `option` VARCHAR(255) NOT NULL,
+                                                  `question_option` VARCHAR(255) NOT NULL,
     `description` TEXT,
     `is_correct` BOOLEAN DEFAULT FALSE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -321,6 +325,7 @@ CREATE TABLE IF NOT EXISTS `Rider_Answers` (
     `is_correct` BOOLEAN DEFAULT FALSE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE (`rider_id`,`option_id`,`quiz_key`),
     FOREIGN KEY (`rider_id`) REFERENCES `Riders`(`rider_id`) ON DELETE CASCADE,
     FOREIGN KEY (`option_id`) REFERENCES `Question_Options`(`question_option_id`) ON DELETE CASCADE
     );
@@ -380,14 +385,14 @@ CREATE TABLE IF NOT EXISTS `Reviews` (
     FOREIGN KEY (`order_id`) REFERENCES `Orders`(`order_id`) ON DELETE CASCADE
     );
 
-CREATE TABLE IF NOT EXISTS `Cancellation_Request` (
-                                                      `cancellation_request_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                                      `type` ENUM('FULL', 'PARTIAL') NOT NULL,
+CREATE TABLE IF NOT EXISTS `Cancellation_Requests` (
+                                                       `cancellation_request_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                                       `type` ENUM('FULL', 'PARTIAL') NOT NULL,
     `status` ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
     `cancellation_fee` FLOAT,
     `refund_amount` FLOAT,
     `reason` VARCHAR(255) NOT NULL,
-    `photos` JSON,
+    `photo_urls` JSON,
     `remark` TEXT NOT NULL,
     `cancelled_by_type` ENUM('USER', 'RIDER', 'ADMIN') NOT NULL,
     `cancelled_by` BIGINT,
@@ -396,13 +401,13 @@ CREATE TABLE IF NOT EXISTS `Cancellation_Request` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT check_cancellation_request_photos CHECK (
-                                                           JSON_TYPE(photos) = 'ARRAY' AND
+                                                           JSON_TYPE(photo_urls) = 'ARRAY' AND
     JSON_SCHEMA_VALID('{
             "type": "array",
             "items": {
                 "type": "string"
             }
-        }', photos)
+        }', photo_urls)
     ),
     FOREIGN KEY (`order_id`) REFERENCES `Orders`(`order_id`) ON DELETE CASCADE,
     FOREIGN KEY (`cancelled_by`) REFERENCES `Users`(`user_id`) ON DELETE SET NULL
@@ -461,11 +466,11 @@ CREATE TABLE IF NOT EXISTS `Destinations` (
     `recipient_name` VARCHAR(255),
     `order_id` BIGINT NOT NULL,
     `status` ENUM('PENDING', 'COMPLETED', 'CANCELLED') DEFAULT 'PENDING',
-    `delivery_by_id` BIGINT,
+    `delivery_by` BIGINT,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`order_id`) REFERENCES `Orders`(`order_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`delivery_by_id`) REFERENCES `Riders`(`rider_id`) ON DELETE SET NULL
+    FOREIGN KEY (`delivery_by`) REFERENCES `Riders`(`rider_id`) ON DELETE SET NULL
     );
 CREATE TABLE IF NOT EXISTS `Delivery_Details` (
                                                   `delivery_detail_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -473,11 +478,11 @@ CREATE TABLE IF NOT EXISTS `Delivery_Details` (
                                                   `pickup_longitude` FLOAT NOT NULL,
                                                   `pickup_address_text` VARCHAR(255),
     `estimated_time` INT DEFAULT 0,
-    `pickup_time` ENUM('MORNING', 'AFTERNOON', 'EVENING') NOT NULL,
+    `pickup_time` ENUM('TODAY','ASAP','IN_2_HOURS','OTHER_DAY') NOT NULL,
     `pickup_date_time` TIMESTAMP NULL,
     `picked_up_date_time` TIMESTAMP NULL,
     `desired_arrival_date_time` TIMESTAMP NULL,
-    `picked_up_by` VARCHAR(255),
+    `picked_up_by` BIGINT,
     `picked_up_notes` TEXT,
     `recipient_phone_number` VARCHAR(255),
     `recipient_name` VARCHAR(255),
@@ -519,7 +524,7 @@ CREATE TABLE IF NOT EXISTS `Evidences` (
     FOREIGN KEY (`destination_id`) REFERENCES `Destinations`(`destination_id`) ON DELETE CASCADE
     );
 
-CREATE TABLE IF NOT EXISTS `References` (
+CREATE TABLE IF NOT EXISTS `Ma_References` (
                                             `reference_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                             `order_ids` JSON NOT NULL,
                                             `amount` FLOAT NOT NULL,
@@ -678,7 +683,7 @@ CREATE TABLE IF NOT EXISTS `Transport_Basic_Prices` (
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     `unique_transport_basic_prices_size_check` VARCHAR(50) GENERATED ALWAYS AS (
                                                                                    CASE WHEN is_latest = TRUE
-                                                                                   THEN "LATEST"
+                                                                                   THEN CONCAT(vehicle_type, '_', "LATEST")
                                                                                    ELSE NULL
                                                                                    END
                                                                                ) STORED,

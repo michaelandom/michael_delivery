@@ -81,7 +81,7 @@ public class RiderAnswersResource {
     public ResponseEntity<Map<Long, String>> getOptionValues() {
         return ResponseEntity.ok(questionOptionsRepository.findAll(Sort.by("questionOptionId"))
                 .stream()
-                .collect(CustomCollectors.toSortedMap(QuestionOptions::getQuestionOptionId, QuestionOptions::getOption)));
+                .collect(CustomCollectors.toSortedMap(QuestionOptions::getQuestionOptionId, QuestionOptions::getQuestionOption)));
     }
 
 }

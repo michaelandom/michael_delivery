@@ -63,7 +63,7 @@ public class QuestionOptionsService {
     private QuestionOptionsDTO mapToDTO(final QuestionOptions questionOptions,
             final QuestionOptionsDTO questionOptionsDTO) {
         questionOptionsDTO.setQuestionOptionId(questionOptions.getQuestionOptionId());
-        questionOptionsDTO.setOption(questionOptions.getOption());
+        questionOptionsDTO.setQuestionOption(questionOptions.getQuestionOption());
         questionOptionsDTO.setDescription(questionOptions.getDescription());
         questionOptionsDTO.setIsCorrect(questionOptions.getIsCorrect());
         questionOptionsDTO.setQuestion(questionOptions.getQuestion() == null ? null : questionOptions.getQuestion().getQuestionId());
@@ -72,7 +72,7 @@ public class QuestionOptionsService {
 
     private QuestionOptions mapToEntity(final QuestionOptionsDTO questionOptionsDTO,
             final QuestionOptions questionOptions) {
-        questionOptions.setOption(questionOptionsDTO.getOption());
+        questionOptions.setQuestionOption(questionOptionsDTO.getQuestionOption());
         questionOptions.setDescription(questionOptionsDTO.getDescription());
         questionOptions.setIsCorrect(questionOptionsDTO.getIsCorrect());
         final Questions question = questionOptionsDTO.getQuestion() == null ? null : questionsRepository.findById(questionOptionsDTO.getQuestion())

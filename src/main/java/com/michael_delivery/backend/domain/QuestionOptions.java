@@ -20,7 +20,7 @@ public class QuestionOptions {
     private Long questionOptionId;
 
     @Column(nullable = false)
-    private String option;
+    private String questionOption;
 
     @Column(columnDefinition = "longtext")
     private String description;
@@ -53,12 +53,12 @@ public class QuestionOptions {
         this.questionOptionId = questionOptionId;
     }
 
-    public String getOption() {
-        return option;
+    public String getQuestionOption() {
+        return questionOption;
     }
 
-    public void setOption(final String option) {
-        this.option = option;
+    public void setQuestionOption(final String questionOption) {
+        this.questionOption = questionOption;
     }
 
     public String getDescription() {

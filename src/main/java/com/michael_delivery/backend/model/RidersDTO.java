@@ -1,7 +1,8 @@
 package com.michael_delivery.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.michael_delivery.backend.enums.RiderStatusType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -27,7 +28,7 @@ public class RidersDTO {
 
     private Boolean profileCompleted;
 
-    @NotNull
+    @Enumerated(EnumType.STRING)
     private RiderStatusType status;
 
     private OffsetDateTime lastLocationTime;
@@ -84,6 +85,14 @@ public class RidersDTO {
 
     public Double getLatitude() {
         return latitude;
+    }
+
+    public RiderStatusType getStatus() {
+        return status;
+    }
+
+    public void setStatus(RiderStatusType status) {
+        this.status = status;
     }
 
     public void setLatitude(final Double latitude) {

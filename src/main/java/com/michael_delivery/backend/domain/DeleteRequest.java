@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.ReasonType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -18,8 +19,9 @@ public class DeleteRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deleteRequestId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String reason;
+    private ReasonType reason;
 
     @Column(columnDefinition = "longtext")
     private String note;
@@ -44,11 +46,11 @@ public class DeleteRequest {
         this.deleteRequestId = deleteRequestId;
     }
 
-    public String getReason() {
+    public ReasonType getReason() {
         return reason;
     }
 
-    public void setReason(final String reason) {
+    public void setReason(final ReasonType reason) {
         this.reason = reason;
     }
 

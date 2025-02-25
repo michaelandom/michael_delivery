@@ -84,7 +84,7 @@ public class RidersService {
         ridersDTO.setIsSuspend(riders.getIsSuspend());
         ridersDTO.setPassedQuiz(riders.getPassedQuiz());
         ridersDTO.setProfileCompleted(riders.getProfileCompleted());
-//        ridersDTO.s(riders.getStatus());
+        ridersDTO.setStatus(riders.getStatus());
         ridersDTO.setLastLocationTime(riders.getLastLocationTime());
         ridersDTO.setEmergencyContactFirstName(riders.getEmergencyContactFirstName());
         ridersDTO.setEmergencyContactLastName(riders.getEmergencyContactLastName());
@@ -113,7 +113,7 @@ public class RidersService {
         riders.setIsSuspend(ridersDTO.getIsSuspend());
         riders.setPassedQuiz(ridersDTO.getPassedQuiz());
         riders.setProfileCompleted(ridersDTO.getProfileCompleted());
-//        riders.setStatus(ridersDTO.getStatus());
+        riders.setStatus(ridersDTO.getStatus());
         riders.setLastLocationTime(ridersDTO.getLastLocationTime());
         riders.setEmergencyContactFirstName(ridersDTO.getEmergencyContactFirstName());
         riders.setEmergencyContactLastName(ridersDTO.getEmergencyContactLastName());

@@ -11,7 +11,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "Groups")
+@Table(name = "MaGroups")
 @EntityListeners(AuditingEntityListener.class)
 public class Groups {
 

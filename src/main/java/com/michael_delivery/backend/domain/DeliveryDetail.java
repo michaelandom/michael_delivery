@@ -36,6 +36,7 @@ public class DeliveryDetail {
     private Integer estimatedTime;
 
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PickupTimeType pickupTime;
 
@@ -49,7 +50,7 @@ public class DeliveryDetail {
     private OffsetDateTime desiredArrivalDateTime;
 
     @Column
-    private String pickedUpBy;
+    private Long pickedUpBy;
 
     @Column(columnDefinition = "longtext")
     private String pickedUpNotes;
@@ -154,11 +155,11 @@ public class DeliveryDetail {
         this.desiredArrivalDateTime = desiredArrivalDateTime;
     }
 
-    public String getPickedUpBy() {
+    public Long getPickedUpBy() {
         return pickedUpBy;
     }
 
-    public void setPickedUpBy(final String pickedUpBy) {
+    public void setPickedUpBy(final Long pickedUpBy) {
         this.pickedUpBy = pickedUpBy;
     }
 
@@ -191,7 +192,7 @@ public class DeliveryDetail {
     }
 
     public void setPickupPhotoUrls(final List<String> pickupPhotoUrl) {
-        this.pickupPhotoUrls.addAll(pickupPhotoUrl);
+        this.pickupPhotoUrls=pickupPhotoUrl;
     }
 
 

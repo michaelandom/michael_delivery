@@ -61,7 +61,7 @@ public class Destination {
     private Orders order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_by_id")
+    @JoinColumn(name = "delivery_by")
     private Riders deliveryBy;
 
     @OneToMany(mappedBy = "destination")

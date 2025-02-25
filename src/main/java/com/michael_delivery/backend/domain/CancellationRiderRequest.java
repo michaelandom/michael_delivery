@@ -49,7 +49,7 @@ public class CancellationRiderRequest {
     private Orders order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cancelled_by_id")
+    @JoinColumn(name = "cancelled_by")
     private Users cancelledBy;
 
     @CreatedDate
@@ -89,7 +89,7 @@ public class CancellationRiderRequest {
     }
 
     public void setPhotoUrls(final List<String> photoUrl) {
-        this.photoUrls.addAll(photoUrl);
+        this.photoUrls=photoUrl;
     }
 
     public String getRemark() {

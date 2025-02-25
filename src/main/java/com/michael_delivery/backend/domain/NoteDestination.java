@@ -62,7 +62,7 @@ public class NoteDestination {
     }
 
     public void setPhotoUrls(final List<String> photoUrl) {
-        this.photoUrls.addAll(photoUrl);
+        this.photoUrls=photoUrl;
     }
 
 

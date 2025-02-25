@@ -108,15 +108,15 @@ INSERT INTO `Transport_Basic_Prices`
 INSERT INTO `Peak_Time_Rates`
 (`is_weekend`, `start_time`, `end_time`, `rate`, `is_latest`) VALUES
                                                                   (FALSE, '07:00', '09:00', 1.5, TRUE),
-                                                                  (FALSE, '17:00', '19:00', 1.5, TRUE),
-                                                                  (TRUE, '12:00', '15:00', 1.3, TRUE);
+                                                                  (FALSE, '17:00', '19:00', 1.5, FALSE),
+                                                                  (TRUE, '12:00', '15:00', 1.3, FALSE);
 
 -- Insert Groups
-INSERT INTO `Groups` (`name`, `description`, `group_type`) VALUES
-                                                               ('Administrators', 'System administrators with full access', 'PERMISSION'),
-                                                               ('Riders', 'Delivery personnel group', 'PERMISSION'),
-                                                               ('Customers', 'Regular customers', 'PERMISSION'),
-                                                               ('Special Events', 'Special promotion events group', 'EVENT');
+INSERT INTO `Ma_Groups` (`name`, `description`, `group_type`) VALUES
+                                                                  ('Administrators', 'System administrators with full access', 'PERMISSION'),
+                                                                  ('Riders', 'Delivery personnel group', 'PERMISSION'),
+                                                                  ('Customers', 'Regular customers', 'PERMISSION'),
+                                                                  ('Special Events', 'Special promotion events group', 'EVENT');
 
 -- Insert Group Members
 INSERT INTO `Group_Members` (`group_id`, `user_id`) VALUES
@@ -189,16 +189,16 @@ INSERT INTO `Questions` (`question_text`, `description`) VALUES
 
 -- Insert Question Options
 INSERT INTO `Question_Options`
-(`question_id`, `option`, `is_correct`) VALUES
-                                            (1, 'Handle roughly and quickly', FALSE),
-                                            (1, 'Handle with care and secure properly', TRUE),
-                                            (1, 'Leave items unattended', FALSE),
-                                            (2, 'Ignore the customer', FALSE),
-                                            (2, 'Listen and escalate to support if needed', TRUE),
-                                            (2, 'Argue with the customer', FALSE),
-                                            (3, 'Leave items unprotected', FALSE),
-                                            (3, 'Follow delivery instructions or contact support', TRUE),
-                                            (3, 'Return items immediately', FALSE);
+(`question_id`, `question_option`, `is_correct`) VALUES
+                                                     (1, 'Handle roughly and quickly', FALSE),
+                                                     (1, 'Handle with care and secure properly', TRUE),
+                                                     (1, 'Leave items unattended', FALSE),
+                                                     (2, 'Ignore the customer', FALSE),
+                                                     (2, 'Listen and escalate to support if needed', TRUE),
+                                                     (2, 'Argue with the customer', FALSE),
+                                                     (3, 'Leave items unprotected', FALSE),
+                                                     (3, 'Follow delivery instructions or contact support', TRUE),
+                                                     (3, 'Return items immediately', FALSE);
 
 -- Insert Rider Answers
 INSERT INTO `Rider_Answers`

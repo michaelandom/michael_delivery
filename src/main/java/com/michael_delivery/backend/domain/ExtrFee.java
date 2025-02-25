@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.michael_delivery.backend.enums.PaymentStatusType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -27,8 +28,9 @@ public class ExtrFee {
     @Column(nullable = false)
     private String cardNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column
-    private String paymentStatus;
+    private PaymentStatusType paymentStatus;
 
     @Column
     private OffsetDateTime paidAt;
@@ -82,11 +84,11 @@ public class ExtrFee {
         this.cardNumber = cardNumber;
     }
 
-    public String getPaymentStatus() {
+    public PaymentStatusType getPaymentStatus() {
         return paymentStatus;
     }
 
-    public void setPaymentStatus(final String paymentStatus) {
+    public void setPaymentStatus(final PaymentStatusType paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 

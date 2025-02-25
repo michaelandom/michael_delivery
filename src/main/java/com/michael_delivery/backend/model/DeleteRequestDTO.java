@@ -1,5 +1,8 @@
 package com.michael_delivery.backend.model;
 
+import com.michael_delivery.backend.enums.ReasonType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,8 +14,9 @@ public class DeleteRequestDTO {
 
     private Long deleteRequestId;
 
-    @NotBlank(message = "reason is required")
-    private String reason;
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "reason is required")
+    private ReasonType reason;
 
     private String note;
 
@@ -28,11 +32,11 @@ public class DeleteRequestDTO {
         this.deleteRequestId = deleteRequestId;
     }
 
-    public String getReason() {
+    public ReasonType getReason() {
         return reason;
     }
 
-    public void setReason(final String reason) {
+    public void setReason(final ReasonType reason) {
         this.reason = reason;
     }
 

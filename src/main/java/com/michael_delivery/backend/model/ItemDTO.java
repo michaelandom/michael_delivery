@@ -50,15 +50,15 @@ public class ItemDTO {
     }
 
     public void setItemClassification(final List<ItemClassificationType> itemClassification) {
-        this.itemClassification.addAll(itemClassification);
+        this.itemClassification=itemClassification;
     }
 
     public List<String> getPhotoUrls() {
         return photoUrls;
     }
 
-    public void setPhotoUrls(final List<String> photoUrl) {
-        this.photoUrls.addAll(photoUrl);
+    public void setPhotoUrls(final List<String> photoUrls) {
+        this.photoUrls=photoUrls;
     }
 
 

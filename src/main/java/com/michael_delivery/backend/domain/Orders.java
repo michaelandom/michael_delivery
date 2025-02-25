@@ -117,7 +117,7 @@ public class Orders {
     private Users customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_by_id")
+    @JoinColumn(name = "assigned_by")
     private Users assignedBy;
 
     @OneToMany(mappedBy = "order")

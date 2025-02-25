@@ -1,6 +1,8 @@
 package com.michael_delivery.backend.model;
 
 import com.michael_delivery.backend.enums.DestinationStatusType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,15 +14,15 @@ public class DestinationDTO {
 
     private Long destinationId;
 
-    @NotBlank(message = "destinationLatitude is required")
+    @NotNull(message = "destinationLatitude is required")
     private Double destinationLatitude;
 
-    @NotBlank(message = "destinationLongitude is required")
+    @NotNull(message = "destinationLongitude is required")
     private Double destinationLongitude;
 
     private String destinationAddressText;
 
-    @NotBlank(message = "sequence is required")
+    @NotNull(message = "sequence is required")
     private Integer sequence;
 
     private String recipientPhoneNumber;
@@ -35,6 +37,7 @@ public class DestinationDTO {
 
     private String recipientName;
 
+    @Enumerated(EnumType.STRING)
     private DestinationStatusType status;
 
 

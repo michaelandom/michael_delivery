@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @Entity
-@Table(name = "References")
+@Table(name = "MaReferences")
 @EntityListeners(AuditingEntityListener.class)
 public class Reference {
 

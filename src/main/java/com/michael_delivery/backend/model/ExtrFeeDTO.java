@@ -1,5 +1,8 @@
 package com.michael_delivery.backend.model;
 
+import com.michael_delivery.backend.enums.PaymentStatusType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,7 +22,8 @@ public class ExtrFeeDTO {
     @NotBlank(message = "cardNumber is required")
     private String cardNumber;
 
-    private String paymentStatus;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatusType paymentStatus;
 
     private OffsetDateTime paidAt;
 
@@ -61,11 +65,11 @@ public class ExtrFeeDTO {
         this.cardNumber = cardNumber;
     }
 
-    public String getPaymentStatus() {
+    public PaymentStatusType getPaymentStatus() {
         return paymentStatus;
     }
 
-    public void setPaymentStatus(final String paymentStatus) {
+    public void setPaymentStatus(final PaymentStatusType paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 

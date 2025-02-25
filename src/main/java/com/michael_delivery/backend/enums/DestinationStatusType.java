@@ -5,5 +5,6 @@ public enum DestinationStatusType {
     DELIVERED,
     CANCELLED,
     IN_TRANSIT,
-    RETURNED
+    RETURNED,
+    COMPLETED
 }
