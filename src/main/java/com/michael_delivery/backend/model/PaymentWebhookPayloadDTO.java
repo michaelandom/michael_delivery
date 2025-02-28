@@ -28,13 +28,13 @@ public class PaymentWebhookPayloadDTO {
 
     private String paymentMethod;
 
-    @NotBlank(message = "pspReference is required")
-    private String amount;
+    @NotNull(message = "amount is required")
+    private Map<String, Object> amount;
 
     @NotNull
     private Boolean success;
 
-    private Map payload;
+    private Map<String, Object> payload;
 
     public Long getPaymentWebhookPayloadId() {
         return paymentWebhookPayloadId;
@@ -92,11 +92,11 @@ public class PaymentWebhookPayloadDTO {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getAmount() {
+    public Map<String, Object> getAmount() {
         return amount;
     }
 
-    public void setAmount(final String amount) {
+    public void setAmount(final Map<String, Object> amount) {
         this.amount = amount;
     }
 
@@ -108,11 +108,11 @@ public class PaymentWebhookPayloadDTO {
         this.success = success;
     }
 
-    public Map getPayload() {
+    public Map<String, Object> getPayload() {
         return payload;
     }
 
-    public void setPayload(final Map payload) {
+    public void setPayload(final Map<String, Object> payload) {
         this.payload = payload;
     }
 

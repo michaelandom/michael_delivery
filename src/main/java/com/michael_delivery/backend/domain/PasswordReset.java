@@ -19,9 +19,9 @@ public class PasswordReset {
     private Long passwordResetId;
 
     @Column(nullable = false, columnDefinition = "tinyint", length = 1)
-    private Boolean isActive;
+    private Boolean isActive = true;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)

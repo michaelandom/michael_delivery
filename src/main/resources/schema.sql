@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `Password_Resets` (
                                                  `password_reset_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                                  `user_id` BIGINT NOT NULL,
                                                  `is_Active` BOOLEAN NOT NULL DEFAULT TRUE,
-                                                 `code` VARCHAR(50) NOT NULL,
+                                                 `code` VARCHAR(50) NULL,
     `reseated_by` BIGINT,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -796,14 +796,14 @@ CREATE TABLE IF NOT EXISTS `None_Business_Hour_Rates` (
     );
 
 
-CREATE TABLE IF NOT EXISTS `Payment_Webhook_Payload` (
+CREATE TABLE IF NOT EXISTS `Payment_Webhook_Payloads` (
                                                          `payment_webhook_payload_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                                         `pspReference` VARCHAR(255) NOT NULL,
-    `merchantReference` VARCHAR(255) NOT NULL,
-    `originalReference` VARCHAR(255),
-    `eventCode` VARCHAR(255) NOT NULL,
+                                                         `psp_reference` VARCHAR(255) NOT NULL,
+    `merchant_reference` VARCHAR(255) NOT NULL,
+    `original_reference` VARCHAR(255),
+    `event_code` VARCHAR(255) NOT NULL,
     `reason` TEXT,
-    `paymentMethod` VARCHAR(255),
+    `payment_method` VARCHAR(255),
     `amount` JSON NOT NULL,
     `success` BOOLEAN NOT NULL,
     `payload` JSON NOT NULL,

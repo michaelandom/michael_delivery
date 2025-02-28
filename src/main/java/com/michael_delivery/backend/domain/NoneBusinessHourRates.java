@@ -31,7 +31,7 @@ public class NoneBusinessHourRates {
     private Boolean isLatest;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_id")
+    @JoinColumn(name = "created_by")
     private Users createdBy;
 
     @CreatedDate

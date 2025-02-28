@@ -38,10 +38,10 @@ public class OrdersDTO {
 
     private Long deliveryDetails;
 
-    @NotBlank(message = "vehicleType is required")
+    @NotNull(message = "vehicleType is required")
     private VehicleType vehicleType;
 
-    @NotBlank(message = "orderStatus is required")
+    @NotNull(message = "orderStatus is required")
     private OrderStatusType orderStatus;
 
     private OffsetDateTime refundAt;

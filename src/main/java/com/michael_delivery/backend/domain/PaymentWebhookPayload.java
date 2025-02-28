@@ -1,6 +1,8 @@
 package com.michael_delivery.backend.domain;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -38,16 +40,17 @@ public class PaymentWebhookPayload {
     @Column
     private String paymentMethod;
 
-    @Column(nullable = false, columnDefinition = "longtext")
-    private String amount;
+    @Column(nullable = false, columnDefinition = "json")
+    @Type(JsonType.class)
+    private Map<String, Object> amount;
 
     @Column(nullable = false, columnDefinition = "tinyint", length = 1)
     private Boolean success;
 
-    @Column(nullable = false, columnDefinition = "longtext")
-    private String payload;
 
-    
+    @Column(nullable = false, columnDefinition = "json")
+    @Type(JsonType.class)
+    private Map<String, Object> payload;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -113,11 +116,11 @@ public class PaymentWebhookPayload {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getAmount() {
+    public Map<String, Object> getAmount() {
         return amount;
     }
 
-    public void setAmount(final String amount) {
+    public void setAmount(final Map<String, Object> amount) {
         this.amount = amount;
     }
 
@@ -129,13 +132,13 @@ public class PaymentWebhookPayload {
         this.success = success;
     }
 
-    public Map getPayload() {
-        return new HashMap();
+    public Map<String, Object> getPayload() {
+        return this.payload;
     }
 
-//    public void setPayload(final String payload) {
-//        this.payload = payload;
-//    }
+    public void setPayload(final Map<String, Object> payload) {
+        this.payload = payload;
+    }
 
     public OffsetDateTime getCreatedAt() {
         return createdAt;

@@ -1,12 +1,14 @@
 package com.michael_delivery.backend.model;
 
 import com.michael_delivery.backend.enums.ItemClassificationType;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class ItemDTO {
@@ -17,11 +19,13 @@ public class ItemDTO {
     @Size(max = 255)
     private String name;
 
-    @NotBlank(message = "itemClassification is required")
+    @Enumerated(EnumType.STRING)
+    @NotEmpty(message = "itemClassification is required")
     private List<ItemClassificationType> itemClassification;
 
-    @NotBlank(message = "photoUrs is required")
-    private List<String> photoUrls;
+    @NotNull(message = "photoUrs is required")
+    private List<@Pattern(regexp = URL_PATTERN,
+            message = "Invalid URL format") String> photoUrls;
 
     @NotNull
     private Long destination;

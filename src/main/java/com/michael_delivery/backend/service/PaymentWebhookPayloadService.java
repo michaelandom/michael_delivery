@@ -63,6 +63,7 @@ public class PaymentWebhookPayloadService {
         paymentWebhookPayloadDTO.setAmount(paymentWebhookPayload.getAmount());
         paymentWebhookPayloadDTO.setSuccess(paymentWebhookPayload.getSuccess());
         paymentWebhookPayloadDTO.setPayload(paymentWebhookPayload.getPayload());
+        paymentWebhookPayloadDTO.setPayload(paymentWebhookPayload.getPayload());
         return paymentWebhookPayloadDTO;
     }
 
@@ -76,6 +77,7 @@ public class PaymentWebhookPayloadService {
         paymentWebhookPayload.setReason(paymentWebhookPayloadDTO.getReason());
         paymentWebhookPayload.setPaymentMethod(paymentWebhookPayloadDTO.getPaymentMethod());
         paymentWebhookPayload.setAmount(paymentWebhookPayloadDTO.getAmount());
+        paymentWebhookPayload.setPayload(paymentWebhookPayloadDTO.getPayload());
         paymentWebhookPayload.setSuccess(paymentWebhookPayloadDTO.getSuccess());
         return paymentWebhookPayload;
     }

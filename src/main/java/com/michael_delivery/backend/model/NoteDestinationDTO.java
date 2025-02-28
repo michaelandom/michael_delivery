@@ -2,9 +2,13 @@ package com.michael_delivery.backend.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import static com.michael_delivery.backend.util.ValidationConstants.URLs.URL_PATTERN;
 
 
 public class NoteDestinationDTO {
@@ -14,8 +18,9 @@ public class NoteDestinationDTO {
     @NotBlank(message = "note is required")
     private String note;
 
-    private List<String>  photoUrls;
-    @NotBlank(message = "destination is required")
+    private List<@Pattern(regexp = URL_PATTERN, message = "Invalid URL format") String>  photoUrls;
+
+    @NotNull(message = "destination is required")
     private Long destination;
 
     public Long getNoteDestinationId() {
