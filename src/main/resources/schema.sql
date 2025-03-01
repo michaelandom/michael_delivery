@@ -813,6 +813,8 @@ CREATE TABLE IF NOT EXISTS `Payment_Webhook_Payloads` (
 
 
 
+
+
 CREATE TABLE IF NOT EXISTS `Announcements` (
                                                `announcement_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                                `title` VARCHAR(255) NOT NULL,
