@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -23,6 +24,7 @@ public class StateDTO {
 
     @URL(message = "Must be a valid URL")
     @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
+    @Schema(example = "https://profilePicture.png")
     private String logoUrl;
 
     public Long getStateId() {

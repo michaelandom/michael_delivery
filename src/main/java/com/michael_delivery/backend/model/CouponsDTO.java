@@ -3,6 +3,7 @@ package com.michael_delivery.backend.model;
 import com.michael_delivery.backend.enums.CouponType;
 import com.michael_delivery.backend.enums.DiscountType;
 import com.michael_delivery.backend.enums.UserImportType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -58,6 +59,7 @@ public class CouponsDTO {
 
     @URL(message = "Must be a valid URL")
     @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
+    @Schema(example = "https://profilePicture.png")
     private String excelFileUrl;
 
 

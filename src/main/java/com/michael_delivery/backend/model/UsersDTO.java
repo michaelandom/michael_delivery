@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.michael_delivery.backend.enums.AccountStatusType;
 import com.michael_delivery.backend.enums.AccountType;
 import com.michael_delivery.backend.enums.GenderType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -22,6 +23,7 @@ public class UsersDTO {
     private Long userId;
 
     @NotBlank(message = "username is required")
+    @Schema(example = "admin1")
     private String username;
 
     @NotBlank(message = "firstName is required")
@@ -36,8 +38,10 @@ public class UsersDTO {
     @NotNull(message = "gender is required")
     private GenderType gender;
 
+    @Schema(example = "admin1@yopmail.com")
     private String email;
 
+    @Schema(example = "+1000000000000")
     private String phone;
 
     private OffsetDateTime lastLogin;
@@ -51,11 +55,13 @@ public class UsersDTO {
 
     @URL(message = "Must be a valid URL")
     @Pattern(regexp = URL_PATTERN, message = "Invalid URL format")
+    @Schema(example = "https://profilePicture.png")
     private String profilePicture;
 
     @Pattern(regexp = STRONG_PASSWORD_REGEX, message = "Password must be at least 8 characters long, " +
             "contain one uppercase letter, one lowercase letter, " +
             "one digit, and one special character.")
+    @Schema(example = "Pass123!")
     private String password;
 
     public String getPassword() {
