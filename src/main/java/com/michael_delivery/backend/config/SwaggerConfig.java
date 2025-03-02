@@ -11,6 +11,8 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,12 +35,17 @@ public class SwaggerConfig {
                         .addProperty("message", new StringSchema())
                         .addProperty("property", new StringSchema())
                         .addProperty("rejectedValue", new ObjectSchema())
-                        .addProperty("path", new StringSchema())));
+                        .addProperty("path", new StringSchema()))
+                .addSecuritySchemes("JWT", new SecurityScheme()
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")
+                        .description("JWT Bearer Token Authentication")))
+                .addSecurityItem(new SecurityRequirement().addList("JWT"));
     }
 
     @Bean
     public OperationCustomizer operationCustomizer() {
-        // add error type to each operation
         return (operation, handlerMethod) -> {
             operation.getResponses().addApiResponse("4xx/5xx", new ApiResponse()
                     .description("Error")

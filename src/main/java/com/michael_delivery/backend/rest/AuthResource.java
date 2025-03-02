@@ -54,8 +54,8 @@ public class AuthResource {
     public ResponseEntity<UserResponse> login(@RequestBody @Valid final UsernameAndPasswordLoginDTO usersDTO) {
       final Users users = authService.authenticate(usersDTO.getUsername(), usersDTO.getPassword());
       UserResponse userResponse=  usersService.getUserData(users.getUserId());
-        String accessToken = jwtUtil.generateToken(userResponse.getUsername(),userResponse.getPermissions());
-        String refreshToken = jwtUtil.generateToken(userResponse.getUserId());
+        String accessToken = jwtUtil.generateToken(userResponse.getUserId(),userResponse.getUsername(),userResponse.getPermissions());
+        String refreshToken = jwtUtil.generateToken(userResponse.getUserId(),userResponse.getUsername());
         userResponse.setAccessToken(accessToken);
         userResponse.setRefreshToken(refreshToken);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);

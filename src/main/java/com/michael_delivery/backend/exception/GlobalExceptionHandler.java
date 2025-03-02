@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.xml.registry.InvalidRequestException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -67,6 +68,20 @@ public class GlobalExceptionHandler {
                 ""
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRequestException(InvalidRequestException ex) {
+        Map<String, String> errors = new HashMap<>();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse errorResponse = new ErrorResponse(
+                OffsetDateTime.now(),
+                status.value(),
+                ex.getMessage(),
+                errors,
+                ""
+        );
+        return new ResponseEntity<>(errorResponse, status);
     }
 
     @ExceptionHandler(NotFoundException.class)

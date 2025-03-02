@@ -29,7 +29,7 @@ public class AuthService {
 
 
     public Users authenticate(final String username, final String password) {
-        final Users users = usersRepository.findById(1L).orElseThrow(UnauthorizedException::new);
+        final Users users = usersRepository.findByUsername(username).orElseThrow(UnauthorizedException::new);
         if (users.getPasswordHash().isEmpty() || !passwordEncoder.matches(password, users.getPassword())  || users.getAccountType().equals(AccountType.SSO)) {
             throw new UnauthorizedException();
         }
