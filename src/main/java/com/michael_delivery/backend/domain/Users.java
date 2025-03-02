@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.AccountStatusType;
 import com.michael_delivery.backend.enums.AccountType;
 import com.michael_delivery.backend.enums.GenderType;
@@ -7,16 +9,21 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "Users")
 @EntityListeners(AuditingEntityListener.class)
-public class Users {
+public class Users  implements UserDetails {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -74,72 +81,97 @@ public class Users {
     @Column(nullable = false)
     private AccountStatusType accountStatus;
 
-    
 
+
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sso_provider_id")
     private SsoProvider ssoProvider;
 
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bussiness_account_id")
     private BussinessAccount bussinessAccount;
 
-    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<BillingAddress> userBillingAddresses;
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private Set<GroupMembers> userGroupMembers;
 
-    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<PasswordReset> userPasswordResets;
 
-    @OneToMany(mappedBy = "reseatedBy")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "reseatedBy",fetch = FetchType.LAZY)
     private Set<PasswordReset> reseatedByPasswordResets;
 
-    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<DeleteRequest> userDeleteRequests;
 
-    @OneToMany(mappedBy = "createdBy")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "createdBy",fetch = FetchType.LAZY)
     private Set<Coupons> createdByCouponses;
 
-    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<UserCoupon> userUserCoupons;
 
-    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<Riders> userRiderses;
 
-    @OneToMany(mappedBy = "admin")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "admin",fetch = FetchType.LAZY)
     private Set<Penalities> adminPenalitieses;
 
-    @OneToMany(mappedBy = "suspenedBy")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "suspenedBy",fetch = FetchType.LAZY)
     private Set<Suspensions> suspenedBySuspensionses;
 
-    @OneToMany(mappedBy = "customer")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY)
     private Set<Orders> customerOrderses;
 
-    @OneToMany(mappedBy = "assignedBy")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "assignedBy",fetch = FetchType.LAZY)
     private Set<Orders> assignedByOrderses;
 
-    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<Reviews> userReviewses;
 
-    @OneToMany(mappedBy = "cancelledBy")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "cancelledBy",fetch = FetchType.LAZY)
     private Set<CancellationRequest> cancelledByCancellationRequests;
 
-    @OneToMany(mappedBy = "cancelledBy")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "cancelledBy",fetch = FetchType.LAZY)
     private Set<CancellationRiderRequest> cancelledByCancellationRiderRequests;
 
-    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private Set<UserFavoriteAddress> userUserFavoriteAddresses;
 
-    @OneToMany(mappedBy = "createdBy")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "createdBy",fetch = FetchType.LAZY)
     private Set<NoneBusinessHourRates> createdByNoneBusinessHourRateses;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     @LastModifiedDate
     @Column(nullable = false)
@@ -153,8 +185,39 @@ public class Users {
         this.userId = userId;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        System.out.println(userGroupMembers.toString());
+        return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     public void setUsername(final String username) {

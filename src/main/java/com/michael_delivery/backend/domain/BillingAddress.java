@@ -28,8 +28,6 @@ public class BillingAddress {
     @Column(columnDefinition = "longtext")
     private String billingStreetAddress2;
 
-    @Column
-    private String billingState;
 
     @Column(length = 10)
     private String billingPostcode;
@@ -79,14 +77,6 @@ public class BillingAddress {
 
     public void setBillingStreetAddress2(final String billingStreetAddress2) {
         this.billingStreetAddress2 = billingStreetAddress2;
-    }
-
-    public String getBillingState() {
-        return billingState;
-    }
-
-    public void setBillingState(final String billingState) {
-        this.billingState = billingState;
     }
 
     public String getBillingPostcode() {

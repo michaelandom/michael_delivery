@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.GroupType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -33,14 +35,16 @@ public class Groups {
     @Column(nullable = false)
     private GroupType groupType;
 
-    
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "group")
     private Set<GroupMembers> groupGroupMembers;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "group")
     private Set<GroupPermissions> groupGroupPermissions;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "group")
     private Set<EventGroups> groupEventGroups;
 

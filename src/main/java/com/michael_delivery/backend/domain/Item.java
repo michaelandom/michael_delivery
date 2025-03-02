@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.michael_delivery.backend.enums.ItemClassificationType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -35,10 +36,12 @@ public class Item {
     @Type(JsonType.class)
     private List<String> photoUrls;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "destination_id", nullable = false)
     private Destination destination;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "size_weight_description_id", nullable = false)
     private SizeAndWeightDescriptions sizeWeightDescription;

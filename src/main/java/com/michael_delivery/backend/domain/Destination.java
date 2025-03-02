@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.DestinationStatusType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -54,22 +56,25 @@ public class Destination {
     @Column
     private DestinationStatusType status;
 
-    
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Orders order;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_by")
     private Riders deliveryBy;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "destination")
     private Set<Evidence> destinationEvidences;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "destination")
     private Set<Item> destinationItems;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "destination")
     private Set<NoteDestination> destinationNoteDestinations;
 

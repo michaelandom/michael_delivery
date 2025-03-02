@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,7 +23,7 @@ public class SsoProvider {
     @Column(nullable = false)
     private String ssoProvider;
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "ssoProvider")
     private Set<Users> ssoProviderUsers;
 

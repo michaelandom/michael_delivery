@@ -2,23 +2,35 @@ package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.*;
 import com.michael_delivery.backend.enums.AccountType;
+import com.michael_delivery.backend.model.UsernameAndPasswordLoginDTO;
 import com.michael_delivery.backend.model.UsersDTO;
+import com.michael_delivery.backend.model.response.UserResponse;
 import com.michael_delivery.backend.repos.*;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.ValidationException;
 import javax.validation.executable.ValidateOnExecution;
 import javax.ws.rs.BadRequestException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
-public class UsersService {
+public class UsersService  {
 
     private final UsersRepository usersRepository;
     private final SsoProviderRepository ssoProviderRepository;
@@ -91,9 +103,25 @@ public class UsersService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final UsersDTO usersDTO) {
+    public UserResponse getUserData(final Long userId) {
+        final Users users = getUserById(userId);
+        final UserResponse userResponse= new UserResponse();
+        mapToUserResponse(users,userResponse);
+        return userResponse;
+    }
+
+    public Set<String> getPermissionsById(final Long userId){
+        return usersRepository.findPermissionsById(userId);
+    }
+    public Long create(final UsersDTO usersDTO, final Boolean isSSo) {
         final Users users = new Users();
         mapToEntity(usersDTO, users);
+        if (isSSo!= null && isSSo) {
+            users.setAccountType(AccountType.SSO);
+        }
+        else if(usersDTO.getPassword() != null && !usersDTO.getPassword().isEmpty()) {
+            users.setPasswordHash(passwordEncoder.encode(usersDTO.getPassword()));
+        }
         return usersRepository.save(users).getUserId();
     }
 
@@ -150,6 +178,31 @@ public class UsersService {
         usersRepository.deleteById(userId);
     }
 
+
+
+    private UserResponse mapToUserResponse(final Users users, final UserResponse userResponse) {
+        final Set<String> permissions = usersRepository.findPermissionsById(users.getUserId());
+        userResponse.setUserId(users.getUserId());
+        userResponse.setUsername(users.getUsername());
+        userResponse.setFirstName(users.getFirstName());
+        userResponse.setLastName(users.getLastName());
+        userResponse.setDateOfBirth(users.getDateOfBirth());
+        userResponse.setGender(users.getGender());
+        userResponse.setEmail(users.getEmail());
+        userResponse.setEmailVerified(users.getEmailVerified());
+        userResponse.setPhoneVerified(users.getPhoneVerified());
+        userResponse.setPhone(users.getPhone());
+        userResponse.setLastLogin(users.getLastLogin());
+        userResponse.setAccountType(users.getAccountType());
+        userResponse.setRequestForDeleteAt(users.getRequestForDeleteAt());
+        userResponse.setDeactivatedDate(users.getDeactivatedDate());
+        userResponse.setProfilePicture(users.getProfilePicture());
+        userResponse.setAccountStatus(users.getAccountStatus());
+        userResponse.setCreatedAt(users.getCreatedAt());
+        userResponse.setUpdatedAt(users.getUpdatedAt());
+        userResponse.setPermissions(permissions);
+        return userResponse;
+    }
     private UsersDTO mapToDTO(final Users users, final UsersDTO usersDTO) {
         usersDTO.setUserId(users.getUserId());
         usersDTO.setUsername(users.getUsername());

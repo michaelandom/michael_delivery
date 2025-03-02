@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.michael_delivery.backend.enums.PaymentStatusType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -38,8 +39,8 @@ public class ExtrFee {
     @Column
     private OffsetDateTime sentAt;
 
-    
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Orders order;

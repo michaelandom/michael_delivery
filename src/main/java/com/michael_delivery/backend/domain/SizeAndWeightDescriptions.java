@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.SizeAndWeightType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -33,14 +35,16 @@ public class SizeAndWeightDescriptions {
     @Column(columnDefinition = "tinyint", length = 1)
     private Boolean isLatest;
 
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_id")
     private SizeAndWeightDescriptions previous;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "previous")
     private Set<SizeAndWeightDescriptions> previousSizeAndWeightDescriptions;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "sizeWeightDescription")
     private Set<Item> sizeWeightDescriptionItems;
 

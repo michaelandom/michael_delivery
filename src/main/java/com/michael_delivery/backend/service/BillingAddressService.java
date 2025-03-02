@@ -66,7 +66,6 @@ public class BillingAddressService {
         billingAddressDTO.setBillingEmail(billingAddress.getBillingEmail());
         billingAddressDTO.setBillingStreetAddress(billingAddress.getBillingStreetAddress());
         billingAddressDTO.setBillingStreetAddress2(billingAddress.getBillingStreetAddress2());
-        billingAddressDTO.setBillingState(billingAddress.getBillingState());
         billingAddressDTO.setBillingPostcode(billingAddress.getBillingPostcode());
         billingAddressDTO.setBillingSuburb(billingAddress.getBillingSuburb());
         billingAddressDTO.setUserId(billingAddress.getUsers() == null ? null : billingAddress.getUsers().getUserId());
@@ -79,7 +78,6 @@ public class BillingAddressService {
         billingAddress.setBillingEmail(billingAddressDTO.getBillingEmail());
         billingAddress.setBillingStreetAddress(billingAddressDTO.getBillingStreetAddress());
         billingAddress.setBillingStreetAddress2(billingAddressDTO.getBillingStreetAddress2());
-        billingAddress.setBillingState(billingAddressDTO.getBillingState());
         billingAddress.setBillingPostcode(billingAddressDTO.getBillingPostcode());
         billingAddress.setBillingSuburb(billingAddressDTO.getBillingSuburb());
         final Users user = billingAddressDTO.getUserId() == null ? null : usersRepository.findById(billingAddressDTO.getUserId())

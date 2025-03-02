@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.CouponType;
 import com.michael_delivery.backend.enums.DiscountType;
 import com.michael_delivery.backend.enums.UserImportType;
@@ -63,10 +65,12 @@ public class Coupons {
     @Column(columnDefinition = "longtext")
     private String excelFileUrl;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
     private Users createdBy;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "coupon")
     private Set<UserCoupon> couponUserCoupons;
 

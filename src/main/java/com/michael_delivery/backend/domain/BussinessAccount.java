@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -31,6 +33,7 @@ public class BussinessAccount {
     @Column(nullable = false, columnDefinition = "tinyint", length = 1)
     private Boolean isActive;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "bussinessAccount")
     private Set<Users> bussinessAccountUsers;
 

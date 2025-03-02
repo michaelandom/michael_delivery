@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.RiderStatusType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -93,33 +95,41 @@ public class Riders {
     @Column(nullable = false, columnDefinition = "longtext")
     private String signature;
 
-    
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "rider")
     private Set<Vehicles> riderVehicleses;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "rider")
     private Set<Penalities> riderPenalitieses;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "rider")
     private Set<Suspensions> riderSuspensionses;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "rider")
     private Set<RiderAnswers> riderRiderAnswers;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "rider")
     private Set<Orders> riderOrderses;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "rider")
     private Set<Reviews> riderReviewses;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "deliveryBy")
     private Set<Destination> deliveryByDestinations;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "rider")
     private Set<RiderPayments> riderRiderPaymentses;
 

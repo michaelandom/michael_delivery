@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.michael_delivery.backend.enums.SuspensionReasonType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -39,10 +40,12 @@ public class Suspensions {
     private Boolean isActive;
 
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rider_id", nullable = false)
     private Riders rider;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "suspened_by")
     private Users suspenedBy;

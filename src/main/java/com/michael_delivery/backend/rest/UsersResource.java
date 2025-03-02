@@ -72,7 +72,7 @@ public class UsersResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createUsers(@RequestBody @Valid final UsersDTO usersDTO) {
-        final Long createdUserId = usersService.create(usersDTO);
+        final Long createdUserId = usersService.create(usersDTO,false);
         return new ResponseEntity<>(createdUserId, HttpStatus.CREATED);
     }
 

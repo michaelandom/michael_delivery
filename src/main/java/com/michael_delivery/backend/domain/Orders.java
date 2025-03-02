@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.OrderStatusType;
 import com.michael_delivery.backend.enums.PaymentStatusType;
 import com.michael_delivery.backend.enums.VehicleType;
@@ -106,35 +108,37 @@ public class Orders {
     @Column
     private OffsetDateTime canceledAt;
 
-    
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rider_id")
     private Riders rider;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Users customer;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_by")
     private Users assignedBy;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "order")
     private Set<Reviews> orderReviewses;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "order")
     private Set<CancellationRequest> orderCancellationRequests;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "order")
     private Set<CancellationRiderRequest> orderCancellationRiderRequests;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "order")
     private Set<ExtrFee> orderExtrFees;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "order")
     private Set<Destination> orderDestinations;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "order")
     private Set<DeliveryDetail> orderDeliveryDetails;
 

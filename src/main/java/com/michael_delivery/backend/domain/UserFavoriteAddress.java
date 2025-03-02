@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.michael_delivery.backend.enums.AddressType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -41,8 +42,7 @@ public class UserFavoriteAddress {
     @Column(nullable = false)
     private AddressType addressType;
 
-    
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;

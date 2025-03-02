@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -28,7 +29,7 @@ public class Permissions {
     )
     private String description;
 
-
+    @JsonBackReference
     @OneToMany(mappedBy = "permission")
     private Set<GroupPermissions> permissionGroupPermissions;
 

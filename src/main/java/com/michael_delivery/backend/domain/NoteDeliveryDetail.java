@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
@@ -30,6 +31,7 @@ public class NoteDeliveryDetail {
     private List<String> photoUrls;
 
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_detail_id", nullable = false)
     private DeliveryDetail deliveryDetail;

@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.michael_delivery.backend.enums.ReasonType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -26,6 +27,7 @@ public class DeleteRequest {
     @Column(columnDefinition = "longtext")
     private String note;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
