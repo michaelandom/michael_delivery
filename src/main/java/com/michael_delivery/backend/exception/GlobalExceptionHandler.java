@@ -1,9 +1,15 @@
 package com.michael_delivery.backend.exception;
 
 import com.michael_delivery.backend.util.NotFoundException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -14,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.xml.registry.InvalidRequestException;
+import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -21,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler implements AuthenticationEntryPoint {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex, WebRequest request) {
@@ -96,6 +103,58 @@ public class GlobalExceptionHandler {
                 request.getDescription(false).replace("uri=","")
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        String errorMessage;
+        int statusCode;
+
+        if (authException.getMessage().contains("Invalid or expired JWT token")) {
+            statusCode = HttpServletResponse.SC_UNAUTHORIZED; // 401 Unauthorized
+            errorMessage = "Authentication failed: Invalid or expired JWT token.";
+        } else {
+            statusCode = HttpServletResponse.SC_FORBIDDEN; // 403 Forbidden
+            errorMessage = "Access Denied: You do not have the necessary authority to access this resource.";
+        }
+
+        response.setStatus(statusCode);
+        response.setContentType("application/json");
+
+        response.getWriter().write("{\"status\": " + statusCode + ", " +
+                "\"error\": \"" + (statusCode == HttpServletResponse.SC_UNAUTHORIZED ? "Unauthorized" : "Forbidden") + "\", " +
+                "\"message\": \"" + errorMessage + "\", " +
+                "\"path\": \"" + request.getRequestURI() + "\"}");
+
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handlePropertyReferenceException(PropertyReferenceException ex, WebRequest request) {
+//        String errorMessage = "Invalid sort parameter. Please ensure the sort format is correct and refer to valid properties.";
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                OffsetDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                null,
+                request.getDescription(false).replace("uri=","")
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Object> handleException(Exception ex,WebRequest request) {
+        String errorMessage = "An unexpected error occurred. Please try again later.";
+        ErrorResponse errorResponse = new ErrorResponse(
+                OffsetDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                errorMessage,
+                null,
+                request.getDescription(false).replace("uri=","")
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 

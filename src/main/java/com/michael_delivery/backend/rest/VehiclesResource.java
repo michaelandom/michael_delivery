@@ -32,7 +32,7 @@ public class VehiclesResource {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('manage_riders')")
+    @PreAuthorize("hasAnyAuthority('manage_riders')")
     public ResponseEntity<List<VehiclesDTO>> getAllVehicles() {
         return ResponseEntity.ok(vehiclesService.findAll());
     }

@@ -3,9 +3,15 @@ package com.michael_delivery.backend.service;
 import com.michael_delivery.backend.domain.Advertisement;
 import com.michael_delivery.backend.model.AdvertisementDTO;
 import com.michael_delivery.backend.repos.AdvertisementRepository;
+import com.michael_delivery.backend.specification.AdvertisementSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.michael_delivery.backend.util.NotFoundException;
+
 import java.util.List;
 
 @Service
@@ -21,6 +27,31 @@ public class AdvertisementService {
         return advertisements.stream()
                 .map(advertisement -> mapToDTO(advertisement, new AdvertisementDTO()))
                 .toList();
+    }
+    public Page<AdvertisementDTO> findAll(Pageable pageable) {
+        pageable = getPageable(pageable);
+        return advertisementRepository.findAll(pageable).map(a -> mapToDTO(a, new AdvertisementDTO()));
+    }
+
+    public Page<AdvertisementDTO> search(String title, String content, Pageable pageable) {
+        pageable = getPageable(pageable);
+        Specification<Advertisement> spec = Specification.where(null);
+
+        if (title != null && !title.isEmpty()) {
+            spec = spec.and(AdvertisementSpecification.titleContains(title));
+        }
+        if (content != null && !content.isEmpty()) {
+            spec = spec.and(AdvertisementSpecification.contentContains(content));
+        }
+
+        return advertisementRepository.findAll(spec, pageable);
+    }
+
+    private static Pageable getPageable(Pageable pageable) {
+        if (pageable.getSort().isSorted() ) {
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        }
+        return pageable;
     }
 
     public AdvertisementDTO get(final Long advertisementId) {

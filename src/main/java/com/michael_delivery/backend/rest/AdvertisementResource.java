@@ -4,6 +4,10 @@ import com.michael_delivery.backend.model.AdvertisementDTO;
 import com.michael_delivery.backend.service.AdvertisementService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +26,19 @@ public class AdvertisementResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<AdvertisementDTO>> getAllAdvertisements() {
-        return ResponseEntity.ok(advertisementService.findAll());
+    public ResponseEntity<Page<AdvertisementDTO>> getAllAdvertisements(
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(advertisementService.findAll(pageable));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<AdvertisementDTO>> searchAdvertisements(
+            Pageable pageable,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content
+    ) {
+        return ResponseEntity.ok(advertisementService.search(title,content,pageable));
     }
 
     @GetMapping("/{advertisementId}")
@@ -54,5 +69,9 @@ public class AdvertisementResource {
             @PathVariable(name = "advertisementId") final Long advertisementId) {
         advertisementService.delete(advertisementId);
         return ResponseEntity.noContent().build();
+    }
+
+    private boolean isInvalidSort(Sort sort) {
+        return sort.stream().allMatch(order -> order.getProperty().isEmpty());
     }
 }
