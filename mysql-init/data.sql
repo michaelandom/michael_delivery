@@ -160,11 +160,11 @@ INSERT INTO `Delivery_Details`
 (`pickup_latitude`, `pickup_longitude`, `pickup_address_text`, `estimated_time`,
  `pickup_time`, `pickup_date_time`, `recipient_phone_number`, `recipient_name`,
  `pickup_photo_urls`, `order_id`) VALUES
-                                      (-33.8650, 151.2094, '100 Pickup St, Sydney', 30, 'MORNING', '2024-02-24 09:00:00',
+                                      (-33.8650, 151.2094, '100 Pickup St, Sydney', 30, 'TODAY', '2024-02-24 09:00:00',
                                        '+61412345670', 'John Recipient', '["pickup1.jpg"]', 1),
-                                      (-37.8140, 144.9633, '200 Collect Rd, Melbourne', 45, 'AFTERNOON', '2024-02-24 14:00:00',
+                                      (-37.8140, 144.9633, '200 Collect Rd, Melbourne', 45, 'ASAP', '2024-02-24 14:00:00',
                                        '+61412345671', 'Mary Receiver', '["pickup2.jpg"]', 2),
-                                      (-27.4698, 153.0251, '300 Dispatch Ave, Brisbane', 35, 'EVENING', '2024-02-24 18:00:00',
+                                      (-27.4698, 153.0251, '300 Dispatch Ave, Brisbane', 35, 'IN_2_HOURS', '2024-02-24 18:00:00',
                                        '+61412345672', 'Peter Collector', '["pickup3.jpg"]', 3);
 
 -- Insert Note Delivery Details
@@ -276,15 +276,15 @@ INSERT INTO `App_Versions` (`app_name`, `update_type`, `version`) VALUES
                                                                       ('CUSTOMER', TRUE, '2.1.1');
 
 -- Insert References (Payment References)
-INSERT INTO `References`
+INSERT INTO `Ma_References`
 (`order_ids`, `amount`, `currency`, `psp_reference`, `payment_method`, `result_json`) VALUES
                                                                                           ('[1]', 25.50, 'AUD', 'PSP123456', 'CREDIT_CARD', '{"status": "success", "transaction_id": "TX123"}'),
                                                                                           ('[2]', 35.75, 'AUD', 'PSP123457', 'CREDIT_CARD', '{"status": "success", "transaction_id": "TX124"}'),
                                                                                           ('[3]', 45.90, 'AUD', 'PSP123458', 'PAYPAL', '{"status": "pending", "transaction_id": "TX125"}');
 
 -- Insert Payment Webhook Payload
-INSERT INTO `Payment_Webhook_Payload`
-(`pspReference`, `merchantReference`, `eventCode`, `paymentMethod`, `amount`, `success`, `payload`) VALUES
+INSERT INTO `Payment_Webhook_Payloads`
+(`psp_reference`, `merchant_reference`, `event_code`, `payment_method`, `amount`, `success`, `payload`) VALUES
                                                                                                         ('PSP123456', 'ORD-2024-001', 'AUTHORISATION', 'visa', '{"currency":"AUD","value":2550}', TRUE,
                                                                                                          '{"event":"payment_success","timestamp":"2024-02-24T10:00:00Z"}'),
                                                                                                         ('PSP123457', 'ORD-2024-002', 'AUTHORISATION', 'mastercard', '{"currency":"AUD","value":3575}', TRUE,
