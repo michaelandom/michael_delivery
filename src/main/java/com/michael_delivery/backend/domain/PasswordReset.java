@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "PasswordResets")
 @EntityListeners(AuditingEntityListener.class)
-public class PasswordReset {
+public class PasswordReset extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -84,5 +84,9 @@ public class PasswordReset {
         this.reseatedBy = reseatedBy;
     }
 
+    @Override
+    public Long getId() {
+        return passwordResetId;
+    }
 
 }

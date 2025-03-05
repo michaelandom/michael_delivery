@@ -23,7 +23,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Users")
 @EntityListeners(AuditingEntityListener.class)
-public class Users  implements UserDetails {
+public class Users extends BaseModel<Long> implements UserDetails  {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -502,4 +502,8 @@ public class Users  implements UserDetails {
     }
 
 
+    @Override
+    public Long getId() {
+        return userId;
+    }
 }

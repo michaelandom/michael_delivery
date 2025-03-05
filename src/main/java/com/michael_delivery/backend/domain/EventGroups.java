@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "EventGroups")
 @EntityListeners(AuditingEntityListener.class)
-public class EventGroups {
+public class EventGroups extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -60,6 +60,9 @@ public class EventGroups {
     public void setEvent(final Events event) {
         this.event = event;
     }
-
+    @Override
+    public Long getId() {
+        return eventGroupId;
+    }
 
 }

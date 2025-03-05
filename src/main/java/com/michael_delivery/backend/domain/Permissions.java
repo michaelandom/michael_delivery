@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Permissions")
 @EntityListeners(AuditingEntityListener.class)
-public class Permissions {
+public class Permissions extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -75,5 +75,9 @@ public class Permissions {
         this.permissionGroupPermissions = permissionGroupPermissions;
     }
 
+    @Override
+    public Long getId() {
+        return permissionId;
+    }
 
 }

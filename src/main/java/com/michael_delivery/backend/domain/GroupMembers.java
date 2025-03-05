@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "GroupMembers")
 @EntityListeners(AuditingEntityListener.class)
-public class GroupMembers {
+public class GroupMembers extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -64,5 +64,9 @@ public class GroupMembers {
         this.user = user;
     }
 
+    @Override
+    public Long getId() {
+        return groupMemberId;
+    }
 
 }

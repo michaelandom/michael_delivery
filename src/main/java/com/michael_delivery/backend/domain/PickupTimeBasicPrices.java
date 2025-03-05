@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "PickupTimeBasicPrices")
 @EntityListeners(AuditingEntityListener.class)
-public class PickupTimeBasicPrices {
+public class PickupTimeBasicPrices extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -108,4 +108,8 @@ public class PickupTimeBasicPrices {
     }
 
 
+    @Override
+    public Long getId() {
+        return pickupTimeBasicPriceId;
+    }
 }

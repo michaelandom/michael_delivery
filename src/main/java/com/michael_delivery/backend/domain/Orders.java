@@ -17,7 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Orders")
 @EntityListeners(AuditingEntityListener.class)
-public class Orders {
+public class Orders extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -449,5 +449,9 @@ public class Orders {
         this.orderDeliveryDetails = orderDeliveryDetails;
     }
 
+    @Override
+    public Long getId() {
+        return orderId;
+    }
 
 }

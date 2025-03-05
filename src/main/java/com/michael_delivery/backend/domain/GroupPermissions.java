@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "GroupPermissions")
 @EntityListeners(AuditingEntityListener.class)
-public class GroupPermissions {
+public class GroupPermissions extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -64,4 +64,8 @@ public class GroupPermissions {
     }
 
 
+    @Override
+    public Long getId() {
+        return groupPermissionId;
+    }
 }

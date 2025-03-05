@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "BussinessAccounts")
 @EntityListeners(AuditingEntityListener.class)
-public class BussinessAccount {
+public class BussinessAccount extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -101,4 +101,8 @@ public class BussinessAccount {
         this.isActive = isActive;
     }
 
+    @Override
+    public Long getId() {
+        return bussinessAccountId;
+    }
 }

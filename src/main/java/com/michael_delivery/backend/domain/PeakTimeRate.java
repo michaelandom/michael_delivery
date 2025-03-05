@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name = "PeakTimeRates")
 @EntityListeners(AuditingEntityListener.class)
-public class PeakTimeRate {
+public class PeakTimeRate extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -127,5 +127,9 @@ public class PeakTimeRate {
         this.previousPeakTimeRates = previousPeakTimeRates;
     }
 
+    @Override
+    public Long getId() {
+        return peakTimeRateId;
+    }
 
 }

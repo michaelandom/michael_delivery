@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "Reviews")
 @EntityListeners(AuditingEntityListener.class)
-public class Reviews {
+public class Reviews extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -96,5 +96,8 @@ public class Reviews {
         this.order = order;
     }
 
-
+    @Override
+    public Long getId() {
+        return reviewId;
+    }
 }

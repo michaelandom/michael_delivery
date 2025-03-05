@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "CancellationRequests")
 @EntityListeners(AuditingEntityListener.class)
-public class CancellationRequest {
+public class CancellationRequest extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -176,4 +176,8 @@ public class CancellationRequest {
     }
 
 
+    @Override
+    public Long getId() {
+        return cancellationRequestId;
+    }
 }

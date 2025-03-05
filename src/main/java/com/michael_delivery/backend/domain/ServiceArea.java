@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "ServiceAreas")
 @EntityListeners(AuditingEntityListener.class)
-public class ServiceArea {
+public class ServiceArea extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -82,4 +82,8 @@ public class ServiceArea {
     }
 
 
+    @Override
+    public Long getId() {
+        return serviceAreaId;
+    }
 }

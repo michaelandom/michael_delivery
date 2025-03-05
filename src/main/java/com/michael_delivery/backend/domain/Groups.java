@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "MaGroups")
 @EntityListeners(AuditingEntityListener.class)
-public class Groups {
+public class Groups extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -113,5 +113,9 @@ public class Groups {
         this.groupEventGroups = groupEventGroups;
     }
 
+    @Override
+    public Long getId() {
+        return groupId;
+    }
 
 }

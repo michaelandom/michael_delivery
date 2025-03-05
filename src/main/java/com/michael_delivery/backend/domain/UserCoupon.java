@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "UserCoupons")
 @EntityListeners(AuditingEntityListener.class)
-public class UserCoupon {
+public class UserCoupon extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -63,4 +63,8 @@ public class UserCoupon {
     }
 
 
+    @Override
+    public Long getId() {
+        return userCouponId;
+    }
 }

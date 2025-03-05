@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "UserFavoriteAddress")
 @EntityListeners(AuditingEntityListener.class)
-public class UserFavoriteAddress {
+public class UserFavoriteAddress extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -129,4 +129,8 @@ public class UserFavoriteAddress {
     }
 
 
+    @Override
+    public Long getId() {
+        return favoriteAddressId;
+    }
 }

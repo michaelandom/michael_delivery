@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Questions")
 @EntityListeners(AuditingEntityListener.class)
-public class Questions {
+public class Questions extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -80,4 +80,8 @@ public class Questions {
         this.questionQuestionOptions = questionQuestionOptions;
     }
 
+    @Override
+    public Long getId() {
+        return questionId;
+    }
 }

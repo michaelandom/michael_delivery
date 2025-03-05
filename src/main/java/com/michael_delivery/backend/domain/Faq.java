@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "Faq")
 @EntityListeners(AuditingEntityListener.class)
-public class Faq {
+public class Faq extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -37,6 +37,7 @@ public class Faq {
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
 
+    @Override
     public Long getId() {
         return id;
     }

@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "CancellationRiderRequests")
 @EntityListeners(AuditingEntityListener.class)
-public class CancellationRiderRequest {
+public class CancellationRiderRequest extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -135,4 +135,8 @@ public class CancellationRiderRequest {
     }
 
 
+    @Override
+    public Long getId() {
+        return cancellationRiderRequestId;
+    }
 }

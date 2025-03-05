@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "AppVersions")
 @EntityListeners(AuditingEntityListener.class)
-public class AppVersion {
+public class AppVersion extends BaseModel<Integer>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -71,5 +71,8 @@ public class AppVersion {
     }
 
 
-
+    @Override
+    public Integer getId() {
+        return appVersionId;
+    }
 }

@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "DeleteRequests")
 @EntityListeners(AuditingEntityListener.class)
-public class DeleteRequest {
+public class DeleteRequest extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -73,5 +73,8 @@ public class DeleteRequest {
         this.user = user;
     }
 
-
+    @Override
+    public Long getId() {
+        return deleteRequestId;
+    }
 }

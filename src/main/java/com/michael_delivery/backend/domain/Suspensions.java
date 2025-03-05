@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "Suspensions")
 @EntityListeners(AuditingEntityListener.class)
-public class Suspensions {
+public class Suspensions extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -132,4 +132,8 @@ public class Suspensions {
     }
 
 
+    @Override
+    public Long getId() {
+        return suspensionId;
+    }
 }

@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "SizeAndWeightDescriptions")
 @EntityListeners(AuditingEntityListener.class)
-public class SizeAndWeightDescriptions {
+public class SizeAndWeightDescriptions extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -123,4 +123,8 @@ public class SizeAndWeightDescriptions {
     }
 
 
+    @Override
+    public Long getId() {
+        return sizeWeightDescriptionId;
+    }
 }

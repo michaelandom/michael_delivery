@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "DriverGuides")
 @EntityListeners(AuditingEntityListener.class)
-public class DriverGuide {
+public class DriverGuide extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -68,6 +68,9 @@ public class DriverGuide {
         this.isImportant = isImportant;
     }
 
-
+    @Override
+    public Long getId() {
+        return driverGuideId;
+    }
 
 }

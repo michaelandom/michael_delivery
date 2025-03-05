@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name = "RiderCommissions")
 @EntityListeners(AuditingEntityListener.class)
-public class RiderCommission {
+public class RiderCommission extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -103,5 +103,8 @@ public class RiderCommission {
         this.previousRiderCommissions = previousRiderCommissions;
     }
 
-
+    @Override
+    public Long getId() {
+        return riderCommissionId;
+    }
 }

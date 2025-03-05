@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "NoteDeliveryDetails")
 @EntityListeners(AuditingEntityListener.class)
-public class NoteDeliveryDetail {
+public class NoteDeliveryDetail extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -75,5 +75,9 @@ public class NoteDeliveryDetail {
         this.deliveryDetail = deliveryDetail;
     }
 
+    @Override
+    public Long getId() {
+        return noteDeliveryDetailId;
+    }
 
 }

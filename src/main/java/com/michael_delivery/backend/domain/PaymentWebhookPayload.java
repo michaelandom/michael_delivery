@@ -15,7 +15,7 @@ import java.util.Map;
 @Entity
 @Table(name = "PaymentWebhookPayloads")
 @EntityListeners(AuditingEntityListener.class)
-public class PaymentWebhookPayload {
+public class PaymentWebhookPayload extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -149,4 +149,8 @@ public class PaymentWebhookPayload {
     }
 
 
+    @Override
+    public Long getId() {
+        return paymentWebhookPayloadId;
+    }
 }

@@ -17,7 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Coupons")
 @EntityListeners(AuditingEntityListener.class)
-public class Coupons {
+public class Coupons extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -225,6 +225,9 @@ public class Coupons {
     public void setCouponUserCoupons(final Set<UserCoupon> couponUserCoupons) {
         this.couponUserCoupons = couponUserCoupons;
     }
-
+    @Override
+    public Long getId() {
+        return couponId;
+    }
 
 }

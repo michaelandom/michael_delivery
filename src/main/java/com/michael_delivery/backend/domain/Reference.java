@@ -15,7 +15,7 @@ import java.util.Map;
 @Entity
 @Table(name = "MaReferences")
 @EntityListeners(AuditingEntityListener.class)
-public class Reference {
+public class Reference extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -40,7 +40,7 @@ public class Reference {
     @Lob
     @Column(nullable = false,columnDefinition = "JSON")
     @Type(JsonType.class)
-    private Map resultJson;
+    private Map<String, Object> resultJson;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -98,14 +98,17 @@ public class Reference {
         this.paymentMethod = paymentMethod;
     }
 
-    public Map getResultJson() {
+    public Map<String, Object> getResultJson() {
         return resultJson;
     }
-    public void setResultJson(Map resultJson) {
+    public void setResultJson(Map<String, Object> resultJson) {
         this.resultJson = resultJson;
     }
 
-
+    @Override
+    public Long getId() {
+        return referenceId;
+    }
 
 
 }

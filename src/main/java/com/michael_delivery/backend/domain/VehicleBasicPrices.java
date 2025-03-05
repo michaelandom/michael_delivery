@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "VehicleBasicPrices")
 @EntityListeners(AuditingEntityListener.class)
-public class VehicleBasicPrices {
+public class VehicleBasicPrices extends BaseModel<Long>{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -97,5 +97,9 @@ public class VehicleBasicPrices {
         this.previousVehicleBasicPrices = previousVehicleBasicPrices;
     }
 
+    @Override
+    public Long getId() {
+        return vehicleBasicPriceId;
+    }
 
 }

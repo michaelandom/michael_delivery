@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "SsoProviders")
 @EntityListeners(AuditingEntityListener.class)
-public class SsoProvider {
+public class SsoProvider extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -59,5 +59,8 @@ public class SsoProvider {
         this.ssoProviderUsers = ssoProviderUsers;
     }
 
-
+    @Override
+    public Long getId() {
+        return ssoProviderId;
+    }
 }

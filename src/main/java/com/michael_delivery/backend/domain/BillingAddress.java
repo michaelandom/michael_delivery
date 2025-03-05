@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name = "BillingAddress")
 @EntityListeners(AuditingEntityListener.class)
-public class BillingAddress {
+public class BillingAddress extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -103,4 +103,8 @@ public class BillingAddress {
         this.user = user;
     }
 
+    @Override
+    public Long getId() {
+        return billingAddressId;
+    }
 }
