@@ -4,6 +4,10 @@ import com.michael_delivery.backend.domain.BillingAddress;
 import com.michael_delivery.backend.domain.BussinessAccount;
 import com.michael_delivery.backend.domain.SsoProvider;
 import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.UsersDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -25,4 +29,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
             "JOIN GroupMembers gm ON g.groupId = gm.group.groupId\n" +
             "WHERE gm.user.userId = :userId")
     Set<String> findPermissionsById(Long userId);
+
+    public Page<UsersDTO> findAll(Specification<Users> spec, Pageable pageable);
+
 }

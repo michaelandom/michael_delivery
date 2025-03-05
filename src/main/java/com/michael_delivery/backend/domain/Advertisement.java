@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "Advertisements")
 @EntityListeners(AuditingEntityListener.class)
-public class Advertisement {
+public class Advertisement extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -67,4 +67,8 @@ public class Advertisement {
         this.imageUrl = imageUrl;
     }
 
+    @Override
+    public Long getId() {
+        return advertisementId;
+    }
 }

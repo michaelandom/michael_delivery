@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "Announcements")
 @EntityListeners(AuditingEntityListener.class)
-public class Announcement {
+public class Announcement extends BaseModel<Long> {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -68,5 +68,8 @@ public class Announcement {
     }
 
 
-
+    @Override
+    public Long getId() {
+        return announcementId;
+    }
 }
