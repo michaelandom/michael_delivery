@@ -8,11 +8,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface TransportBasicPricesRepository extends JpaRepository<TransportBasicPrices, Long> {
+public interface TransportBasicPricesRepository extends JpaRepository<TransportBasicPrices, Long>   ,BaseRepository<TransportBasicPricesDTO,TransportBasicPrices>{
 
     TransportBasicPrices findFirstByPreviousAndTransportBasicPriceIdNot(
             TransportBasicPrices transportBasicPrices, final Long transportBasicPriceId);
 
-    public Page<TransportBasicPricesDTO> findAll(Specification<TransportBasicPrices> spec, Pageable pageable);
 
 }

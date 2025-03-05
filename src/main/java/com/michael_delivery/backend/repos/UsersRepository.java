@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 
 
-public interface UsersRepository extends JpaRepository<Users, Long> {
+public interface UsersRepository extends JpaRepository<Users, Long>  ,BaseRepository<UsersDTO,Users> {
 
     Users findFirstBySsoProvider(SsoProvider ssoProvider);
 
@@ -29,7 +29,5 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
             "JOIN GroupMembers gm ON g.groupId = gm.group.groupId\n" +
             "WHERE gm.user.userId = :userId")
     Set<String> findPermissionsById(Long userId);
-
-    public Page<UsersDTO> findAll(Specification<Users> spec, Pageable pageable);
 
 }

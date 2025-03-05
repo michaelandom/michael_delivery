@@ -11,14 +11,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface OrdersRepository extends JpaRepository<Orders, Long> {
+public interface OrdersRepository extends JpaRepository<Orders, Long> ,BaseRepository<OrdersDTO,Orders> {
 
     Orders findFirstByRider(Riders riders);
 
     Orders findFirstByCustomer(Users users);
 
     Orders findFirstByAssignedBy(Users users);
-
-    public Page<OrdersDTO> findAll(Specification<Orders> spec, Pageable pageable);
 
 }

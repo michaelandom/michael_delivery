@@ -9,12 +9,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface PasswordResetRepository extends JpaRepository<PasswordReset, Long> {
+public interface PasswordResetRepository extends JpaRepository<PasswordReset, Long> ,BaseRepository<PasswordResetDTO,PasswordReset> {
 
     PasswordReset findFirstByUser(Users users);
 
     PasswordReset findFirstByReseatedBy(Users users);
-
-    public Page<PasswordResetDTO> findAll(Specification<PasswordReset> spec, Pageable pageable);
 
 }

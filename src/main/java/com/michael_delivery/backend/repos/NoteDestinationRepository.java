@@ -9,10 +9,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface NoteDestinationRepository extends JpaRepository<NoteDestination, Long> {
+public interface NoteDestinationRepository extends JpaRepository<NoteDestination, Long> ,BaseRepository<NoteDestinationDTO,NoteDestination> {
 
     NoteDestination findFirstByDestination(Destination destination);
-
-    public Page<NoteDestinationDTO> findAll(Specification<NoteDestination> spec, Pageable pageable);
 
 }

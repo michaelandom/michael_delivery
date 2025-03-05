@@ -8,9 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface ReferenceRepository extends JpaRepository<Reference, Long> {
+public interface ReferenceRepository extends JpaRepository<Reference, Long>  ,BaseRepository<ReferenceDTO,Reference> {
 
-    public Page<ReferenceDTO> findAll(Specification<Reference> spec, Pageable pageable);
 
 
 }

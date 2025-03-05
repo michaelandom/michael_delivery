@@ -8,14 +8,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface SizeAndWeightDescriptionsRepository extends JpaRepository<SizeAndWeightDescriptions, Long> {
+public interface SizeAndWeightDescriptionsRepository extends JpaRepository<SizeAndWeightDescriptions, Long>  ,BaseRepository<SizeAndWeightDescriptionsDTO, SizeAndWeightDescriptions> {
 
     SizeAndWeightDescriptions findFirstByPreviousAndSizeWeightDescriptionIdNot(
             SizeAndWeightDescriptions sizeAndWeightDescriptions,
             final Long sizeWeightDescriptionId);
 
    // boolean existsByUniqueSizeCheckIgnoreCase(String uniqueSizeCheck);
-
-    public Page<SizeAndWeightDescriptionsDTO> findAll(Specification<SizeAndWeightDescriptions> spec, Pageable pageable);
 
 }

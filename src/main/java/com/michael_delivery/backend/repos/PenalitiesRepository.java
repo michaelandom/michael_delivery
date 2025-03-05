@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface PenalitiesRepository extends JpaRepository<Penalities, Long> {
+public interface PenalitiesRepository extends JpaRepository<Penalities, Long>  ,BaseRepository<PenalitiesDTO,Penalities> {
 
     Penalities findFirstByRider(Riders riders);
 
     Penalities findFirstByAdmin(Users users);
-
-    public Page<PenalitiesDTO> findAll(Specification<Penalities> spec, Pageable pageable);
 
 }

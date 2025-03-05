@@ -8,7 +8,5 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface FaqRepository extends JpaRepository<Faq, Long> {
-    public Page<FaqDTO> findAll(Specification<Faq> spec, Pageable pageable);
-
+public interface FaqRepository extends JpaRepository<Faq, Long>,BaseRepository<FaqDTO,Faq> {
 }

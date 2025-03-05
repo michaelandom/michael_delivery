@@ -9,8 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface DeliveryDetailRepository extends JpaRepository<DeliveryDetail, Long> {
+public interface DeliveryDetailRepository extends JpaRepository<DeliveryDetail, Long>,BaseRepository<DeliveryDetailDTO,DeliveryDetail> {
 
     DeliveryDetail findFirstByOrder(Orders orders);
-    public Page<DeliveryDetailDTO> findAll(Specification<DeliveryDetail> spec, Pageable pageable);
 }

@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface GroupPermissionsRepository extends JpaRepository<GroupPermissions, Long> {
+public interface GroupPermissionsRepository extends JpaRepository<GroupPermissions, Long> ,BaseRepository<GroupPermissionsDTO,GroupPermissions> {
 
     GroupPermissions findFirstByGroup(Groups groups);
 
     GroupPermissions findFirstByPermission(Permissions permissions);
-
-    public Page<GroupPermissionsDTO> findAll(Specification<GroupPermissions> spec, Pageable pageable);
 
 }

@@ -8,7 +8,5 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface PaymentWebhookPayloadRepository extends JpaRepository<PaymentWebhookPayload, Long> {
-    public Page<PaymentWebhookPayloadDTO> findAll(Specification<PaymentWebhookPayload> spec, Pageable pageable);
-
+public interface PaymentWebhookPayloadRepository extends JpaRepository<PaymentWebhookPayload, Long> ,BaseRepository<PaymentWebhookPayloadDTO,PaymentWebhookPayload> {
 }

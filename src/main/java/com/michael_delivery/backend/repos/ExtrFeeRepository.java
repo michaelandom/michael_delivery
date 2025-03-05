@@ -9,10 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface ExtrFeeRepository extends JpaRepository<ExtrFee, Long> {
+public interface ExtrFeeRepository extends JpaRepository<ExtrFee, Long>,BaseRepository<ExtrFeeDTO,ExtrFee> {
 
     ExtrFee findFirstByOrder(Orders orders);
-
-    public Page<ExtrFeeDTO> findAll(Specification<ExtrFee> spec, Pageable pageable);
-
 }

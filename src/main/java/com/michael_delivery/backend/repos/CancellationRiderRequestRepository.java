@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface CancellationRiderRequestRepository extends JpaRepository<CancellationRiderRequest, Long> {
+public interface CancellationRiderRequestRepository extends JpaRepository<CancellationRiderRequest, Long> ,BaseRepository<CancellationRiderRequestDTO,CancellationRiderRequest> {
 
     CancellationRiderRequest findFirstByOrder(Orders orders);
 
     CancellationRiderRequest findFirstByCancelledBy(Users users);
-
-    public Page<CancellationRiderRequestDTO> findAll(Specification<CancellationRiderRequest> spec, Pageable pageable);
 
 }

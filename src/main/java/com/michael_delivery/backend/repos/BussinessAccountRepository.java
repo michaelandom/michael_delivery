@@ -8,8 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface BussinessAccountRepository extends JpaRepository<BussinessAccount, Long> {
+public interface BussinessAccountRepository extends JpaRepository<BussinessAccount, Long>,BaseRepository<BussinessAccountDTO, BussinessAccount>  {
 
-    public Page<BussinessAccountDTO> findAll(Specification<BussinessAccount> spec, Pageable pageable);
 
 }

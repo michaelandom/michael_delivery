@@ -29,7 +29,9 @@ public class AuthService {
 
 
     public Users authenticate(final String username, final String password) {
+        System.out.println("passwordEncoder");
         final Users users = usersRepository.findByUsername(username).orElseThrow(UnauthorizedException::new);
+        System.out.println("passwordEncoder.encode(password)");
         if (users.getPasswordHash().isEmpty() || !passwordEncoder.matches(password, users.getPassword())  || users.getAccountType().equals(AccountType.SSO)) {
             throw new UnauthorizedException();
         }

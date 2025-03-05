@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface SsoProviderRepository extends JpaRepository<SsoProvider, Long> {
-    public Page<SsoProviderDTO> findAll(Specification<SsoProvider> spec, Pageable pageable);
+public interface SsoProviderRepository extends JpaRepository<SsoProvider, Long>   ,BaseRepository<SsoProviderDTO,SsoProvider>{
 
 }

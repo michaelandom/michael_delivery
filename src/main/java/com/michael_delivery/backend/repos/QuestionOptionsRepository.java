@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface QuestionOptionsRepository extends JpaRepository<QuestionOptions, Long> {
+public interface QuestionOptionsRepository extends JpaRepository<QuestionOptions, Long>  ,BaseRepository<QuestionOptionsDTO,QuestionOptions>{
 
     QuestionOptions findFirstByQuestion(Questions questions);
 

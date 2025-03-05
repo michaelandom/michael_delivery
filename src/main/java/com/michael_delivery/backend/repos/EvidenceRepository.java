@@ -9,10 +9,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface EvidenceRepository extends JpaRepository<Evidence, Long> {
+public interface EvidenceRepository extends JpaRepository<Evidence, Long>,BaseRepository<EvidenceDTO,Evidence> {
 
     Evidence findFirstByDestination(Destination destination);
 
-    public Page<EvidenceDTO> findAll(Specification<Evidence> spec, Pageable pageable);
 
 }

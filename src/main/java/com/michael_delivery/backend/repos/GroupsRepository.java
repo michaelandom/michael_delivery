@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface GroupsRepository extends JpaRepository<Groups, Long> {
+public interface GroupsRepository extends JpaRepository<Groups, Long> ,BaseRepository<GroupsDTO,Groups>{
     public Page<GroupsDTO> findAll(Specification<Groups> spec, Pageable pageable);
 
 }

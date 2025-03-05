@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface DriverGuideRepository extends JpaRepository<DriverGuide, Long> {
-    public Page<DriverGuideDTO> findAll(Specification<DriverGuide> spec, Pageable pageable);
+public interface DriverGuideRepository extends JpaRepository<DriverGuide, Long> ,BaseRepository<DriverGuideDTO,DriverGuide> {
 
 }

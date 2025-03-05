@@ -9,10 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface VehiclesRepository extends JpaRepository<Vehicles, Long> {
+public interface VehiclesRepository extends JpaRepository<Vehicles, Long>  ,BaseRepository<VehiclesDTO,Vehicles> {
 
     Vehicles findFirstByRider(Riders riders);
-
-    public Page<VehiclesDTO> findAll(Specification<Vehicles> spec, Pageable pageable);
-
 }

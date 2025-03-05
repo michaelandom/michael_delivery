@@ -1,6 +1,7 @@
 package com.michael_delivery.backend.exception;
 
 import com.michael_delivery.backend.util.NotFoundException;
+import com.michael_delivery.backend.util.UnauthorizedException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -103,6 +104,20 @@ public class GlobalExceptionHandler implements AuthenticationEntryPoint {
                 request.getDescription(false).replace("uri=","")
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        ErrorResponse errorResponse = new ErrorResponse(
+                OffsetDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage(),
+                errors,
+                request.getDescription(false).replace("uri=","")
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @Override

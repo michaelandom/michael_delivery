@@ -11,14 +11,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface ReviewsRepository extends JpaRepository<Reviews, Long> {
+public interface ReviewsRepository extends JpaRepository<Reviews, Long>  ,BaseRepository<ReviewsDTO,Reviews> {
 
     Reviews findFirstByRider(Riders riders);
 
     Reviews findFirstByUser(Users users);
 
     Reviews findFirstByOrder(Orders orders);
-
-    public Page<ReviewsDTO> findAll(Specification<Reviews> spec, Pageable pageable);
 
 }

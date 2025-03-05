@@ -11,8 +11,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface BillingAddressRepository extends JpaRepository<BillingAddress, Long> {
+public interface BillingAddressRepository extends JpaRepository<BillingAddress, Long>,BaseRepository<BillingAddressDTO,BillingAddress> {
     BillingAddress findFirstByUser(Users user);
-    public Page<BillingAddressDTO> findAll(Specification<BillingAddress> spec, Pageable pageable);
-
 }

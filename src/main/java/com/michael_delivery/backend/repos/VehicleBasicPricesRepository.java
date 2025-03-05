@@ -8,12 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface VehicleBasicPricesRepository extends JpaRepository<VehicleBasicPrices, Long> {
+public interface VehicleBasicPricesRepository extends JpaRepository<VehicleBasicPrices, Long>  ,BaseRepository<VehicleBasicPricesDTO,VehicleBasicPrices> {
 
     VehicleBasicPrices findFirstByPreviousAndVehicleBasicPriceIdNot(
             VehicleBasicPrices vehicleBasicPrices, final Long vehicleBasicPriceId);
-
-    public Page<VehicleBasicPricesDTO> findAll(Specification<VehicleBasicPrices> spec, Pageable pageable);
-
-
 }

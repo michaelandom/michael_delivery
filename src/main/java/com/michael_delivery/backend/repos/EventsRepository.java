@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface EventsRepository extends JpaRepository<Events, Long> {
-    public Page<EventsDTO> findAll(Specification<Events> spec, Pageable pageable);
+public interface EventsRepository extends JpaRepository<Events, Long> ,BaseRepository<EventsDTO,Events> {
 
 }

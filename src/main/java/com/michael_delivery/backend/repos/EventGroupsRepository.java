@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface EventGroupsRepository extends JpaRepository<EventGroups, Long> {
+public interface EventGroupsRepository extends JpaRepository<EventGroups, Long> ,BaseRepository<EventGroupsDTO,EventGroups> {
 
     EventGroups findFirstByGroup(Groups groups);
 
     EventGroups findFirstByEvent(Events events);
-
-    public Page<EventGroupsDTO> findAll(Specification<EventGroups> spec, Pageable pageable);
 
 }

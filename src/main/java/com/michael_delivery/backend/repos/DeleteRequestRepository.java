@@ -9,8 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface DeleteRequestRepository extends JpaRepository<DeleteRequest, Long> {
+public interface DeleteRequestRepository extends JpaRepository<DeleteRequest, Long>,BaseRepository<DeleteRequestDTO,DeleteRequest> {
 
     DeleteRequest findFirstByUser(Users users);
-    public Page<DeleteRequestDTO> findAll(Specification<DeleteRequest> spec, Pageable pageable);
 }

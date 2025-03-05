@@ -8,13 +8,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface PickupTimeBasicPricesRepository extends JpaRepository<PickupTimeBasicPrices, Long> {
+public interface PickupTimeBasicPricesRepository extends JpaRepository<PickupTimeBasicPrices, Long>  ,BaseRepository<PickupTimeBasicPricesDTO,PickupTimeBasicPrices> {
 
     PickupTimeBasicPrices findFirstByPreviousAndPickupTimeBasicPriceIdNot(
             PickupTimeBasicPrices pickupTimeBasicPrices, final Long pickupTimeBasicPriceId);
 
 //    boolean existsByUniqueVehicleTypePickupTimeCheckIgnoreCase(
 //            String uniqueVehicleTypePickupTimeCheck);
-public Page<PickupTimeBasicPricesDTO> findAll(Specification<PickupTimeBasicPrices> spec, Pageable pageable);
 
 }

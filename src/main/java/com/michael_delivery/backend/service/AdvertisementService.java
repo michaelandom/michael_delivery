@@ -6,14 +6,9 @@ import com.michael_delivery.backend.repos.AdvertisementRepository;
 import com.michael_delivery.backend.specification.AdvertisementSpecification;
 import com.michael_delivery.backend.util.ShareFunction;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import com.michael_delivery.backend.util.NotFoundException;
-
-import java.util.List;
 
 @Service
 public class AdvertisementService extends BaseService<Advertisement, AdvertisementDTO,Long, AdvertisementRepository> {

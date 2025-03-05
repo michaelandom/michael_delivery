@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface RiderAnswersRepository extends JpaRepository<RiderAnswers, Long> {
+public interface RiderAnswersRepository extends JpaRepository<RiderAnswers, Long>  ,BaseRepository<RiderAnswersDTO,RiderAnswers>{
 
     RiderAnswers findFirstByRider(Riders riders);
 
     RiderAnswers findFirstByOption(QuestionOptions questionOptions);
-
-    public Page<RiderAnswersDTO> findAll(Specification<RiderAnswers> spec, Pageable pageable);
 
 }

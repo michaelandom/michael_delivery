@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface GroupMembersRepository extends JpaRepository<GroupMembers, Long> {
+public interface GroupMembersRepository extends JpaRepository<GroupMembers, Long>,BaseRepository<GroupMembersDTO,GroupMembers> {
 
     GroupMembers findFirstByGroup(Groups groups);
 
     GroupMembers findFirstByUser(Users users);
-
-    public Page<GroupMembersDTO> findAll(Specification<GroupMembers> spec, Pageable pageable);
 
 }

@@ -9,10 +9,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface RidersRepository extends JpaRepository<Riders, Long> {
+public interface RidersRepository extends JpaRepository<Riders, Long>  ,BaseRepository<RidersDTO,Riders> {
 
     Riders findFirstByUser(Users users);
-
-    public Page<RidersDTO> findAll(Specification<Riders> spec, Pageable pageable);
 
 }

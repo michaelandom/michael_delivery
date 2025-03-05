@@ -9,10 +9,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface ServiceAreaRepository extends JpaRepository<ServiceArea, Long> {
+public interface ServiceAreaRepository extends JpaRepository<ServiceArea, Long>  ,BaseRepository<ServiceAreaDTO,ServiceArea> {
 
     ServiceArea findFirstByState(State state);
 
-    public Page<ServiceAreaDTO> findAll(Specification<ServiceArea> spec, Pageable pageable);
 
 }

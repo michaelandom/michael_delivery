@@ -8,7 +8,5 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface StateRepository extends JpaRepository<State, Long> {
-    public Page<StateDTO> findAll(Specification<State> spec, Pageable pageable);
-
+public interface StateRepository extends JpaRepository<State, Long>  ,BaseRepository<StateDTO,State>{
 }

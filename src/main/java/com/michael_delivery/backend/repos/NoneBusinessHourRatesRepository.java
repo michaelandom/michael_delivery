@@ -9,12 +9,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface NoneBusinessHourRatesRepository extends JpaRepository<NoneBusinessHourRates, Long> {
+public interface NoneBusinessHourRatesRepository extends JpaRepository<NoneBusinessHourRates, Long>,BaseRepository<NoneBusinessHourRatesDTO,NoneBusinessHourRates> {
 
     NoneBusinessHourRates findFirstByCreatedBy(Users users);
 
 //    boolean existsByUniqueStartTimeEndTimeCheckIgnoreCase(String uniqueStartTimeEndTimeCheck);
 
-    public Page<NoneBusinessHourRatesDTO> findAll(Specification<NoneBusinessHourRates> spec, Pageable pageable);
 
 }

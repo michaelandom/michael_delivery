@@ -8,11 +8,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface RiderCommissionRepository extends JpaRepository<RiderCommission, Long> {
+public interface RiderCommissionRepository extends JpaRepository<RiderCommission, Long>  ,BaseRepository<RiderCommissionDTO, RiderCommission> {
 
     RiderCommission findFirstByPreviousAndRiderCommissionIdNot(RiderCommission riderCommission,
             final Long riderCommissionId);
 
-    public Page<RiderCommissionDTO> findAll(Specification<RiderCommission> spec, Pageable pageable);
 
 }

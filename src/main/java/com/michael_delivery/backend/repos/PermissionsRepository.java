@@ -8,7 +8,5 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface PermissionsRepository extends JpaRepository<Permissions, Long> {
-    public Page<PermissionsDTO> findAll(Specification<Permissions> spec, Pageable pageable);
-
+public interface PermissionsRepository extends JpaRepository<Permissions, Long>  ,BaseRepository<PermissionsDTO,Permissions> {
 }

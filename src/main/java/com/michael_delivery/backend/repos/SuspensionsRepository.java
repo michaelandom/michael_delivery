@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface SuspensionsRepository extends JpaRepository<Suspensions, Long> {
+public interface SuspensionsRepository extends JpaRepository<Suspensions, Long> ,BaseRepository<SuspensionsDTO,Suspensions> {
 
     Suspensions findFirstByRider(Riders riders);
 
     Suspensions findFirstBySuspenedBy(Users users);
-
-    public Page<SuspensionsDTO> findAll(Specification<Suspensions> spec, Pageable pageable);
 
 }

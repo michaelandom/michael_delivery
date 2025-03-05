@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface UserCouponRepository extends JpaRepository<UserCoupon, Long> {
+public interface UserCouponRepository extends JpaRepository<UserCoupon, Long>  ,BaseRepository<UserCouponDTO,UserCoupon>{
 
     UserCoupon findFirstByUser(Users users);
 
     UserCoupon findFirstByCoupon(Coupons coupons);
-
-    public Page<UserCouponDTO> findAll(Specification<UserCoupon> spec, Pageable pageable);
 
 }

@@ -10,12 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface DestinationRepository extends JpaRepository<Destination, Long> {
+public interface DestinationRepository extends JpaRepository<Destination, Long>,BaseRepository<DestinationDTO,Destination> {
 
     Destination findFirstByOrder(Orders orders);
 
     Destination findFirstByDeliveryBy(Riders riders);
-
-    public Page<DestinationDTO> findAll(Specification<Destination> spec, Pageable pageable);
 
 }

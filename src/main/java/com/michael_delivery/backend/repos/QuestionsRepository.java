@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface QuestionsRepository extends JpaRepository<Questions, Long> {
+public interface QuestionsRepository extends JpaRepository<Questions, Long>  ,BaseRepository<QuestionsDTO,Questions>{
     public Page<QuestionsDTO> findAll(Specification<Questions> spec, Pageable pageable);
 
 }
