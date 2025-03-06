@@ -11,8 +11,19 @@ services:
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_DATASOURCE_DRIVER_CLASSNAME=com.mysql.jdbc.Driver
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - spring.data.mongodb.host=mongodb
+      - spring.data.mongodb.port=27017
+      - spring.data.mongodb.database=db
+      - spring.data.mongodb.username=root
+      - spring.data.mongodb.password=12345678
+      - spring.data.mongodb.authentication-database=admin
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       - db
+      - mongodb
+    networks:
+      - michael-delivery-network
+    restart: unless-stopped
   db:
     image: mysql:8.1
     restart: always
@@ -27,6 +38,8 @@ services:
       - '3307'
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - michael-delivery-network
   mongodb:
     image: mongo:latest
     container_name: mongodb_contaner
@@ -38,10 +51,17 @@ services:
       - '--logpath'
       - '/var/log/mongodb/mongod.log'
     ports:
-      - 27017:27017
+      - 27017:27020
     volumes:
       - ./docker/mongodb_data:/data/db
       - ./docker/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    networks:
+      - michael-delivery-network
+
+networks:
+  michael-delivery-network:
+    driver: bridge
+
 volumes:
   mysql_data:
     driver: local

@@ -1,8 +1,21 @@
-FROM openjdk:17-jdk-slim
+FROM maven:3.8.5-openjdk-17 AS build
+
 WORKDIR /app
 
-COPY target/michael_delivery-0.0.1-SNAPSHOT.jar /app/michael_delivery-0.0.1-SNAPSHOT.jar
+COPY pom.xml .
+
+RUN mvn dependency:go-offline -B
+
+COPY src ./src
+
+RUN mvn package -DskipTests
+
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
 EXPOSE 8085
-
-ENTRYPOINT ["java", "-jar", "michael_delivery-0.0.1-SNAPSHOT.jar"]
