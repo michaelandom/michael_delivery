@@ -4,6 +4,7 @@ import com.michael_delivery.backend.domain.EventGroups;
 import com.michael_delivery.backend.domain.GroupMembers;
 import com.michael_delivery.backend.domain.GroupPermissions;
 import com.michael_delivery.backend.domain.Groups;
+import com.michael_delivery.backend.model.GroupPermissionsDTO;
 import com.michael_delivery.backend.model.GroupsDTO;
 import com.michael_delivery.backend.repos.EventGroupsRepository;
 import com.michael_delivery.backend.repos.GroupMembersRepository;
@@ -18,7 +19,7 @@ import java.util.List;
 
 
 @Service
-public class GroupsService {
+public class GroupsService extends BaseService<Groups, GroupsDTO,Long,GroupsRepository> {
 
     private final GroupsRepository groupsRepository;
     private final GroupMembersRepository groupMembersRepository;
@@ -29,43 +30,17 @@ public class GroupsService {
             final GroupMembersRepository groupMembersRepository,
             final GroupPermissionsRepository groupPermissionsRepository,
             final EventGroupsRepository eventGroupsRepository) {
+        super(groupsRepository,"groupId");
         this.groupsRepository = groupsRepository;
         this.groupMembersRepository = groupMembersRepository;
         this.groupPermissionsRepository = groupPermissionsRepository;
         this.eventGroupsRepository = eventGroupsRepository;
     }
 
-    public List<GroupsDTO> findAll() {
-        final List<Groups> groupses = groupsRepository.findAll(Sort.by("groupId"));
-        return groupses.stream()
-                .map(groups -> mapToDTO(groups, new GroupsDTO()))
-                .toList();
-    }
 
-    public GroupsDTO get(final Long groupId) {
-        return groupsRepository.findById(groupId)
-                .map(groups -> mapToDTO(groups, new GroupsDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
 
-    public Long create(final GroupsDTO groupsDTO) {
-        final Groups groups = new Groups();
-        mapToEntity(groupsDTO, groups);
-        return groupsRepository.save(groups).getGroupId();
-    }
 
-    public void update(final Long groupId, final GroupsDTO groupsDTO) {
-        final Groups groups = groupsRepository.findById(groupId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(groupsDTO, groups);
-        groupsRepository.save(groups);
-    }
-
-    public void delete(final Long groupId) {
-        groupsRepository.deleteById(groupId);
-    }
-
-    private GroupsDTO mapToDTO(final Groups groups, final GroupsDTO groupsDTO) {
+    protected GroupsDTO mapToDTO(final Groups groups, final GroupsDTO groupsDTO) {
         groupsDTO.setGroupId(groups.getGroupId());
         groupsDTO.setName(groups.getName());
         groupsDTO.setDescription(groups.getDescription());
@@ -73,11 +48,21 @@ public class GroupsService {
         return groupsDTO;
     }
 
-    private Groups mapToEntity(final GroupsDTO groupsDTO, final Groups groups) {
+    protected Groups mapToEntity(final GroupsDTO groupsDTO, final Groups groups) {
         groups.setName(groupsDTO.getName());
         groups.setDescription(groupsDTO.getDescription());
         groups.setGroupType(groupsDTO.getGroupType());
         return groups;
+    }
+
+    @Override
+    protected GroupsDTO createDTO() {
+        return new GroupsDTO();
+    }
+
+    @Override
+    protected Groups createEntity() {
+        return new Groups();
     }
 
     public ReferencedWarning getReferencedWarning(final Long groupId) {

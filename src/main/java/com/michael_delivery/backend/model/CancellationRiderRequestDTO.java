@@ -28,8 +28,7 @@ public class CancellationRiderRequestDTO {
 
     private OffsetDateTime responseAt;
 
-    @Size(max = 255)
-    private String responseBy;
+    private Long responseBy;
 
 
     @NotNull
@@ -85,11 +84,11 @@ public class CancellationRiderRequestDTO {
         this.responseAt = responseAt;
     }
 
-    public String getResponseBy() {
+    public Long getResponseBy() {
         return responseBy;
     }
 
-    public void setResponseBy(final String responseBy) {
+    public void setResponseBy(final Long responseBy) {
         this.responseBy = responseBy;
     }
 

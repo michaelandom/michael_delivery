@@ -1,9 +1,12 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.Announcement;
 import com.michael_delivery.backend.domain.BillingAddress;
 import com.michael_delivery.backend.domain.BussinessAccount;
 import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.AnnouncementDTO;
 import com.michael_delivery.backend.model.BillingAddressDTO;
+import com.michael_delivery.backend.repos.AnnouncementRepository;
 import com.michael_delivery.backend.repos.BillingAddressRepository;
 import com.michael_delivery.backend.repos.BussinessAccountRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
@@ -16,7 +19,7 @@ import java.util.List;
 
 
 @Service
-public class BillingAddressService {
+public class BillingAddressService extends BaseService<BillingAddress, BillingAddressDTO,Long, BillingAddressRepository> {
 
     private final BillingAddressRepository billingAddressRepository;
     private final BussinessAccountRepository bussinessAccountRepository;
@@ -25,42 +28,16 @@ public class BillingAddressService {
     public BillingAddressService(final BillingAddressRepository billingAddressRepository,
             final BussinessAccountRepository bussinessAccountRepository,
             final UsersRepository usersRepository) {
+        super(billingAddressRepository,"billingAddressId");
         this.billingAddressRepository = billingAddressRepository;
         this.bussinessAccountRepository = bussinessAccountRepository;
         this.usersRepository = usersRepository;
     }
 
-    public List<BillingAddressDTO> findAll() {
-        final List<BillingAddress> billingAddresses = billingAddressRepository.findAll(Sort.by("billingAddressId"));
-        return billingAddresses.stream()
-                .map(billingAddress -> mapToDTO(billingAddress, new BillingAddressDTO()))
-                .toList();
-    }
 
-    public BillingAddressDTO get(final Long billingAddressId) {
-        return billingAddressRepository.findById(billingAddressId)
-                .map(billingAddress -> mapToDTO(billingAddress, new BillingAddressDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
 
-    public Long create(final BillingAddressDTO billingAddressDTO) {
-        final BillingAddress billingAddress = new BillingAddress();
-        mapToEntity(billingAddressDTO, billingAddress);
-        return billingAddressRepository.save(billingAddress).getBillingAddressId();
-    }
-
-    public void update(final Long billingAddressId, final BillingAddressDTO billingAddressDTO) {
-        final BillingAddress billingAddress = billingAddressRepository.findById(billingAddressId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(billingAddressDTO, billingAddress);
-        billingAddressRepository.save(billingAddress);
-    }
-
-    public void delete(final Long billingAddressId) {
-        billingAddressRepository.deleteById(billingAddressId);
-    }
-
-    private BillingAddressDTO mapToDTO(final BillingAddress billingAddress,
+    @Override
+    protected BillingAddressDTO mapToDTO(final BillingAddress billingAddress,
             final BillingAddressDTO billingAddressDTO) {
         billingAddressDTO.setBillingAddressId(billingAddress.getBillingAddressId());
         billingAddressDTO.setBillingEmail(billingAddress.getBillingEmail());
@@ -72,8 +49,8 @@ public class BillingAddressService {
 
         return billingAddressDTO;
     }
-
-    private BillingAddress mapToEntity(final BillingAddressDTO billingAddressDTO,
+    @Override
+    protected BillingAddress mapToEntity(final BillingAddressDTO billingAddressDTO,
             final BillingAddress billingAddress) {
         billingAddress.setBillingEmail(billingAddressDTO.getBillingEmail());
         billingAddress.setBillingStreetAddress(billingAddressDTO.getBillingStreetAddress());
@@ -85,6 +62,16 @@ public class BillingAddressService {
                 );
         billingAddress.setUsers(user);
         return billingAddress;
+    }
+
+    @Override
+    protected BillingAddressDTO createDTO() {
+        return new BillingAddressDTO();
+    }
+
+    @Override
+    protected BillingAddress createEntity() {
+        return new BillingAddress();
     }
 
 

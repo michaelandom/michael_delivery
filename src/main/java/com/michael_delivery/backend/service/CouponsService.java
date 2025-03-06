@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @Service
-public class CouponsService {
+public class CouponsService extends BaseService<Coupons, CouponsDTO,Long, CouponsRepository>  {
 
     private final CouponsRepository couponsRepository;
     private final UsersRepository usersRepository;
@@ -25,42 +25,24 @@ public class CouponsService {
     public CouponsService(final CouponsRepository couponsRepository,
             final UsersRepository usersRepository,
             final UserCouponRepository userCouponRepository) {
+        super(couponsRepository,"couponId");
         this.couponsRepository = couponsRepository;
         this.usersRepository = usersRepository;
         this.userCouponRepository = userCouponRepository;
     }
 
-    public List<CouponsDTO> findAll() {
-        final List<Coupons> couponses = couponsRepository.findAll(Sort.by("couponId"));
-        return couponses.stream()
-                .map(coupons -> mapToDTO(coupons, new CouponsDTO()))
-                .toList();
+    @Override
+    protected CouponsDTO createDTO() {
+        return new CouponsDTO();
     }
 
-    public CouponsDTO get(final Long couponId) {
-        return couponsRepository.findById(couponId)
-                .map(coupons -> mapToDTO(coupons, new CouponsDTO()))
-                .orElseThrow(NotFoundException::new);
+    @Override
+    protected Coupons createEntity() {
+        return new Coupons();
     }
 
-    public Long create(final CouponsDTO couponsDTO) {
-        final Coupons coupons = new Coupons();
-        mapToEntity(couponsDTO, coupons);
-        return couponsRepository.save(coupons).getCouponId();
-    }
-
-    public void update(final Long couponId, final CouponsDTO couponsDTO) {
-        final Coupons coupons = couponsRepository.findById(couponId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(couponsDTO, coupons);
-        couponsRepository.save(coupons);
-    }
-
-    public void delete(final Long couponId) {
-        couponsRepository.deleteById(couponId);
-    }
-
-    private CouponsDTO mapToDTO(final Coupons coupons, final CouponsDTO couponsDTO) {
+    @Override
+    protected CouponsDTO mapToDTO(final Coupons coupons, final CouponsDTO couponsDTO) {
         couponsDTO.setCouponId(coupons.getCouponId());
         couponsDTO.setDiscountType(coupons.getDiscountType());
         couponsDTO.setDiscountAmount(coupons.getDiscountAmount());
@@ -79,7 +61,8 @@ public class CouponsService {
         return couponsDTO;
     }
 
-    private Coupons mapToEntity(final CouponsDTO couponsDTO, final Coupons coupons) {
+    @Override
+    protected Coupons mapToEntity(final CouponsDTO couponsDTO, final Coupons coupons) {
         coupons.setDiscountType(couponsDTO.getDiscountType());
         coupons.setDiscountAmount(couponsDTO.getDiscountAmount());
         coupons.setDiscountPercentage(couponsDTO.getDiscountPercentage());

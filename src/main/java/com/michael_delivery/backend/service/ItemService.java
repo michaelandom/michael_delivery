@@ -1,10 +1,13 @@
 package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.Destination;
+import com.michael_delivery.backend.domain.Groups;
 import com.michael_delivery.backend.domain.Item;
 import com.michael_delivery.backend.domain.SizeAndWeightDescriptions;
+import com.michael_delivery.backend.model.GroupsDTO;
 import com.michael_delivery.backend.model.ItemDTO;
 import com.michael_delivery.backend.repos.DestinationRepository;
+import com.michael_delivery.backend.repos.GroupsRepository;
 import com.michael_delivery.backend.repos.ItemRepository;
 import com.michael_delivery.backend.repos.SizeAndWeightDescriptionsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
@@ -15,7 +18,7 @@ import java.util.List;
 
 
 @Service
-public class ItemService {
+public class ItemService extends BaseService<Item, ItemDTO,Long, ItemRepository> {
 
     private final ItemRepository itemRepository;
     private final DestinationRepository destinationRepository;
@@ -24,42 +27,14 @@ public class ItemService {
     public ItemService(final ItemRepository itemRepository,
             final DestinationRepository destinationRepository,
             final SizeAndWeightDescriptionsRepository sizeAndWeightDescriptionsRepository) {
+        super(itemRepository,"itemId");
         this.itemRepository = itemRepository;
         this.destinationRepository = destinationRepository;
         this.sizeAndWeightDescriptionsRepository = sizeAndWeightDescriptionsRepository;
     }
 
-    public List<ItemDTO> findAll() {
-        final List<Item> items = itemRepository.findAll(Sort.by("itemId"));
-        return items.stream()
-                .map(item -> mapToDTO(item, new ItemDTO()))
-                .toList();
-    }
 
-    public ItemDTO get(final Long itemId) {
-        return itemRepository.findById(itemId)
-                .map(item -> mapToDTO(item, new ItemDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final ItemDTO itemDTO) {
-        final Item item = new Item();
-        mapToEntity(itemDTO, item);
-        return itemRepository.save(item).getItemId();
-    }
-
-    public void update(final Long itemId, final ItemDTO itemDTO) {
-        final Item item = itemRepository.findById(itemId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(itemDTO, item);
-        itemRepository.save(item);
-    }
-
-    public void delete(final Long itemId) {
-        itemRepository.deleteById(itemId);
-    }
-
-    private ItemDTO mapToDTO(final Item item, final ItemDTO itemDTO) {
+    protected ItemDTO mapToDTO(final Item item, final ItemDTO itemDTO) {
         itemDTO.setItemId(item.getItemId());
         itemDTO.setName(item.getName());
         itemDTO.setItemClassification(item.getItemClassification());
@@ -69,7 +44,7 @@ public class ItemService {
         return itemDTO;
     }
 
-    private Item mapToEntity(final ItemDTO itemDTO, final Item item) {
+    protected Item mapToEntity(final ItemDTO itemDTO, final Item item) {
         item.setName(itemDTO.getName());
         item.setItemClassification(itemDTO.getItemClassification());
         item.setPhotoUrls(itemDTO.getPhotoUrls());
@@ -80,6 +55,16 @@ public class ItemService {
                 .orElseThrow(() -> new NotFoundException("sizeWeightDescription not found"));
         item.setSizeWeightDescription(sizeWeightDescription);
         return item;
+    }
+
+    @Override
+    protected ItemDTO createDTO() {
+        return new ItemDTO();
+    }
+
+    @Override
+    protected Item createEntity() {
+        return new Item();
     }
 
 }

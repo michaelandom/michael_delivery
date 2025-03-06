@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Service
-public class GroupPermissionsService {
+public class GroupPermissionsService extends BaseService<GroupPermissions,GroupPermissionsDTO,Long,GroupPermissionsRepository> {
 
     private final GroupPermissionsRepository groupPermissionsRepository;
     private final GroupsRepository groupsRepository;
@@ -24,43 +24,15 @@ public class GroupPermissionsService {
     public GroupPermissionsService(final GroupPermissionsRepository groupPermissionsRepository,
             final GroupsRepository groupsRepository,
             final PermissionsRepository permissionsRepository) {
+
+        super(groupPermissionsRepository,"groupPermissionId");
         this.groupPermissionsRepository = groupPermissionsRepository;
         this.groupsRepository = groupsRepository;
         this.permissionsRepository = permissionsRepository;
     }
 
-    public List<GroupPermissionsDTO> findAll() {
-        final List<GroupPermissions> groupPermissionses = groupPermissionsRepository.findAll(Sort.by("groupPermissionId"));
-        return groupPermissionses.stream()
-                .map(groupPermissions -> mapToDTO(groupPermissions, new GroupPermissionsDTO()))
-                .toList();
-    }
-
-    public GroupPermissionsDTO get(final Long groupPermissionId) {
-        return groupPermissionsRepository.findById(groupPermissionId)
-                .map(groupPermissions -> mapToDTO(groupPermissions, new GroupPermissionsDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final GroupPermissionsDTO groupPermissionsDTO) {
-        final GroupPermissions groupPermissions = new GroupPermissions();
-        mapToEntity(groupPermissionsDTO, groupPermissions);
-        return groupPermissionsRepository.save(groupPermissions).getGroupPermissionId();
-    }
-
-    public void update(final Long groupPermissionId,
-            final GroupPermissionsDTO groupPermissionsDTO) {
-        final GroupPermissions groupPermissions = groupPermissionsRepository.findById(groupPermissionId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(groupPermissionsDTO, groupPermissions);
-        groupPermissionsRepository.save(groupPermissions);
-    }
-
-    public void delete(final Long groupPermissionId) {
-        groupPermissionsRepository.deleteById(groupPermissionId);
-    }
-
-    private GroupPermissionsDTO mapToDTO(final GroupPermissions groupPermissions,
+    @Override
+    protected GroupPermissionsDTO mapToDTO(final GroupPermissions groupPermissions,
             final GroupPermissionsDTO groupPermissionsDTO) {
         groupPermissionsDTO.setGroupPermissionId(groupPermissions.getGroupPermissionId());
         groupPermissionsDTO.setGroup(groupPermissions.getGroup() == null ? null : groupPermissions.getGroup().getGroupId());
@@ -68,7 +40,8 @@ public class GroupPermissionsService {
         return groupPermissionsDTO;
     }
 
-    private GroupPermissions mapToEntity(final GroupPermissionsDTO groupPermissionsDTO,
+    @Override
+    protected GroupPermissions mapToEntity(final GroupPermissionsDTO groupPermissionsDTO,
             final GroupPermissions groupPermissions) {
         final Groups group = groupPermissionsDTO.getGroup() == null ? null : groupsRepository.findById(groupPermissionsDTO.getGroup())
                 .orElseThrow(() -> new NotFoundException("group not found"));
@@ -77,6 +50,16 @@ public class GroupPermissionsService {
                 .orElseThrow(() -> new NotFoundException("permission not found"));
         groupPermissions.setPermission(permission);
         return groupPermissions;
+    }
+
+    @Override
+    protected GroupPermissionsDTO createDTO() {
+        return new GroupPermissionsDTO();
+    }
+
+    @Override
+    protected GroupPermissions createEntity() {
+        return new GroupPermissions();
     }
 
 }

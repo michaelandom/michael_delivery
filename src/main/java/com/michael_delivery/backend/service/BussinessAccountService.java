@@ -3,6 +3,7 @@ package com.michael_delivery.backend.service;
 import com.michael_delivery.backend.domain.BillingAddress;
 import com.michael_delivery.backend.domain.BussinessAccount;
 import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.BillingAddressDTO;
 import com.michael_delivery.backend.model.BussinessAccountDTO;
 import com.michael_delivery.backend.repos.BillingAddressRepository;
 import com.michael_delivery.backend.repos.BussinessAccountRepository;
@@ -16,7 +17,7 @@ import java.util.List;
 
 
 @Service
-public class BussinessAccountService {
+public class BussinessAccountService extends BaseService<BussinessAccount, BussinessAccountDTO,Long, BussinessAccountRepository>  {
 
     private final BussinessAccountRepository bussinessAccountRepository;
     private final BillingAddressRepository billingAddressRepository;
@@ -25,43 +26,14 @@ public class BussinessAccountService {
     public BussinessAccountService(final BussinessAccountRepository bussinessAccountRepository,
             final BillingAddressRepository billingAddressRepository,
             final UsersRepository usersRepository) {
+        super(bussinessAccountRepository,"bussinessAccountId");
+
         this.bussinessAccountRepository = bussinessAccountRepository;
         this.billingAddressRepository = billingAddressRepository;
         this.usersRepository = usersRepository;
     }
-
-    public List<BussinessAccountDTO> findAll() {
-        final List<BussinessAccount> bussinessAccounts = bussinessAccountRepository.findAll(Sort.by("bussinessAccountId"));
-        return bussinessAccounts.stream()
-                .map(bussinessAccount -> mapToDTO(bussinessAccount, new BussinessAccountDTO()))
-                .toList();
-    }
-
-    public BussinessAccountDTO get(final Long bussinessAccountId) {
-        return bussinessAccountRepository.findById(bussinessAccountId)
-                .map(bussinessAccount -> mapToDTO(bussinessAccount, new BussinessAccountDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final BussinessAccountDTO bussinessAccountDTO) {
-        final BussinessAccount bussinessAccount = new BussinessAccount();
-        mapToEntity(bussinessAccountDTO, bussinessAccount);
-        return bussinessAccountRepository.save(bussinessAccount).getBussinessAccountId();
-    }
-
-    public void update(final Long bussinessAccountId,
-            final BussinessAccountDTO bussinessAccountDTO) {
-        final BussinessAccount bussinessAccount = bussinessAccountRepository.findById(bussinessAccountId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(bussinessAccountDTO, bussinessAccount);
-        bussinessAccountRepository.save(bussinessAccount);
-    }
-
-    public void delete(final Long bussinessAccountId) {
-        bussinessAccountRepository.deleteById(bussinessAccountId);
-    }
-
-    private BussinessAccountDTO mapToDTO(final BussinessAccount bussinessAccount,
+    @Override
+    protected BussinessAccountDTO mapToDTO(final BussinessAccount bussinessAccount,
             final BussinessAccountDTO bussinessAccountDTO) {
         bussinessAccountDTO.setBussinessAccountId(bussinessAccount.getBussinessAccountId());
         bussinessAccountDTO.setCompanyAbn(bussinessAccount.getCompanyAbn());
@@ -70,14 +42,24 @@ public class BussinessAccountService {
         bussinessAccountDTO.setIsActive(bussinessAccount.getIsActive());
         return bussinessAccountDTO;
     }
-
-    private BussinessAccount mapToEntity(final BussinessAccountDTO bussinessAccountDTO,
+    @Override
+    protected BussinessAccount mapToEntity(final BussinessAccountDTO bussinessAccountDTO,
             final BussinessAccount bussinessAccount) {
         bussinessAccount.setCompanyAbn(bussinessAccountDTO.getCompanyAbn());
         bussinessAccount.setCompanyName(bussinessAccountDTO.getCompanyName());
         bussinessAccount.setLogoUrl(bussinessAccountDTO.getLogoUrl());
         bussinessAccount.setIsActive(bussinessAccountDTO.getIsActive());
         return bussinessAccount;
+    }
+
+    @Override
+    protected BussinessAccountDTO createDTO() {
+        return new BussinessAccountDTO();
+    }
+
+    @Override
+    protected BussinessAccount createEntity() {
+        return new BussinessAccount();
     }
 
     public ReferencedWarning getReferencedWarning(final Long bussinessAccountId) {

@@ -1,8 +1,11 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.Evidence;
 import com.michael_delivery.backend.domain.ExtrFee;
 import com.michael_delivery.backend.domain.Orders;
+import com.michael_delivery.backend.model.EvidenceDTO;
 import com.michael_delivery.backend.model.ExtrFeeDTO;
+import com.michael_delivery.backend.repos.EvidenceRepository;
 import com.michael_delivery.backend.repos.ExtrFeeRepository;
 import com.michael_delivery.backend.repos.OrdersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
@@ -13,48 +16,19 @@ import java.util.List;
 
 
 @Service
-public class ExtrFeeService {
+public class ExtrFeeService extends BaseService<ExtrFee, ExtrFeeDTO,Long, ExtrFeeRepository>{
 
     private final ExtrFeeRepository extrFeeRepository;
     private final OrdersRepository ordersRepository;
 
     public ExtrFeeService(final ExtrFeeRepository extrFeeRepository,
             final OrdersRepository ordersRepository) {
+        super(extrFeeRepository,"extrFeeId");
         this.extrFeeRepository = extrFeeRepository;
         this.ordersRepository = ordersRepository;
     }
 
-    public List<ExtrFeeDTO> findAll() {
-        final List<ExtrFee> extrFees = extrFeeRepository.findAll(Sort.by("extrFeeId"));
-        return extrFees.stream()
-                .map(extrFee -> mapToDTO(extrFee, new ExtrFeeDTO()))
-                .toList();
-    }
-
-    public ExtrFeeDTO get(final Long extrFeeId) {
-        return extrFeeRepository.findById(extrFeeId)
-                .map(extrFee -> mapToDTO(extrFee, new ExtrFeeDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final ExtrFeeDTO extrFeeDTO) {
-        final ExtrFee extrFee = new ExtrFee();
-        mapToEntity(extrFeeDTO, extrFee);
-        return extrFeeRepository.save(extrFee).getExtrFeeId();
-    }
-
-    public void update(final Long extrFeeId, final ExtrFeeDTO extrFeeDTO) {
-        final ExtrFee extrFee = extrFeeRepository.findById(extrFeeId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(extrFeeDTO, extrFee);
-        extrFeeRepository.save(extrFee);
-    }
-
-    public void delete(final Long extrFeeId) {
-        extrFeeRepository.deleteById(extrFeeId);
-    }
-
-    private ExtrFeeDTO mapToDTO(final ExtrFee extrFee, final ExtrFeeDTO extrFeeDTO) {
+    protected ExtrFeeDTO mapToDTO(final ExtrFee extrFee, final ExtrFeeDTO extrFeeDTO) {
         extrFeeDTO.setExtrFeeId(extrFee.getExtrFeeId());
         extrFeeDTO.setMessage(extrFee.getMessage());
         extrFeeDTO.setAmount(extrFee.getAmount());
@@ -66,7 +40,7 @@ public class ExtrFeeService {
         return extrFeeDTO;
     }
 
-    private ExtrFee mapToEntity(final ExtrFeeDTO extrFeeDTO, final ExtrFee extrFee) {
+    protected ExtrFee mapToEntity(final ExtrFeeDTO extrFeeDTO, final ExtrFee extrFee) {
         extrFee.setMessage(extrFeeDTO.getMessage());
         extrFee.setAmount(extrFeeDTO.getAmount());
         extrFee.setCardNumber(extrFeeDTO.getCardNumber());
@@ -77,6 +51,16 @@ public class ExtrFeeService {
                 .orElseThrow(() -> new NotFoundException("order not found"));
         extrFee.setOrder(order);
         return extrFee;
+    }
+
+    @Override
+    protected ExtrFeeDTO createDTO() {
+        return new ExtrFeeDTO();
+    }
+
+    @Override
+    protected ExtrFee createEntity() {
+        return new ExtrFee();
     }
 
 }

@@ -1,13 +1,8 @@
 package com.michael_delivery.backend.service;
-
 import com.michael_delivery.backend.domain.Announcement;
 import com.michael_delivery.backend.model.AnnouncementDTO;
 import com.michael_delivery.backend.repos.AnnouncementRepository;
-import com.michael_delivery.backend.util.NotFoundException;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
@@ -16,7 +11,7 @@ public class AnnouncementService extends BaseService<Announcement, AnnouncementD
     private final AnnouncementRepository announcementRepository;
 
     public AnnouncementService(final AnnouncementRepository announcementRepository) {
-        super(announcementRepository,"advertisementId");
+        super(announcementRepository,"announcementId");
         this.announcementRepository = announcementRepository;
     }
 

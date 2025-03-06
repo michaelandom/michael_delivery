@@ -1,9 +1,12 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.DeleteRequest;
 import com.michael_delivery.backend.domain.DeliveryDetail;
 import com.michael_delivery.backend.domain.NoteDeliveryDetail;
 import com.michael_delivery.backend.domain.Orders;
+import com.michael_delivery.backend.model.DeleteRequestDTO;
 import com.michael_delivery.backend.model.DeliveryDetailDTO;
+import com.michael_delivery.backend.repos.DeleteRequestRepository;
 import com.michael_delivery.backend.repos.DeliveryDetailRepository;
 import com.michael_delivery.backend.repos.NoteDeliveryDetailRepository;
 import com.michael_delivery.backend.repos.OrdersRepository;
@@ -16,7 +19,7 @@ import java.util.List;
 
 
 @Service
-public class DeliveryDetailService {
+public class DeliveryDetailService extends BaseService<DeliveryDetail, DeliveryDetailDTO,Long, DeliveryDetailRepository>{
 
     private final DeliveryDetailRepository deliveryDetailRepository;
     private final OrdersRepository ordersRepository;
@@ -25,42 +28,14 @@ public class DeliveryDetailService {
     public DeliveryDetailService(final DeliveryDetailRepository deliveryDetailRepository,
             final OrdersRepository ordersRepository,
             final NoteDeliveryDetailRepository noteDeliveryDetailRepository) {
+        super(deliveryDetailRepository,"deliveryDetailId");
         this.deliveryDetailRepository = deliveryDetailRepository;
         this.ordersRepository = ordersRepository;
         this.noteDeliveryDetailRepository = noteDeliveryDetailRepository;
     }
 
-    public List<DeliveryDetailDTO> findAll() {
-        final List<DeliveryDetail> deliveryDetails = deliveryDetailRepository.findAll(Sort.by("deliveryDetailId"));
-        return deliveryDetails.stream()
-                .map(deliveryDetail -> mapToDTO(deliveryDetail, new DeliveryDetailDTO()))
-                .toList();
-    }
-
-    public DeliveryDetailDTO get(final Long deliveryDetailId) {
-        return deliveryDetailRepository.findById(deliveryDetailId)
-                .map(deliveryDetail -> mapToDTO(deliveryDetail, new DeliveryDetailDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final DeliveryDetailDTO deliveryDetailDTO) {
-        final DeliveryDetail deliveryDetail = new DeliveryDetail();
-        mapToEntity(deliveryDetailDTO, deliveryDetail);
-        return deliveryDetailRepository.save(deliveryDetail).getDeliveryDetailId();
-    }
-
-    public void update(final Long deliveryDetailId, final DeliveryDetailDTO deliveryDetailDTO) {
-        final DeliveryDetail deliveryDetail = deliveryDetailRepository.findById(deliveryDetailId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(deliveryDetailDTO, deliveryDetail);
-        deliveryDetailRepository.save(deliveryDetail);
-    }
-
-    public void delete(final Long deliveryDetailId) {
-        deliveryDetailRepository.deleteById(deliveryDetailId);
-    }
-
-    private DeliveryDetailDTO mapToDTO(final DeliveryDetail deliveryDetail,
+    @Override
+    protected DeliveryDetailDTO mapToDTO(final DeliveryDetail deliveryDetail,
             final DeliveryDetailDTO deliveryDetailDTO) {
         deliveryDetailDTO.setDeliveryDetailId(deliveryDetail.getDeliveryDetailId());
         deliveryDetailDTO.setPickupLatitude(deliveryDetail.getPickupLatitude());
@@ -80,7 +55,8 @@ public class DeliveryDetailService {
         return deliveryDetailDTO;
     }
 
-    private DeliveryDetail mapToEntity(final DeliveryDetailDTO deliveryDetailDTO,
+    @Override
+    protected DeliveryDetail mapToEntity(final DeliveryDetailDTO deliveryDetailDTO,
             final DeliveryDetail deliveryDetail) {
         deliveryDetail.setPickupLatitude(deliveryDetailDTO.getPickupLatitude());
         deliveryDetail.setPickupLongitude(deliveryDetailDTO.getPickupLongitude());
@@ -99,6 +75,16 @@ public class DeliveryDetailService {
                 .orElseThrow(() -> new NotFoundException("order not found"));
         deliveryDetail.setOrder(order);
         return deliveryDetail;
+    }
+
+    @Override
+    protected DeliveryDetailDTO createDTO() {
+        return new DeliveryDetailDTO();
+    }
+
+    @Override
+    protected DeliveryDetail createEntity() {
+        return new DeliveryDetail();
     }
 
     public ReferencedWarning getReferencedWarning(final Long deliveryDetailId) {

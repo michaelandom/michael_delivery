@@ -421,7 +421,7 @@ CREATE TABLE IF NOT EXISTS `Cancellation_Rider_Requests` (
     `remark` TEXT,
     `cancelled_by` BIGINT,
     `response_at` TIMESTAMP NULL,
-    `response_by` VARCHAR(255),
+    `response_by` BIGINT,
     `order_id` BIGINT NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -435,7 +435,8 @@ CREATE TABLE IF NOT EXISTS `Cancellation_Rider_Requests` (
         }', photo_urls)
     ),
     FOREIGN KEY (`order_id`) REFERENCES `Orders`(`order_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`cancelled_by`) REFERENCES `Users`(`user_id`) ON DELETE SET NULL
+    FOREIGN KEY (`cancelled_by`) REFERENCES `Riders`(`rider_id`) ON DELETE SET NULL,
+    FOREIGN KEY (`response_by`) REFERENCES `Users`(`user_id`) ON DELETE SET NULL
     );
 
 CREATE TABLE IF NOT EXISTS `Extr_Fees` (

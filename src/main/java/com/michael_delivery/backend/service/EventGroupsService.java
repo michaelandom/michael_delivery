@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Service
-public class EventGroupsService {
+public class EventGroupsService extends BaseService<EventGroups, EventGroupsDTO,Long, EventGroupsRepository> {
 
     private final EventGroupsRepository eventGroupsRepository;
     private final GroupsRepository groupsRepository;
@@ -23,42 +23,15 @@ public class EventGroupsService {
 
     public EventGroupsService(final EventGroupsRepository eventGroupsRepository,
             final GroupsRepository groupsRepository, final EventsRepository eventsRepository) {
+        super(eventGroupsRepository,"eventGroupId");
         this.eventGroupsRepository = eventGroupsRepository;
         this.groupsRepository = groupsRepository;
         this.eventsRepository = eventsRepository;
     }
 
-    public List<EventGroupsDTO> findAll() {
-        final List<EventGroups> eventGroupses = eventGroupsRepository.findAll(Sort.by("eventGroupId"));
-        return eventGroupses.stream()
-                .map(eventGroups -> mapToDTO(eventGroups, new EventGroupsDTO()))
-                .toList();
-    }
 
-    public EventGroupsDTO get(final Long eventGroupId) {
-        return eventGroupsRepository.findById(eventGroupId)
-                .map(eventGroups -> mapToDTO(eventGroups, new EventGroupsDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final EventGroupsDTO eventGroupsDTO) {
-        final EventGroups eventGroups = new EventGroups();
-        mapToEntity(eventGroupsDTO, eventGroups);
-        return eventGroupsRepository.save(eventGroups).getEventGroupId();
-    }
-
-    public void update(final Long eventGroupId, final EventGroupsDTO eventGroupsDTO) {
-        final EventGroups eventGroups = eventGroupsRepository.findById(eventGroupId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(eventGroupsDTO, eventGroups);
-        eventGroupsRepository.save(eventGroups);
-    }
-
-    public void delete(final Long eventGroupId) {
-        eventGroupsRepository.deleteById(eventGroupId);
-    }
-
-    private EventGroupsDTO mapToDTO(final EventGroups eventGroups,
+    @Override
+    protected EventGroupsDTO mapToDTO(final EventGroups eventGroups,
             final EventGroupsDTO eventGroupsDTO) {
         eventGroupsDTO.setEventGroupId(eventGroups.getEventGroupId());
         eventGroupsDTO.setGroup(eventGroups.getGroup() == null ? null : eventGroups.getGroup().getGroupId());
@@ -66,7 +39,8 @@ public class EventGroupsService {
         return eventGroupsDTO;
     }
 
-    private EventGroups mapToEntity(final EventGroupsDTO eventGroupsDTO,
+    @Override
+    protected EventGroups mapToEntity(final EventGroupsDTO eventGroupsDTO,
             final EventGroups eventGroups) {
         final Groups group = eventGroupsDTO.getGroup() == null ? null : groupsRepository.findById(eventGroupsDTO.getGroup())
                 .orElseThrow(() -> new NotFoundException("group not found"));
@@ -75,6 +49,16 @@ public class EventGroupsService {
                 .orElseThrow(() -> new NotFoundException("event not found"));
         eventGroups.setEvent(event);
         return eventGroups;
+    }
+
+    @Override
+    protected EventGroupsDTO createDTO() {
+        return new EventGroupsDTO();
+    }
+
+    @Override
+    protected EventGroups createEntity() {
+        return new EventGroups();
     }
 
 }

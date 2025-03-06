@@ -1,8 +1,11 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.Coupons;
 import com.michael_delivery.backend.domain.DeleteRequest;
 import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.CouponsDTO;
 import com.michael_delivery.backend.model.DeleteRequestDTO;
+import com.michael_delivery.backend.repos.CouponsRepository;
 import com.michael_delivery.backend.repos.DeleteRequestRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
@@ -13,48 +16,21 @@ import java.util.List;
 
 
 @Service
-public class DeleteRequestService {
+public class DeleteRequestService extends BaseService<DeleteRequest, DeleteRequestDTO,Long, DeleteRequestRepository>{
 
     private final DeleteRequestRepository deleteRequestRepository;
     private final UsersRepository usersRepository;
 
     public DeleteRequestService(final DeleteRequestRepository deleteRequestRepository,
             final UsersRepository usersRepository) {
+        super(deleteRequestRepository,"deleteRequestId");
         this.deleteRequestRepository = deleteRequestRepository;
         this.usersRepository = usersRepository;
     }
 
-    public List<DeleteRequestDTO> findAll() {
-        final List<DeleteRequest> deleteRequests = deleteRequestRepository.findAll(Sort.by("deleteRequestId"));
-        return deleteRequests.stream()
-                .map(deleteRequest -> mapToDTO(deleteRequest, new DeleteRequestDTO()))
-                .toList();
-    }
 
-    public DeleteRequestDTO get(final Long deleteRequestId) {
-        return deleteRequestRepository.findById(deleteRequestId)
-                .map(deleteRequest -> mapToDTO(deleteRequest, new DeleteRequestDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final DeleteRequestDTO deleteRequestDTO) {
-        final DeleteRequest deleteRequest = new DeleteRequest();
-        mapToEntity(deleteRequestDTO, deleteRequest);
-        return deleteRequestRepository.save(deleteRequest).getDeleteRequestId();
-    }
-
-    public void update(final Long deleteRequestId, final DeleteRequestDTO deleteRequestDTO) {
-        final DeleteRequest deleteRequest = deleteRequestRepository.findById(deleteRequestId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(deleteRequestDTO, deleteRequest);
-        deleteRequestRepository.save(deleteRequest);
-    }
-
-    public void delete(final Long deleteRequestId) {
-        deleteRequestRepository.deleteById(deleteRequestId);
-    }
-
-    private DeleteRequestDTO mapToDTO(final DeleteRequest deleteRequest,
+    @Override
+    protected DeleteRequestDTO mapToDTO(final DeleteRequest deleteRequest,
             final DeleteRequestDTO deleteRequestDTO) {
         deleteRequestDTO.setDeleteRequestId(deleteRequest.getDeleteRequestId());
         deleteRequestDTO.setReason(deleteRequest.getReason());
@@ -63,7 +39,8 @@ public class DeleteRequestService {
         return deleteRequestDTO;
     }
 
-    private DeleteRequest mapToEntity(final DeleteRequestDTO deleteRequestDTO,
+    @Override
+    protected DeleteRequest mapToEntity(final DeleteRequestDTO deleteRequestDTO,
             final DeleteRequest deleteRequest) {
         deleteRequest.setReason(deleteRequestDTO.getReason());
         deleteRequest.setNote(deleteRequestDTO.getNote());
@@ -71,6 +48,16 @@ public class DeleteRequestService {
                 .orElseThrow(() -> new NotFoundException("user not found"));
         deleteRequest.setUser(user);
         return deleteRequest;
+    }
+
+    @Override
+    protected DeleteRequestDTO createDTO() {
+        return new DeleteRequestDTO();
+    }
+
+    @Override
+    protected DeleteRequest createEntity() {
+        return new DeleteRequest();
     }
 
 }

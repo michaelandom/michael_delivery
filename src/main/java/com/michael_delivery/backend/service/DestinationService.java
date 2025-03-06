@@ -1,6 +1,7 @@
 package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.DeliveryDetailDTO;
 import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.repos.*;
 import com.michael_delivery.backend.util.NotFoundException;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 @Service
-public class DestinationService {
+public class DestinationService  extends BaseService<Destination, DestinationDTO,Long, DestinationRepository>{
 
     private final DestinationRepository destinationRepository;
     private final OrdersRepository ordersRepository;
@@ -25,6 +26,7 @@ public class DestinationService {
             final OrdersRepository ordersRepository, final RidersRepository ridersRepository,
             final EvidenceRepository evidenceRepository, final ItemRepository itemRepository,
             final NoteDestinationRepository noteDestinationRepository) {
+        super(destinationRepository,"destinationId");
         this.destinationRepository = destinationRepository;
         this.ordersRepository = ordersRepository;
         this.ridersRepository = ridersRepository;
@@ -33,37 +35,7 @@ public class DestinationService {
         this.noteDestinationRepository = noteDestinationRepository;
     }
 
-    public List<DestinationDTO> findAll() {
-        final List<Destination> destinations = destinationRepository.findAll(Sort.by("destinationId"));
-        return destinations.stream()
-                .map(destination -> mapToDTO(destination, new DestinationDTO()))
-                .toList();
-    }
-
-    public DestinationDTO get(final Long destinationId) {
-        return destinationRepository.findById(destinationId)
-                .map(destination -> mapToDTO(destination, new DestinationDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final DestinationDTO destinationDTO) {
-        final Destination destination = new Destination();
-        mapToEntity(destinationDTO, destination);
-        return destinationRepository.save(destination).getDestinationId();
-    }
-
-    public void update(final Long destinationId, final DestinationDTO destinationDTO) {
-        final Destination destination = destinationRepository.findById(destinationId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(destinationDTO, destination);
-        destinationRepository.save(destination);
-    }
-
-    public void delete(final Long destinationId) {
-        destinationRepository.deleteById(destinationId);
-    }
-
-    private DestinationDTO mapToDTO(final Destination destination,
+    protected DestinationDTO mapToDTO(final Destination destination,
             final DestinationDTO destinationDTO) {
         destinationDTO.setDestinationId(destination.getDestinationId());
         destinationDTO.setDestinationLatitude(destination.getDestinationLatitude());
@@ -82,7 +54,7 @@ public class DestinationService {
         return destinationDTO;
     }
 
-    private Destination mapToEntity(final DestinationDTO destinationDTO,
+    protected Destination mapToEntity(final DestinationDTO destinationDTO,
             final Destination destination) {
         destination.setDestinationLatitude(destinationDTO.getDestinationLatitude());
         destination.setDestinationLongitude(destinationDTO.getDestinationLongitude());
@@ -102,6 +74,16 @@ public class DestinationService {
                 .orElseThrow(() -> new NotFoundException("deliveryBy not found"));
         destination.setDeliveryBy(deliveryBy);
         return destination;
+    }
+
+    @Override
+    protected DestinationDTO createDTO() {
+        return new DestinationDTO();
+    }
+
+    @Override
+    protected Destination createEntity() {
+        return new Destination();
     }
 
     public ReferencedWarning getReferencedWarning(final Long destinationId) {

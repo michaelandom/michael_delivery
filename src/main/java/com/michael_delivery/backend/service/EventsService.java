@@ -2,6 +2,7 @@ package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.EventGroups;
 import com.michael_delivery.backend.domain.Events;
+import com.michael_delivery.backend.model.EventGroupsDTO;
 import com.michael_delivery.backend.model.EventsDTO;
 import com.michael_delivery.backend.repos.EventGroupsRepository;
 import com.michael_delivery.backend.repos.EventsRepository;
@@ -14,48 +15,20 @@ import java.util.List;
 
 
 @Service
-public class EventsService {
+public class EventsService extends BaseService<Events, EventsDTO,Long, EventsRepository>  {
 
     private final EventsRepository eventsRepository;
     private final EventGroupsRepository eventGroupsRepository;
 
     public EventsService(final EventsRepository eventsRepository,
             final EventGroupsRepository eventGroupsRepository) {
+        super(eventsRepository,"eventId");
         this.eventsRepository = eventsRepository;
         this.eventGroupsRepository = eventGroupsRepository;
     }
 
-    public List<EventsDTO> findAll() {
-        final List<Events> events = eventsRepository.findAll(Sort.by("eventId"));
-        return events.stream()
-                .map(event -> mapToDTO(event, new EventsDTO()))
-                .toList();
-    }
-
-    public EventsDTO get(final Long eventId) {
-        return eventsRepository.findById(eventId)
-                .map(events -> mapToDTO(events, new EventsDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final EventsDTO eventsDTO) {
-        final Events events = new Events();
-        mapToEntity(eventsDTO, events);
-        return eventsRepository.save(events).getEventId();
-    }
-
-    public void update(final Long eventId, final EventsDTO eventsDTO) {
-        final Events events = eventsRepository.findById(eventId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(eventsDTO, events);
-        eventsRepository.save(events);
-    }
-
-    public void delete(final Long eventId) {
-        eventsRepository.deleteById(eventId);
-    }
-
-    private EventsDTO mapToDTO(final Events events, final EventsDTO eventsDTO) {
+    @Override
+    protected EventsDTO mapToDTO(final Events events, final EventsDTO eventsDTO) {
         eventsDTO.setEventId(events.getEventId());
         eventsDTO.setTitle(events.getTitle());
         eventsDTO.setLink(events.getLink());
@@ -67,7 +40,8 @@ public class EventsService {
         return eventsDTO;
     }
 
-    private Events mapToEntity(final EventsDTO eventsDTO, final Events events) {
+    @Override
+    protected Events mapToEntity(final EventsDTO eventsDTO, final Events events) {
         events.setTitle(eventsDTO.getTitle());
         events.setLink(eventsDTO.getLink());
         events.setContents(eventsDTO.getContents());
@@ -76,6 +50,16 @@ public class EventsService {
         events.setSendPushNotification(eventsDTO.getSendPushNotification());
         events.setBannerImageUrl(eventsDTO.getBannerImageUrl());
         return events;
+    }
+
+    @Override
+    protected EventsDTO createDTO() {
+        return new EventsDTO();
+    }
+
+    @Override
+    protected Events createEntity() {
+        return new Events();
     }
 
     public ReferencedWarning getReferencedWarning(final Long eventId) {

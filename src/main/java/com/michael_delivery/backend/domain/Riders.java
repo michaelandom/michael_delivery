@@ -121,6 +121,11 @@ public class Riders extends BaseModel<Long> {
     @OneToMany(mappedBy = "rider")
     private Set<Orders> riderOrderses;
 
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "cancelledBy")
+    private Set<CancellationRiderRequest> cancellationRiderRequest;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "rider")
     private Set<Reviews> riderReviewses;

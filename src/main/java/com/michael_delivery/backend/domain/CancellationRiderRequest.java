@@ -41,17 +41,21 @@ public class CancellationRiderRequest extends BaseModel<Long> {
     @Column
     private OffsetDateTime responseAt;
 
-    @Column
-    private String responseBy;
-
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Orders order;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cancelled_by")
-    private Users cancelledBy;
+    private Riders cancelledBy;
+
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "response_by")
+    private Users responseBy;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -109,11 +113,11 @@ public class CancellationRiderRequest extends BaseModel<Long> {
         this.responseAt = responseAt;
     }
 
-    public String getResponseBy() {
+    public Users getResponseBy() {
         return responseBy;
     }
 
-    public void setResponseBy(final String responseBy) {
+    public void setResponseBy(final Users responseBy) {
         this.responseBy = responseBy;
     }
 
@@ -126,11 +130,11 @@ public class CancellationRiderRequest extends BaseModel<Long> {
         this.order = order;
     }
 
-    public Users getCancelledBy() {
+    public Riders getCancelledBy() {
         return cancelledBy;
     }
 
-    public void setCancelledBy(final Users cancelledBy) {
+    public void setCancelledBy(final Riders cancelledBy) {
         this.cancelledBy = cancelledBy;
     }
 

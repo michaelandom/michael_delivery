@@ -1,9 +1,12 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.BussinessAccount;
 import com.michael_delivery.backend.domain.CancellationRequest;
 import com.michael_delivery.backend.domain.Orders;
 import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.BussinessAccountDTO;
 import com.michael_delivery.backend.model.CancellationRequestDTO;
+import com.michael_delivery.backend.repos.BussinessAccountRepository;
 import com.michael_delivery.backend.repos.CancellationRequestRepository;
 import com.michael_delivery.backend.repos.OrdersRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
@@ -15,7 +18,7 @@ import java.util.List;
 
 
 @Service
-public class CancellationRequestService {
+public class CancellationRequestService extends BaseService<CancellationRequest, CancellationRequestDTO,Long, CancellationRequestRepository> {
 
     private final CancellationRequestRepository cancellationRequestRepository;
     private final OrdersRepository ordersRepository;
@@ -24,43 +27,24 @@ public class CancellationRequestService {
     public CancellationRequestService(
             final CancellationRequestRepository cancellationRequestRepository,
             final OrdersRepository ordersRepository, final UsersRepository usersRepository) {
+        super(cancellationRequestRepository,"cancellationRequestId");
         this.cancellationRequestRepository = cancellationRequestRepository;
         this.ordersRepository = ordersRepository;
         this.usersRepository = usersRepository;
     }
 
-    public List<CancellationRequestDTO> findAll() {
-        final List<CancellationRequest> cancellationRequests = cancellationRequestRepository.findAll(Sort.by("cancellationRequestId"));
-        return cancellationRequests.stream()
-                .map(cancellationRequest -> mapToDTO(cancellationRequest, new CancellationRequestDTO()))
-                .toList();
+    @Override
+    protected CancellationRequestDTO createDTO() {
+        return new CancellationRequestDTO();
     }
 
-    public CancellationRequestDTO get(final Long cancellationRequestId) {
-        return cancellationRequestRepository.findById(cancellationRequestId)
-                .map(cancellationRequest -> mapToDTO(cancellationRequest, new CancellationRequestDTO()))
-                .orElseThrow(NotFoundException::new);
+    @Override
+    protected CancellationRequest createEntity() {
+        return new CancellationRequest();
     }
 
-    public Long create(final CancellationRequestDTO cancellationRequestDTO) {
-        final CancellationRequest cancellationRequest = new CancellationRequest();
-        mapToEntity(cancellationRequestDTO, cancellationRequest);
-        return cancellationRequestRepository.save(cancellationRequest).getCancellationRequestId();
-    }
-
-    public void update(final Long cancellationRequestId,
-            final CancellationRequestDTO cancellationRequestDTO) {
-        final CancellationRequest cancellationRequest = cancellationRequestRepository.findById(cancellationRequestId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(cancellationRequestDTO, cancellationRequest);
-        cancellationRequestRepository.save(cancellationRequest);
-    }
-
-    public void delete(final Long cancellationRequestId) {
-        cancellationRequestRepository.deleteById(cancellationRequestId);
-    }
-
-    private CancellationRequestDTO mapToDTO(final CancellationRequest cancellationRequest,
+    @Override
+    protected CancellationRequestDTO mapToDTO(final CancellationRequest cancellationRequest,
             final CancellationRequestDTO cancellationRequestDTO) {
         cancellationRequestDTO.setCancellationRequestId(cancellationRequest.getCancellationRequestId());
         cancellationRequestDTO.setType(cancellationRequest.getType());
@@ -77,7 +61,8 @@ public class CancellationRequestService {
         return cancellationRequestDTO;
     }
 
-    private CancellationRequest mapToEntity(final CancellationRequestDTO cancellationRequestDTO,
+    @Override
+    protected CancellationRequest mapToEntity(final CancellationRequestDTO cancellationRequestDTO,
             final CancellationRequest cancellationRequest) {
         cancellationRequest.setType(cancellationRequestDTO.getType());
         cancellationRequest.setStatus(cancellationRequestDTO.getStatus());

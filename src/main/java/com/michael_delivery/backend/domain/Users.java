@@ -150,8 +150,8 @@ public class Users extends BaseModel<Long> implements UserDetails  {
     private Set<CancellationRequest> cancelledByCancellationRequests;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "cancelledBy",fetch = FetchType.LAZY)
-    private Set<CancellationRiderRequest> cancelledByCancellationRiderRequests;
+    @OneToMany(mappedBy = "responseBy",fetch = FetchType.LAZY)
+    private Set<CancellationRiderRequest> responseBy;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
@@ -474,13 +474,13 @@ public class Users extends BaseModel<Long> implements UserDetails  {
         this.cancelledByCancellationRequests = cancelledByCancellationRequests;
     }
 
-    public Set<CancellationRiderRequest> getCancelledByCancellationRiderRequests() {
-        return cancelledByCancellationRiderRequests;
+    public Set<CancellationRiderRequest> getResponseBy() {
+        return responseBy;
     }
 
-    public void setCancelledByCancellationRiderRequests(
+    public void setResponseBy(
             final Set<CancellationRiderRequest> cancelledByCancellationRiderRequests) {
-        this.cancelledByCancellationRiderRequests = cancelledByCancellationRiderRequests;
+        this.responseBy = cancelledByCancellationRiderRequests;
     }
 
     public Set<UserFavoriteAddress> getUserUserFavoriteAddresses() {

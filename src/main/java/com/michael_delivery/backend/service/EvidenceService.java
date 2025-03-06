@@ -1,9 +1,12 @@
 package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.Destination;
+import com.michael_delivery.backend.domain.Events;
 import com.michael_delivery.backend.domain.Evidence;
+import com.michael_delivery.backend.model.EventsDTO;
 import com.michael_delivery.backend.model.EvidenceDTO;
 import com.michael_delivery.backend.repos.DestinationRepository;
+import com.michael_delivery.backend.repos.EventsRepository;
 import com.michael_delivery.backend.repos.EvidenceRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import org.springframework.data.domain.Sort;
@@ -13,48 +16,20 @@ import java.util.List;
 
 
 @Service
-public class EvidenceService {
+public class EvidenceService extends BaseService<Evidence, EvidenceDTO,Long, EvidenceRepository>  {
 
     private final EvidenceRepository evidenceRepository;
     private final DestinationRepository destinationRepository;
 
     public EvidenceService(final EvidenceRepository evidenceRepository,
             final DestinationRepository destinationRepository) {
+        super(evidenceRepository,"evidenceId");
         this.evidenceRepository = evidenceRepository;
         this.destinationRepository = destinationRepository;
     }
 
-    public List<EvidenceDTO> findAll() {
-        final List<Evidence> evidences = evidenceRepository.findAll(Sort.by("evidenceId"));
-        return evidences.stream()
-                .map(evidence -> mapToDTO(evidence, new EvidenceDTO()))
-                .toList();
-    }
-
-    public EvidenceDTO get(final Long evidenceId) {
-        return evidenceRepository.findById(evidenceId)
-                .map(evidence -> mapToDTO(evidence, new EvidenceDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final EvidenceDTO evidenceDTO) {
-        final Evidence evidence = new Evidence();
-        mapToEntity(evidenceDTO, evidence);
-        return evidenceRepository.save(evidence).getEvidenceId();
-    }
-
-    public void update(final Long evidenceId, final EvidenceDTO evidenceDTO) {
-        final Evidence evidence = evidenceRepository.findById(evidenceId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(evidenceDTO, evidence);
-        evidenceRepository.save(evidence);
-    }
-
-    public void delete(final Long evidenceId) {
-        evidenceRepository.deleteById(evidenceId);
-    }
-
-    private EvidenceDTO mapToDTO(final Evidence evidence, final EvidenceDTO evidenceDTO) {
+@Override
+    protected EvidenceDTO mapToDTO(final Evidence evidence, final EvidenceDTO evidenceDTO) {
         evidenceDTO.setEvidenceId(evidence.getEvidenceId());
         evidenceDTO.setUrls(evidence.getUrls());
         evidenceDTO.setRecipientName(evidence.getRecipientName());
@@ -65,7 +40,8 @@ public class EvidenceService {
         return evidenceDTO;
     }
 
-    private Evidence mapToEntity(final EvidenceDTO evidenceDTO, final Evidence evidence) {
+    @Override
+    protected Evidence mapToEntity(final EvidenceDTO evidenceDTO, final Evidence evidence) {
         evidence.setUrls(evidenceDTO.getUrls());
         evidence.setRecipientName(evidenceDTO.getRecipientName());
         evidence.setRecipientDob(evidenceDTO.getRecipientDob());
@@ -75,6 +51,16 @@ public class EvidenceService {
                 .orElseThrow(() -> new NotFoundException("destination not found"));
         evidence.setDestination(destination);
         return evidence;
+    }
+
+    @Override
+    protected EvidenceDTO createDTO() {
+        return new EvidenceDTO();
+    }
+
+    @Override
+    protected Evidence createEntity() {
+        return new Evidence();
     }
 
 }
