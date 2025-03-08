@@ -1,5 +1,10 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.Suspensions;
+import com.michael_delivery.backend.enums.SuspensionReasonType;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.SuspensionsDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Riders;
 import com.michael_delivery.backend.domain.Users;
@@ -9,12 +14,15 @@ import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.service.SuspensionsService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -34,9 +42,50 @@ public class SuspensionsResource {
         this.usersRepository = usersRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<SuspensionsDTO>> getAllSuspensions() {
+    @GetMapping("/all")
+    public ResponseEntity<List<SuspensionsDTO>> getAllSuspensions(
+    ) {
         return ResponseEntity.ok(suspensionsService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<SuspensionsDTO>> searchSuspensions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "suspensionId:asc") String[] sortBy,
+            @RequestParam(required = false) String reason,
+            @RequestParam(required = false) boolean isSystemSuspenstion,
+            @RequestParam(required = false) SuspensionReasonType reasonType,
+            @RequestParam(required = false) boolean isActive,
+            @RequestParam(required = false) OffsetDateTime startingFrom,
+            @RequestParam(required = false) OffsetDateTime endingAt,
+            @RequestParam(required = false) boolean startingFromIsAfter,
+            @RequestParam(required = false) boolean endingAtIsAfter
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<Suspensions> spec = new GenericSpecification<>();
+        Specification<Suspensions> reasonSpec = spec.equals("reason", reason);
+        Specification<Suspensions> isSystemSuspenstionSpec = spec.equals("isSystemSuspenstion", isSystemSuspenstion);
+        Specification<Suspensions> reasonTypeSpec = spec.equals("reasonType", reasonType);
+        Specification<Suspensions> startingFromSpec =startingFromIsAfter ? spec.dateAfter("startingFrom", startingFrom): spec.dateBefore("startingFrom", startingFrom);
+        Specification<Suspensions> endingAtSpec = endingAtIsAfter ? spec.dateBefore("endingAt", endingAt) : spec.dateAfter("endingAt", endingAt);
+        Specification<Suspensions> isActiveSpec = spec.equals("isActive", isActive);
+        Specification<Suspensions> finalSpec = Specification.where(reasonSpec).and(isSystemSuspenstionSpec)
+                .and(reasonTypeSpec)
+                .and(startingFromSpec)
+                .and(endingAtSpec)
+                .and(isActiveSpec)
+                .and(isActiveSpec);
+        return ResponseEntity.ok(suspensionsService.search(finalSpec,pageable.getPageable()));
+    }
+    @GetMapping
+    public ResponseEntity<Page<SuspensionsDTO>> getAllSuspensions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "suspensionId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(suspensionsService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{suspensionId}")

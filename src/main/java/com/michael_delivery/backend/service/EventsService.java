@@ -1,14 +1,19 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.EventGroups;
 import com.michael_delivery.backend.domain.Events;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.EventGroupsDTO;
 import com.michael_delivery.backend.model.EventsDTO;
 import com.michael_delivery.backend.repos.EventGroupsRepository;
 import com.michael_delivery.backend.repos.EventsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +32,10 @@ public class EventsService extends BaseService<Events, EventsDTO,Long, EventsRep
         this.eventGroupsRepository = eventGroupsRepository;
     }
 
+    @Override
+    public Page<EventsDTO> search(Specification<Events> query, Pageable pageable) {
+        return this.eventsRepository.findAll(query, pageable);
+    }
     @Override
     protected EventsDTO mapToDTO(final Events events, final EventsDTO eventsDTO) {
         eventsDTO.setEventId(events.getEventId());

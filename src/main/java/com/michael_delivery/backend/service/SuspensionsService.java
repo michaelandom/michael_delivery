@@ -1,21 +1,25 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Riders;
-import com.michael_delivery.backend.domain.Suspensions;
-import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.SuspensionsDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.RidersRepository;
 import com.michael_delivery.backend.repos.SuspensionsRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class SuspensionsService {
+public class SuspensionsService extends BaseService<Suspensions, SuspensionsDTO,Long, SuspensionsRepository> {
 
     private final SuspensionsRepository suspensionsRepository;
     private final RidersRepository ridersRepository;
@@ -23,42 +27,19 @@ public class SuspensionsService {
 
     public SuspensionsService(final SuspensionsRepository suspensionsRepository,
             final RidersRepository ridersRepository, final UsersRepository usersRepository) {
+        super(suspensionsRepository,"suspensionId");
         this.suspensionsRepository = suspensionsRepository;
         this.ridersRepository = ridersRepository;
         this.usersRepository = usersRepository;
     }
 
-    public List<SuspensionsDTO> findAll() {
-        final List<Suspensions> suspensionses = suspensionsRepository.findAll(Sort.by("suspensionId"));
-        return suspensionses.stream()
-                .map(suspensions -> mapToDTO(suspensions, new SuspensionsDTO()))
-                .toList();
+    @Override
+    public Page<SuspensionsDTO> search(Specification<Suspensions> query, Pageable pageable) {
+        return this.suspensionsRepository.findAll(query, pageable);
     }
 
-    public SuspensionsDTO get(final Long suspensionId) {
-        return suspensionsRepository.findById(suspensionId)
-                .map(suspensions -> mapToDTO(suspensions, new SuspensionsDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final SuspensionsDTO suspensionsDTO) {
-        final Suspensions suspensions = new Suspensions();
-        mapToEntity(suspensionsDTO, suspensions);
-        return suspensionsRepository.save(suspensions).getSuspensionId();
-    }
-
-    public void update(final Long suspensionId, final SuspensionsDTO suspensionsDTO) {
-        final Suspensions suspensions = suspensionsRepository.findById(suspensionId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(suspensionsDTO, suspensions);
-        suspensionsRepository.save(suspensions);
-    }
-
-    public void delete(final Long suspensionId) {
-        suspensionsRepository.deleteById(suspensionId);
-    }
-
-    private SuspensionsDTO mapToDTO(final Suspensions suspensions,
+    @Override
+    protected SuspensionsDTO mapToDTO(final Suspensions suspensions,
             final SuspensionsDTO suspensionsDTO) {
         suspensionsDTO.setSuspensionId(suspensions.getSuspensionId());
         suspensionsDTO.setReason(suspensions.getReason());
@@ -72,7 +53,8 @@ public class SuspensionsService {
         return suspensionsDTO;
     }
 
-    private Suspensions mapToEntity(final SuspensionsDTO suspensionsDTO,
+    @Override
+    protected Suspensions mapToEntity(final SuspensionsDTO suspensionsDTO,
             final Suspensions suspensions) {
         suspensions.setReason(suspensionsDTO.getReason());
         suspensions.setIsSystemSuspenstion(suspensionsDTO.getIsSystemSuspenstion());
@@ -87,6 +69,16 @@ public class SuspensionsService {
                 .orElseThrow(() -> new NotFoundException("suspenedBy not found"));
         suspensions.setSuspenedBy(suspenedBy);
         return suspensions;
+    }
+
+    @Override
+    protected SuspensionsDTO createDTO() {
+        return new SuspensionsDTO();
+    }
+
+    @Override
+    protected Suspensions createEntity() {
+        return new Suspensions();
     }
 
 }

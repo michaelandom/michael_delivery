@@ -1,58 +1,42 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.TransportBasicPrices;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.TransportBasicPricesDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.TransportBasicPricesRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class TransportBasicPricesService {
+public class TransportBasicPricesService  extends BaseService<TransportBasicPrices, TransportBasicPricesDTO,Long, TransportBasicPricesRepository>{
 
     private final TransportBasicPricesRepository transportBasicPricesRepository;
 
     public TransportBasicPricesService(
             final TransportBasicPricesRepository transportBasicPricesRepository) {
+        super(transportBasicPricesRepository,"transportBasicPriceId");
         this.transportBasicPricesRepository = transportBasicPricesRepository;
     }
 
-    public List<TransportBasicPricesDTO> findAll() {
-        final List<TransportBasicPrices> transportBasicPriceses = transportBasicPricesRepository.findAll(Sort.by("transportBasicPriceId"));
-        return transportBasicPriceses.stream()
-                .map(transportBasicPrices -> mapToDTO(transportBasicPrices, new TransportBasicPricesDTO()))
-                .toList();
+    @Override
+    public Page<TransportBasicPricesDTO> search(Specification<TransportBasicPrices> query, Pageable pageable) {
+        return this.transportBasicPricesRepository.findAll(query, pageable);
     }
 
-    public TransportBasicPricesDTO get(final Long transportBasicPriceId) {
-        return transportBasicPricesRepository.findById(transportBasicPriceId)
-                .map(transportBasicPrices -> mapToDTO(transportBasicPrices, new TransportBasicPricesDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final TransportBasicPricesDTO transportBasicPricesDTO) {
-        final TransportBasicPrices transportBasicPrices = new TransportBasicPrices();
-        mapToEntity(transportBasicPricesDTO, transportBasicPrices);
-        return transportBasicPricesRepository.save(transportBasicPrices).getTransportBasicPriceId();
-    }
-
-    public void update(final Long transportBasicPriceId,
-            final TransportBasicPricesDTO transportBasicPricesDTO) {
-        final TransportBasicPrices transportBasicPrices = transportBasicPricesRepository.findById(transportBasicPriceId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(transportBasicPricesDTO, transportBasicPrices);
-        transportBasicPricesRepository.save(transportBasicPrices);
-    }
-
-    public void delete(final Long transportBasicPriceId) {
-        transportBasicPricesRepository.deleteById(transportBasicPriceId);
-    }
-
-    private TransportBasicPricesDTO mapToDTO(final TransportBasicPrices transportBasicPrices,
+    @Override
+    protected TransportBasicPricesDTO mapToDTO(final TransportBasicPrices transportBasicPrices,
             final TransportBasicPricesDTO transportBasicPricesDTO) {
         transportBasicPricesDTO.setTransportBasicPriceId(transportBasicPrices.getTransportBasicPriceId());
         transportBasicPricesDTO.setVehicleType(transportBasicPrices.getVehicleType());
@@ -68,7 +52,8 @@ public class TransportBasicPricesService {
         return transportBasicPricesDTO;
     }
 
-    private TransportBasicPrices mapToEntity(final TransportBasicPricesDTO transportBasicPricesDTO,
+    @Override
+    protected TransportBasicPrices mapToEntity(final TransportBasicPricesDTO transportBasicPricesDTO,
             final TransportBasicPrices transportBasicPrices) {
         transportBasicPrices.setVehicleType(transportBasicPricesDTO.getVehicleType());
         transportBasicPrices.setBasicPrice(transportBasicPricesDTO.getBasicPrice());
@@ -83,6 +68,16 @@ public class TransportBasicPricesService {
                 .orElseThrow(() -> new NotFoundException("previous not found"));
         transportBasicPrices.setPrevious(previous);
         return transportBasicPrices;
+    }
+
+    @Override
+    protected TransportBasicPricesDTO createDTO() {
+        return new TransportBasicPricesDTO();
+    }
+
+    @Override
+    protected TransportBasicPrices createEntity() {
+        return new TransportBasicPrices();
     }
 
 

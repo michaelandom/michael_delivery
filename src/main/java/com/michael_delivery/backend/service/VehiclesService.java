@@ -1,60 +1,45 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.Riders;
 import com.michael_delivery.backend.domain.Vehicles;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.VehiclesDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.RidersRepository;
 import com.michael_delivery.backend.repos.VehiclesRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class VehiclesService {
+public class VehiclesService extends BaseService<Vehicles, VehiclesDTO,Long, VehiclesRepository>{
 
     private final VehiclesRepository vehiclesRepository;
     private final RidersRepository ridersRepository;
 
     public VehiclesService(final VehiclesRepository vehiclesRepository,
             final RidersRepository ridersRepository) {
+        super(vehiclesRepository,"vehicleId");
         this.vehiclesRepository = vehiclesRepository;
         this.ridersRepository = ridersRepository;
     }
 
-    public List<VehiclesDTO> findAll() {
-        final List<Vehicles> vehicleses = vehiclesRepository.findAll(Sort.by("vehicleId"));
-        return vehicleses.stream()
-                .map(vehicles -> mapToDTO(vehicles, new VehiclesDTO()))
-                .toList();
+    @Override
+    public Page<VehiclesDTO> search(Specification<Vehicles> query, Pageable pageable) {
+        return this.vehiclesRepository.findAll(query, pageable);
     }
 
-    public VehiclesDTO get(final Long vehicleId) {
-        return vehiclesRepository.findById(vehicleId)
-                .map(vehicles -> mapToDTO(vehicles, new VehiclesDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final VehiclesDTO vehiclesDTO) {
-        final Vehicles vehicles = new Vehicles();
-        mapToEntity(vehiclesDTO, vehicles);
-        return vehiclesRepository.save(vehicles).getVehicleId();
-    }
-
-    public void update(final Long vehicleId, final VehiclesDTO vehiclesDTO) {
-        final Vehicles vehicles = vehiclesRepository.findById(vehicleId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(vehiclesDTO, vehicles);
-        vehiclesRepository.save(vehicles);
-    }
-
-    public void delete(final Long vehicleId) {
-        vehiclesRepository.deleteById(vehicleId);
-    }
-
-    private VehiclesDTO mapToDTO(final Vehicles vehicles, final VehiclesDTO vehiclesDTO) {
+    @Override
+    protected VehiclesDTO mapToDTO(final Vehicles vehicles, final VehiclesDTO vehiclesDTO) {
         vehiclesDTO.setVehicleId(vehicles.getVehicleId());
         vehiclesDTO.setIsCurrentVehicle(vehicles.getIsCurrentVehicle());
         vehiclesDTO.setVehicleType(vehicles.getVehicleType());
@@ -72,7 +57,8 @@ public class VehiclesService {
         return vehiclesDTO;
     }
 
-    private Vehicles mapToEntity(final VehiclesDTO vehiclesDTO, final Vehicles vehicles) {
+    @Override
+    protected Vehicles mapToEntity(final VehiclesDTO vehiclesDTO, final Vehicles vehicles) {
         vehicles.setIsCurrentVehicle(vehiclesDTO.getIsCurrentVehicle());
         vehicles.setVehicleType(vehiclesDTO.getVehicleType());
         vehicles.setModelYear(vehiclesDTO.getModelYear());
@@ -89,6 +75,16 @@ public class VehiclesService {
                 .orElseThrow(() -> new NotFoundException("rider not found"));
         vehicles.setRider(rider);
         return vehicles;
+    }
+
+    @Override
+    protected VehiclesDTO createDTO() {
+        return new VehiclesDTO();
+    }
+
+    @Override
+    protected Vehicles createEntity() {
+        return new Vehicles();
     }
 
 }

@@ -2,6 +2,8 @@ package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.*;
 import com.michael_delivery.backend.enums.AccountType;
+import com.michael_delivery.backend.model.AdvertisementDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.UsernameAndPasswordLoginDTO;
 import com.michael_delivery.backend.model.UsersDTO;
 import com.michael_delivery.backend.model.response.UserResponse;
@@ -9,7 +11,10 @@ import com.michael_delivery.backend.repos.*;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
@@ -30,7 +35,7 @@ import java.util.Set;
 
 
 @Service
-public class UsersService  {
+public class UsersService extends BaseService<Users, UsersDTO,Long, UsersRepository>  {
 
     private final UsersRepository usersRepository;
     private final SsoProviderRepository ssoProviderRepository;
@@ -69,6 +74,7 @@ public class UsersService  {
             final CancellationRiderRequestRepository cancellationRiderRequestRepository,
             final UserFavoriteAddressRepository userFavoriteAddressRepository,
             final NoneBusinessHourRatesRepository noneBusinessHourRatesRepository) {
+        super(usersRepository,"userId");
         this.usersRepository = usersRepository;
         this.ssoProviderRepository = ssoProviderRepository;
         this.bussinessAccountRepository = bussinessAccountRepository;
@@ -88,6 +94,20 @@ public class UsersService  {
         this.userFavoriteAddressRepository = userFavoriteAddressRepository;
         this.noneBusinessHourRatesRepository = noneBusinessHourRatesRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    public Page<UsersDTO> search(Specification<Users> query, Pageable pageable) {
+        return this.usersRepository.findAll(query, pageable);
+    }
+
+    @Override
+    protected UsersDTO createDTO() {
+        return new UsersDTO();
+    }
+
+    @Override
+    protected Users createEntity() {
+        return new Users();
     }
 
     public List<UsersDTO> findAll() {
@@ -174,6 +194,7 @@ public class UsersService  {
         return usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
     }
+    @Override
     public void delete(final Long userId) {
         usersRepository.deleteById(userId);
     }
@@ -203,7 +224,8 @@ public class UsersService  {
         userResponse.setPermissions(permissions);
         return userResponse;
     }
-    private UsersDTO mapToDTO(final Users users, final UsersDTO usersDTO) {
+    @Override
+    protected UsersDTO mapToDTO(final Users users, final UsersDTO usersDTO) {
         usersDTO.setUserId(users.getUserId());
         usersDTO.setUsername(users.getUsername());
         usersDTO.setFirstName(users.getFirstName());
@@ -223,7 +245,8 @@ public class UsersService  {
         return usersDTO;
     }
 
-    private Users mapToEntity(final UsersDTO usersDTO, final Users users) {
+    @Override
+    protected Users mapToEntity(final UsersDTO usersDTO, final Users users) {
         users.setUsername(usersDTO.getUsername());
         users.setFirstName(usersDTO.getFirstName());
         users.setLastName(usersDTO.getLastName());

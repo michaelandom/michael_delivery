@@ -8,6 +8,7 @@ import com.michael_delivery.backend.util.ShareFunction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.Serializable;
@@ -104,6 +105,7 @@ public abstract class BaseService<E extends BaseModel<ID>, D,ID extends Serializ
         return repository.save(entity).getId();
     }
 
+    public abstract Page<D> search(final Specification<E> query, final Pageable pageable);
 
     /**
      * Create a new DTO instance

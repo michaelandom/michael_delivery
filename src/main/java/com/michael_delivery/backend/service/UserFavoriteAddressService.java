@@ -1,19 +1,27 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.UserFavoriteAddress;
 import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.UserFavoriteAddressDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.UserFavoriteAddressRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class UserFavoriteAddressService {
+public class UserFavoriteAddressService extends BaseService<UserFavoriteAddress, UserFavoriteAddressDTO,Long, UserFavoriteAddressRepository> {
 
     private final UserFavoriteAddressRepository userFavoriteAddressRepository;
     private final UsersRepository usersRepository;
@@ -21,42 +29,18 @@ public class UserFavoriteAddressService {
     public UserFavoriteAddressService(
             final UserFavoriteAddressRepository userFavoriteAddressRepository,
             final UsersRepository usersRepository) {
+        super(userFavoriteAddressRepository,"favoriteAddressId");
         this.userFavoriteAddressRepository = userFavoriteAddressRepository;
         this.usersRepository = usersRepository;
     }
 
-    public List<UserFavoriteAddressDTO> findAll() {
-        final List<UserFavoriteAddress> userFavoriteAddresses = userFavoriteAddressRepository.findAll(Sort.by("favoriteAddressId"));
-        return userFavoriteAddresses.stream()
-                .map(userFavoriteAddress -> mapToDTO(userFavoriteAddress, new UserFavoriteAddressDTO()))
-                .toList();
+    @Override
+    public Page<UserFavoriteAddressDTO> search(Specification<UserFavoriteAddress> query, Pageable pageable) {
+        return this.userFavoriteAddressRepository.findAll(query, pageable);
     }
 
-    public UserFavoriteAddressDTO get(final Long favoriteAddressId) {
-        return userFavoriteAddressRepository.findById(favoriteAddressId)
-                .map(userFavoriteAddress -> mapToDTO(userFavoriteAddress, new UserFavoriteAddressDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final UserFavoriteAddressDTO userFavoriteAddressDTO) {
-        final UserFavoriteAddress userFavoriteAddress = new UserFavoriteAddress();
-        mapToEntity(userFavoriteAddressDTO, userFavoriteAddress);
-        return userFavoriteAddressRepository.save(userFavoriteAddress).getFavoriteAddressId();
-    }
-
-    public void update(final Long favoriteAddressId,
-            final UserFavoriteAddressDTO userFavoriteAddressDTO) {
-        final UserFavoriteAddress userFavoriteAddress = userFavoriteAddressRepository.findById(favoriteAddressId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(userFavoriteAddressDTO, userFavoriteAddress);
-        userFavoriteAddressRepository.save(userFavoriteAddress);
-    }
-
-    public void delete(final Long favoriteAddressId) {
-        userFavoriteAddressRepository.deleteById(favoriteAddressId);
-    }
-
-    private UserFavoriteAddressDTO mapToDTO(final UserFavoriteAddress userFavoriteAddress,
+    @Override
+    protected UserFavoriteAddressDTO mapToDTO(final UserFavoriteAddress userFavoriteAddress,
             final UserFavoriteAddressDTO userFavoriteAddressDTO) {
         userFavoriteAddressDTO.setFavoriteAddressId(userFavoriteAddress.getFavoriteAddressId());
         userFavoriteAddressDTO.setLongAddress(userFavoriteAddress.getLongAddress());
@@ -70,7 +54,8 @@ public class UserFavoriteAddressService {
         return userFavoriteAddressDTO;
     }
 
-    private UserFavoriteAddress mapToEntity(final UserFavoriteAddressDTO userFavoriteAddressDTO,
+    @Override
+    protected UserFavoriteAddress mapToEntity(final UserFavoriteAddressDTO userFavoriteAddressDTO,
             final UserFavoriteAddress userFavoriteAddress) {
         userFavoriteAddress.setLongAddress(userFavoriteAddressDTO.getLongAddress());
         userFavoriteAddress.setShortAddress(userFavoriteAddressDTO.getShortAddress());
@@ -83,6 +68,16 @@ public class UserFavoriteAddressService {
                 .orElseThrow(() -> new NotFoundException("user not found"));
         userFavoriteAddress.setUser(user);
         return userFavoriteAddress;
+    }
+
+    @Override
+    protected UserFavoriteAddressDTO createDTO() {
+        return new UserFavoriteAddressDTO();
+    }
+
+    @Override
+    protected UserFavoriteAddress createEntity() {
+        return new UserFavoriteAddress();
     }
 
 }

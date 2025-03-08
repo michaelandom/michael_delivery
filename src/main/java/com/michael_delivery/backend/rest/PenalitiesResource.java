@@ -1,15 +1,20 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.Penalities;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.PenalitiesDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Riders;
 import com.michael_delivery.backend.domain.Users;
-import com.michael_delivery.backend.model.PenalitiesDTO;
 import com.michael_delivery.backend.repos.RidersRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.service.PenalitiesService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +39,52 @@ public class PenalitiesResource {
         this.usersRepository = usersRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PenalitiesDTO>> getAllPenalities() {
+    @GetMapping("/all")
+    public ResponseEntity<List<PenalitiesDTO>> getAllPenalities(
+    ) {
         return ResponseEntity.ok(penalitiesService.findAll());
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<PenalitiesDTO>> searchPenalities(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "penalitieId:asc") String[] sortBy,
+            @RequestParam(required = false) String reason,
+            @RequestParam(required = false) String deductedAmount,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String orderNumber,
+            @RequestParam(required = false) Boolean isActive,
+            @RequestParam(required = false) Boolean isWarning,
+            @RequestParam(required = false) Boolean deductedAmountIsGreaterThan
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<Penalities> spec = new GenericSpecification<>();
+        Specification<Penalities> reasonSpec = spec.contains("reason", reason);
+        Specification<Penalities> deductedAmountSpec = deductedAmountIsGreaterThan? spec.greaterThan("deductedAmount", deductedAmount) : spec.lessThan("deductedAmount", deductedAmount);
+        Specification<Penalities> descriptionSpec = spec.contains("description", description);
+        Specification<Penalities> orderNumberSpec = spec.equals("orderNumber", orderNumber);
+        Specification<Penalities> isWarningSpec = spec.equals("isWarning", isWarning);
+        Specification<Penalities> isActiveSpec = spec.equals("isActive", isActive);
+        Specification<Penalities> finalSpec = Specification.where(reasonSpec)
+                .and(deductedAmountSpec)
+                .and(descriptionSpec)
+                .and(orderNumberSpec)
+                .and(isActiveSpec)
+                .and(isWarningSpec);
+        return ResponseEntity.ok(penalitiesService.search(finalSpec,pageable.getPageable()));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PenalitiesDTO>> getAllPenalities(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "penalitieId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(penalitiesService.findAll(pageable.getPageable()));
+    }
+    
 
     @GetMapping("/{penalitieId}")
     public ResponseEntity<PenalitiesDTO> getPenalities(

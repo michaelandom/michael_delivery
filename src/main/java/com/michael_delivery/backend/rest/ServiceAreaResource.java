@@ -1,18 +1,24 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.ServiceArea;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.ServiceAreaDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.State;
-import com.michael_delivery.backend.model.ServiceAreaDTO;
 import com.michael_delivery.backend.repos.StateRepository;
 import com.michael_delivery.backend.service.ServiceAreaService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -30,9 +36,39 @@ public class ServiceAreaResource {
         this.stateRepository = stateRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ServiceAreaDTO>> getAllServiceAreas() {
+    @GetMapping("/all")
+    public ResponseEntity<List<ServiceAreaDTO>> getAllServiceArea(
+    ) {
         return ResponseEntity.ok(serviceAreaService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ServiceAreaDTO>> searchServiceArea(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "serviceAreaId:asc") String[] sortBy,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String code,
+            @RequestParam(required = false) boolean isActive
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<ServiceArea> spec = new GenericSpecification<>();
+        Specification<ServiceArea> nameSpec = spec.contains("name", name);
+        Specification<ServiceArea> codeSpec = spec.contains("code", code);
+        Specification<ServiceArea> isActiveSpec = spec.equals("isActive", isActive);
+        Specification<ServiceArea> finalSpec = Specification.where(nameSpec)
+                .and(codeSpec)
+                .and(isActiveSpec);
+        return ResponseEntity.ok(serviceAreaService.search(finalSpec,pageable.getPageable()));
+    }
+    @GetMapping
+    public ResponseEntity<Page<ServiceAreaDTO>> getAllServiceArea(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "serviceAreaId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(serviceAreaService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{serviceAreaId}")

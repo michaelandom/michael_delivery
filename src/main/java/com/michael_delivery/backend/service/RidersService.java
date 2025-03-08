@@ -1,18 +1,23 @@
 package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.RidersDTO;
 import com.michael_delivery.backend.repos.*;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class RidersService {
+public class RidersService extends BaseService<Riders, RidersDTO,Long, RidersRepository> {
 
     private final RidersRepository ridersRepository;
     private final UsersRepository usersRepository;
@@ -33,6 +38,8 @@ public class RidersService {
             final OrdersRepository ordersRepository, final ReviewsRepository reviewsRepository,
             final DestinationRepository destinationRepository,
             final RiderPaymentsRepository riderPaymentsRepository) {
+        super(ridersRepository,"riderId");
+
         this.ridersRepository = ridersRepository;
         this.usersRepository = usersRepository;
         this.vehiclesRepository = vehiclesRepository;
@@ -45,37 +52,14 @@ public class RidersService {
         this.riderPaymentsRepository = riderPaymentsRepository;
     }
 
-    public List<RidersDTO> findAll() {
-        final List<Riders> riderses = ridersRepository.findAll(Sort.by("riderId"));
-        return riderses.stream()
-                .map(riders -> mapToDTO(riders, new RidersDTO()))
-                .toList();
+
+    @Override
+    public Page<RidersDTO> search(Specification<Riders> query, Pageable pageable) {
+        return this.ridersRepository.findAll(query, pageable);
     }
 
-    public RidersDTO get(final Long riderId) {
-        return ridersRepository.findById(riderId)
-                .map(riders -> mapToDTO(riders, new RidersDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final RidersDTO ridersDTO) {
-        final Riders riders = new Riders();
-        mapToEntity(ridersDTO, riders);
-        return ridersRepository.save(riders).getRiderId();
-    }
-
-    public void update(final Long riderId, final RidersDTO ridersDTO) {
-        final Riders riders = ridersRepository.findById(riderId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(ridersDTO, riders);
-        ridersRepository.save(riders);
-    }
-
-    public void delete(final Long riderId) {
-        ridersRepository.deleteById(riderId);
-    }
-
-    private RidersDTO mapToDTO(final Riders riders, final RidersDTO ridersDTO) {
+    @Override
+    protected RidersDTO mapToDTO(final Riders riders, final RidersDTO ridersDTO) {
         ridersDTO.setRiderId(riders.getRiderId());
         ridersDTO.setLatitude(riders.getLatitude());
         ridersDTO.setLongitude(riders.getLongitude());
@@ -105,7 +89,8 @@ public class RidersService {
         return ridersDTO;
     }
 
-    private Riders mapToEntity(final RidersDTO ridersDTO, final Riders riders) {
+    @Override
+    protected Riders mapToEntity(final RidersDTO ridersDTO, final Riders riders) {
         riders.setLatitude(ridersDTO.getLatitude());
         riders.setLongitude(ridersDTO.getLongitude());
         riders.setIsOnline(ridersDTO.getIsOnline());
@@ -134,6 +119,16 @@ public class RidersService {
                 .orElseThrow(() -> new NotFoundException("user not found"));
         riders.setUser(user);
         return riders;
+    }
+
+    @Override
+    protected RidersDTO createDTO() {
+        return new RidersDTO();
+    }
+
+    @Override
+    protected Riders createEntity() {
+        return new Riders();
     }
 
     public ReferencedWarning getReferencedWarning(final Long riderId) {

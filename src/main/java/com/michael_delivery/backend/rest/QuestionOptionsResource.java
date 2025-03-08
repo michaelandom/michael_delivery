@@ -1,5 +1,12 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.QuestionOptions;
+import com.michael_delivery.backend.enums.PickupTimeType;
+import com.michael_delivery.backend.enums.VehicleType;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.PickupTimeBasicPricesDTO;
+import com.michael_delivery.backend.model.QuestionOptionsDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Questions;
 import com.michael_delivery.backend.model.QuestionOptionsDTO;
@@ -9,7 +16,9 @@ import com.michael_delivery.backend.util.CustomCollectors;
 import com.michael_delivery.backend.util.ReferencedException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +41,41 @@ public class QuestionOptionsResource {
         this.questionsRepository = questionsRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<QuestionOptionsDTO>> getAllQuestionOptions() {
+    @GetMapping("/all")
+    public ResponseEntity<List<QuestionOptionsDTO>> getAllQuestionOptions(
+    ) {
         return ResponseEntity.ok(questionOptionsService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<QuestionOptionsDTO>> searchQuestionOptions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "questionOptionId:asc") String[] sortBy,
+            @RequestParam(required = false) String questionOption,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Boolean isCorrect
+
+
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<QuestionOptions> spec = new GenericSpecification<>();
+        Specification<QuestionOptions> questionOptionSpec = spec.contains("questionOption", questionOption);
+        Specification<QuestionOptions> descriptionSpec = spec.equals("description", description);
+        Specification<QuestionOptions> isCorrectSpec = spec.equals("isCorrect", isCorrect);
+        Specification<QuestionOptions> finalSpec = Specification.where(questionOptionSpec)
+                .and(descriptionSpec)
+                .and(isCorrectSpec);
+        return ResponseEntity.ok(questionOptionsService.search(finalSpec,pageable.getPageable()));
+    }
+    @GetMapping
+    public ResponseEntity<Page<QuestionOptionsDTO>> getAllQuestionOptions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "questionOptionId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(questionOptionsService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{questionOptionId}")

@@ -1,5 +1,9 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.GroupPermissions;
+import com.michael_delivery.backend.model.GroupPermissionsDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Groups;
 import com.michael_delivery.backend.domain.Permissions;
@@ -9,7 +13,9 @@ import com.michael_delivery.backend.repos.PermissionsRepository;
 import com.michael_delivery.backend.service.GroupPermissionsService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +41,20 @@ public class GroupPermissionsResource {
         this.permissionsRepository = permissionsRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<GroupPermissionsDTO>> getAllGroupPermissionss() {
+    @GetMapping("/all")
+    public ResponseEntity<List<GroupPermissionsDTO>> getAllGroupPermissions(
+    ) {
         return ResponseEntity.ok(groupPermissionsService.findAll());
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<GroupPermissionsDTO>> getAllGroupPermissions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "groupPermissionId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(groupPermissionsService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{groupPermissionId}")

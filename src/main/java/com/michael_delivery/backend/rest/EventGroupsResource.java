@@ -1,5 +1,9 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.EventGroups;
+import com.michael_delivery.backend.model.EventGroupsDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Events;
 import com.michael_delivery.backend.domain.Groups;
@@ -9,7 +13,9 @@ import com.michael_delivery.backend.repos.GroupsRepository;
 import com.michael_delivery.backend.service.EventGroupsService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +40,36 @@ public class EventGroupsResource {
         this.eventsRepository = eventsRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<EventGroupsDTO>> getAllEventGroups() {
+    @GetMapping("/all")
+    public ResponseEntity<List<EventGroupsDTO>> getAllEventGroups(
+    ) {
         return ResponseEntity.ok(eventGroupsService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<EventGroupsDTO>> searchEventGroups(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "eventGroupId:asc") String[] sortBy,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) boolean isImportant
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<EventGroups> spec = new GenericSpecification<>();
+        Specification<EventGroups> descriptionSpec = spec.equals("description", description);
+        Specification<EventGroups> isImportantSpec = spec.equals("isImportant", isImportant);
+        Specification<EventGroups> finalSpec = Specification.where(descriptionSpec).and(isImportantSpec);
+        return ResponseEntity.ok(eventGroupsService.search(finalSpec,pageable.getPageable()));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<EventGroupsDTO>> getAllEventGroups(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "eventGroupId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(eventGroupsService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{eventGroupId}")

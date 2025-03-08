@@ -14,7 +14,7 @@ public class ReferenceDTO {
     private Long referenceId;
 
     @NotNull
-    private List<String> orderIds;
+    private List<Integer> orderIds;
 
     @NotNull
     private Double amount;
@@ -36,11 +36,11 @@ public class ReferenceDTO {
         this.referenceId = referenceId;
     }
 
-    public List<String> getOrderIds() {
+    public List<Integer> getOrderIds() {
         return orderIds;
     }
 
-    public void setOrderIds(final List<String> orderIds) {
+    public void setOrderIds(final List<Integer> orderIds) {
         this.orderIds = orderIds;
     }
 

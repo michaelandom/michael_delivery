@@ -28,18 +28,9 @@ public class AdvertisementService extends BaseService<Advertisement, Advertiseme
         return new Advertisement();
     }
 
-    public Page<AdvertisementDTO> search(String title, String content, Pageable pageable) {
-        pageable = ShareFunction.getPageable(pageable);
-        Specification<Advertisement> spec = Specification.where(null);
-
-        if (title != null && !title.isEmpty()) {
-            spec = spec.and(AdvertisementSpecification.titleContains(title));
-        }
-        if (content != null && !content.isEmpty()) {
-            spec = spec.and(AdvertisementSpecification.contentContains(content));
-        }
-
-        return advertisementRepository.findAll(spec, pageable);
+    @Override
+    public Page<AdvertisementDTO> search(Specification<Advertisement> query,Pageable pageable) {
+        return this.advertisementRepository.findAll(query, pageable);
     }
 
     @Override

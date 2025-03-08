@@ -1,22 +1,26 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.QuestionOptions;
-import com.michael_delivery.backend.domain.Questions;
-import com.michael_delivery.backend.domain.RiderAnswers;
+import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.QuestionOptionsDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.QuestionOptionsRepository;
 import com.michael_delivery.backend.repos.QuestionsRepository;
 import com.michael_delivery.backend.repos.RiderAnswersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class QuestionOptionsService {
+public class QuestionOptionsService extends BaseService<QuestionOptions, QuestionOptionsDTO,Long, QuestionOptionsRepository> {
 
     private final QuestionOptionsRepository questionOptionsRepository;
     private final QuestionsRepository questionsRepository;
@@ -25,42 +29,21 @@ public class QuestionOptionsService {
     public QuestionOptionsService(final QuestionOptionsRepository questionOptionsRepository,
             final QuestionsRepository questionsRepository,
             final RiderAnswersRepository riderAnswersRepository) {
+        super(questionOptionsRepository,"questionOptionId");
+
         this.questionOptionsRepository = questionOptionsRepository;
         this.questionsRepository = questionsRepository;
         this.riderAnswersRepository = riderAnswersRepository;
     }
 
-    public List<QuestionOptionsDTO> findAll() {
-        final List<QuestionOptions> questionOptionses = questionOptionsRepository.findAll(Sort.by("questionOptionId"));
-        return questionOptionses.stream()
-                .map(questionOptions -> mapToDTO(questionOptions, new QuestionOptionsDTO()))
-                .toList();
+    @Override
+    public Page<QuestionOptionsDTO> search(Specification<QuestionOptions> query, Pageable pageable) {
+        return this.questionOptionsRepository.findAll(query, pageable);
     }
 
-    public QuestionOptionsDTO get(final Long questionOptionId) {
-        return questionOptionsRepository.findById(questionOptionId)
-                .map(questionOptions -> mapToDTO(questionOptions, new QuestionOptionsDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
 
-    public Long create(final QuestionOptionsDTO questionOptionsDTO) {
-        final QuestionOptions questionOptions = new QuestionOptions();
-        mapToEntity(questionOptionsDTO, questionOptions);
-        return questionOptionsRepository.save(questionOptions).getQuestionOptionId();
-    }
-
-    public void update(final Long questionOptionId, final QuestionOptionsDTO questionOptionsDTO) {
-        final QuestionOptions questionOptions = questionOptionsRepository.findById(questionOptionId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(questionOptionsDTO, questionOptions);
-        questionOptionsRepository.save(questionOptions);
-    }
-
-    public void delete(final Long questionOptionId) {
-        questionOptionsRepository.deleteById(questionOptionId);
-    }
-
-    private QuestionOptionsDTO mapToDTO(final QuestionOptions questionOptions,
+    @Override
+    protected QuestionOptionsDTO mapToDTO(final QuestionOptions questionOptions,
             final QuestionOptionsDTO questionOptionsDTO) {
         questionOptionsDTO.setQuestionOptionId(questionOptions.getQuestionOptionId());
         questionOptionsDTO.setQuestionOption(questionOptions.getQuestionOption());
@@ -70,7 +53,8 @@ public class QuestionOptionsService {
         return questionOptionsDTO;
     }
 
-    private QuestionOptions mapToEntity(final QuestionOptionsDTO questionOptionsDTO,
+    @Override
+    protected QuestionOptions mapToEntity(final QuestionOptionsDTO questionOptionsDTO,
             final QuestionOptions questionOptions) {
         questionOptions.setQuestionOption(questionOptionsDTO.getQuestionOption());
         questionOptions.setDescription(questionOptionsDTO.getDescription());
@@ -79,6 +63,16 @@ public class QuestionOptionsService {
                 .orElseThrow(() -> new NotFoundException("question not found"));
         questionOptions.setQuestion(question);
         return questionOptions;
+    }
+
+    @Override
+    protected QuestionOptionsDTO createDTO() {
+        return new QuestionOptionsDTO();
+    }
+
+    @Override
+    protected QuestionOptions createEntity() {
+        return new QuestionOptions();
     }
 
     public ReferencedWarning getReferencedWarning(final Long questionOptionId) {

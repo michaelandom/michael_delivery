@@ -1,12 +1,13 @@
 package com.michael_delivery.backend.rest;
 
-import com.michael_delivery.backend.model.ChangePasswordDTO;
-import com.michael_delivery.backend.model.SetPasswordDTO;
+import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.enums.AccountStatusType;
+import com.michael_delivery.backend.enums.AccountType;
+import com.michael_delivery.backend.enums.AddressType;
+import com.michael_delivery.backend.enums.GenderType;
+import com.michael_delivery.backend.model.*;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import com.michael_delivery.backend.domain.BillingAddress;
-import com.michael_delivery.backend.domain.BussinessAccount;
-import com.michael_delivery.backend.domain.SsoProvider;
-import com.michael_delivery.backend.model.UsersDTO;
 import com.michael_delivery.backend.repos.BillingAddressRepository;
 import com.michael_delivery.backend.repos.BussinessAccountRepository;
 import com.michael_delivery.backend.repos.SsoProviderRepository;
@@ -15,12 +16,16 @@ import com.michael_delivery.backend.util.CustomCollectors;
 import com.michael_delivery.backend.util.ReferencedException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +49,71 @@ public class UsersResource {
         this.bussinessAccountRepository = bussinessAccountRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<UsersDTO>> getAllUsers() {
+    @GetMapping("/all")
+    public ResponseEntity<List<UsersDTO>> getAllUsers(
+    ) {
         return ResponseEntity.ok(usersService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<UsersDTO>> searchUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "userId:asc") String[] sortBy,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) LocalDate dateOfBirth,
+            @RequestParam(required = false) GenderType gender,
+            @RequestParam(required = false) boolean emailVerified,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) boolean phoneVerified,
+            @RequestParam(required = false) AccountType accountType,
+            @RequestParam(required = false) AccountStatusType accountStatus,
+            @RequestParam(required = false) OffsetDateTime lastLogin,
+            @RequestParam(required = false) OffsetDateTime requestForDeleteAt,
+            @RequestParam(required = false) boolean lastLoginIsAfter,
+            @RequestParam(required = false) boolean requestForDeleteAtIsAfter
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<Users> spec = new GenericSpecification<>();
+        Specification<Users> usernameSpec = spec.contains("username", username);
+        Specification<Users> firstNameSpec = spec.contains("firstName", firstName);
+        Specification<Users> lastNameSpec = spec.contains("nickName", lastName);
+        Specification<Users> emailSpec = spec.equals("email", email);
+        Specification<Users> dateOfBirthSpec = spec.equals("dateOfBirth", dateOfBirth);
+        Specification<Users> genderSpec = spec.equals("gender", gender);
+        Specification<Users> emailVerifiedSpec = spec.equals("emailVerified", emailVerified);
+        Specification<Users> phoneSpec = spec.equals("phone", phone);
+        Specification<Users> phoneVerifiedSpec = spec.equals("phoneVerified", phoneVerified);
+        Specification<Users> accountTypeSpec = spec.equals("accountType", accountType);
+        Specification<Users> accountStatusSpec = spec.equals("accountStatus", accountStatus);
+        Specification<Users> lastLoginSpec = lastLoginIsAfter?spec.dateAfter("lastLogin", lastLogin) : spec.dateBefore("lastLogin", lastLogin);
+        Specification<Users> requestForDeleteAtSpec =requestForDeleteAtIsAfter?spec.dateAfter("requestForDeleteAt", requestForDeleteAt) :spec.dateBefore("requestForDeleteAt", requestForDeleteAt) ;
+        Specification<Users> finalSpec = Specification.where(usernameSpec)
+                .and(firstNameSpec)
+                .and(lastNameSpec)
+                .and(emailSpec)
+                .and(dateOfBirthSpec)
+                .and(genderSpec)
+                .and(emailVerifiedSpec)
+                .and(phoneSpec)
+                .and(phoneVerifiedSpec)
+                .and(accountTypeSpec)
+                .and(accountStatusSpec)
+                .and(lastLoginSpec)
+                .and(requestForDeleteAtSpec);
+        return ResponseEntity.ok(usersService.search(finalSpec,pageable.getPageable()));
+    }
+    @GetMapping
+    public ResponseEntity<Page<UsersDTO>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "userId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(usersService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{userId}")

@@ -1,18 +1,23 @@
 package com.michael_delivery.backend.service;
 
 import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.OrdersDTO;
 import com.michael_delivery.backend.repos.*;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class OrdersService {
+public class OrdersService extends BaseService<Orders, OrdersDTO,Long, OrdersRepository>{
 
     private final OrdersRepository ordersRepository;
     private final RidersRepository ridersRepository;
@@ -32,6 +37,7 @@ public class OrdersService {
                          final ExtrFeeRepository extrFeeRepository,
                          final DestinationRepository destinationRepository,
                          final DeliveryDetailRepository deliveryDetailRepository) {
+        super(ordersRepository,"orderId");
         this.ordersRepository = ordersRepository;
         this.ridersRepository = ridersRepository;
         this.usersRepository = usersRepository;
@@ -43,37 +49,13 @@ public class OrdersService {
         this.deliveryDetailRepository = deliveryDetailRepository;
     }
 
-    public List<OrdersDTO> findAll() {
-        final List<Orders> orderses = ordersRepository.findAll(Sort.by("orderId"));
-        return orderses.stream()
-                .map(orders -> mapToDTO(orders, new OrdersDTO()))
-                .toList();
+    @Override
+    public Page<OrdersDTO> search(Specification<Orders> query, Pageable pageable) {
+        return this.ordersRepository.findAll(query, pageable);
     }
 
-    public OrdersDTO get(final Long orderId) {
-        return ordersRepository.findById(orderId)
-                .map(orders -> mapToDTO(orders, new OrdersDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final OrdersDTO ordersDTO) {
-        final Orders orders = new Orders();
-        mapToEntity(ordersDTO, orders);
-        return ordersRepository.save(orders).getOrderId();
-    }
-
-    public void update(final Long orderId, final OrdersDTO ordersDTO) {
-        final Orders orders = ordersRepository.findById(orderId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(ordersDTO, orders);
-        ordersRepository.save(orders);
-    }
-
-    public void delete(final Long orderId) {
-        ordersRepository.deleteById(orderId);
-    }
-
-    private OrdersDTO mapToDTO(final Orders orders, final OrdersDTO ordersDTO) {
+    @Override
+    protected OrdersDTO mapToDTO(final Orders orders, final OrdersDTO ordersDTO) {
         ordersDTO.setOrderId(orders.getOrderId());
         ordersDTO.setOrderNumber(orders.getOrderNumber());
         ordersDTO.setCustomerFullName(orders.getCustomerFullName());
@@ -108,7 +90,8 @@ public class OrdersService {
         return ordersDTO;
     }
 
-    private Orders mapToEntity(final OrdersDTO ordersDTO, final Orders orders) {
+    @Override
+    protected Orders mapToEntity(final OrdersDTO ordersDTO, final Orders orders) {
         orders.setOrderNumber(ordersDTO.getOrderNumber());
         orders.setCustomerFullName(ordersDTO.getCustomerFullName());
         orders.setMessage(ordersDTO.getMessage());
@@ -146,6 +129,16 @@ public class OrdersService {
                 .orElseThrow(() -> new NotFoundException("assignedBy not found"));
         orders.setAssignedBy(assignedBy);
         return orders;
+    }
+
+    @Override
+    protected OrdersDTO createDTO() {
+        return new OrdersDTO();
+    }
+
+    @Override
+    protected Orders createEntity() {
+        return new Orders();
     }
 
     public ReferencedWarning getReferencedWarning(final Long orderId) {

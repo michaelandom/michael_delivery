@@ -1,9 +1,7 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Announcement;
-import com.michael_delivery.backend.domain.BillingAddress;
-import com.michael_delivery.backend.domain.BussinessAccount;
-import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.AdvertisementDTO;
 import com.michael_delivery.backend.model.AnnouncementDTO;
 import com.michael_delivery.backend.model.BillingAddressDTO;
 import com.michael_delivery.backend.repos.AnnouncementRepository;
@@ -12,7 +10,10 @@ import com.michael_delivery.backend.repos.BussinessAccountRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +35,10 @@ public class BillingAddressService extends BaseService<BillingAddress, BillingAd
         this.usersRepository = usersRepository;
     }
 
-
+    @Override
+    public Page<BillingAddressDTO> search(Specification<BillingAddress> query, Pageable pageable) {
+        return this.billingAddressRepository.findAll(query, pageable);
+    }
 
     @Override
     protected BillingAddressDTO mapToDTO(final BillingAddress billingAddress,

@@ -22,8 +22,10 @@ public class Reference extends BaseModel<Long>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long referenceId;
 
-    @Column(nullable = false, columnDefinition = "longtext")
-    private String orderIds;
+    @Lob
+    @Column(nullable = false, columnDefinition = "json")
+    @Type(JsonType.class)
+    private List<Integer> orderIds;
 
     @Column(nullable = false)
     private Double amount;
@@ -58,13 +60,13 @@ public class Reference extends BaseModel<Long>{
         this.referenceId = referenceId;
     }
 
-    public String getOrderIds() {
+    public List<Integer> getOrderIds() {
         return orderIds;
     }
 
-//    public void setOrderIds(final List<String> orderIds) {
-//        this.orderIds = orderIds;
-//    }
+    public void setOrderIds(final List<Integer> orderIds) {
+        this.orderIds = orderIds;
+    }
 
     public Double getAmount() {
         return amount;

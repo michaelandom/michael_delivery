@@ -1,20 +1,28 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.Item;
 import com.michael_delivery.backend.domain.SizeAndWeightDescriptions;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.SizeAndWeightDescriptionsDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.ItemRepository;
 import com.michael_delivery.backend.repos.SizeAndWeightDescriptionsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class SizeAndWeightDescriptionsService {
+public class SizeAndWeightDescriptionsService extends BaseService<SizeAndWeightDescriptions, SizeAndWeightDescriptionsDTO,Long, SizeAndWeightDescriptionsRepository> {
 
     private final SizeAndWeightDescriptionsRepository sizeAndWeightDescriptionsRepository;
     private final ItemRepository itemRepository;
@@ -22,42 +30,18 @@ public class SizeAndWeightDescriptionsService {
     public SizeAndWeightDescriptionsService(
             final SizeAndWeightDescriptionsRepository sizeAndWeightDescriptionsRepository,
             final ItemRepository itemRepository) {
+        super(sizeAndWeightDescriptionsRepository,"sizeWeightDescriptionId");
         this.sizeAndWeightDescriptionsRepository = sizeAndWeightDescriptionsRepository;
         this.itemRepository = itemRepository;
     }
 
-    public List<SizeAndWeightDescriptionsDTO> findAll() {
-        final List<SizeAndWeightDescriptions> sizeAndWeightDescriptionses = sizeAndWeightDescriptionsRepository.findAll(Sort.by("sizeWeightDescriptionId"));
-        return sizeAndWeightDescriptionses.stream()
-                .map(sizeAndWeightDescriptions -> mapToDTO(sizeAndWeightDescriptions, new SizeAndWeightDescriptionsDTO()))
-                .toList();
+    @Override
+    public Page<SizeAndWeightDescriptionsDTO> search(Specification<SizeAndWeightDescriptions> query, Pageable pageable) {
+        return this.sizeAndWeightDescriptionsRepository.findAll(query, pageable);
     }
 
-    public SizeAndWeightDescriptionsDTO get(final Long sizeWeightDescriptionId) {
-        return sizeAndWeightDescriptionsRepository.findById(sizeWeightDescriptionId)
-                .map(sizeAndWeightDescriptions -> mapToDTO(sizeAndWeightDescriptions, new SizeAndWeightDescriptionsDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final SizeAndWeightDescriptionsDTO sizeAndWeightDescriptionsDTO) {
-        final SizeAndWeightDescriptions sizeAndWeightDescriptions = new SizeAndWeightDescriptions();
-        mapToEntity(sizeAndWeightDescriptionsDTO, sizeAndWeightDescriptions);
-        return sizeAndWeightDescriptionsRepository.save(sizeAndWeightDescriptions).getSizeWeightDescriptionId();
-    }
-
-    public void update(final Long sizeWeightDescriptionId,
-            final SizeAndWeightDescriptionsDTO sizeAndWeightDescriptionsDTO) {
-        final SizeAndWeightDescriptions sizeAndWeightDescriptions = sizeAndWeightDescriptionsRepository.findById(sizeWeightDescriptionId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(sizeAndWeightDescriptionsDTO, sizeAndWeightDescriptions);
-        sizeAndWeightDescriptionsRepository.save(sizeAndWeightDescriptions);
-    }
-
-    public void delete(final Long sizeWeightDescriptionId) {
-        sizeAndWeightDescriptionsRepository.deleteById(sizeWeightDescriptionId);
-    }
-
-    private SizeAndWeightDescriptionsDTO mapToDTO(
+    @Override
+    protected SizeAndWeightDescriptionsDTO mapToDTO(
             final SizeAndWeightDescriptions sizeAndWeightDescriptions,
             final SizeAndWeightDescriptionsDTO sizeAndWeightDescriptionsDTO) {
         sizeAndWeightDescriptionsDTO.setSizeWeightDescriptionId(sizeAndWeightDescriptions.getSizeWeightDescriptionId());
@@ -72,7 +56,8 @@ public class SizeAndWeightDescriptionsService {
         return sizeAndWeightDescriptionsDTO;
     }
 
-    private SizeAndWeightDescriptions mapToEntity(
+    @Override
+    protected SizeAndWeightDescriptions mapToEntity(
             final SizeAndWeightDescriptionsDTO sizeAndWeightDescriptionsDTO,
             final SizeAndWeightDescriptions sizeAndWeightDescriptions) {
         sizeAndWeightDescriptions.setSize(sizeAndWeightDescriptionsDTO.getSize());
@@ -86,9 +71,16 @@ public class SizeAndWeightDescriptionsService {
         return sizeAndWeightDescriptions;
     }
 
-//    public boolean uniqueSizeCheckExists(final String uniqueSizeCheck) {
-//        return  sizeAndWeightDescriptionsRepository.existsByUniqueSizeCheckIgnoreCase(uniqueSizeCheck);
-//    }
+    @Override
+    protected SizeAndWeightDescriptionsDTO createDTO() {
+        return new SizeAndWeightDescriptionsDTO();
+    }
+
+    @Override
+    protected SizeAndWeightDescriptions createEntity() {
+        return new SizeAndWeightDescriptions();
+    }
+
 
     public ReferencedWarning getReferencedWarning(final Long sizeWeightDescriptionId) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();

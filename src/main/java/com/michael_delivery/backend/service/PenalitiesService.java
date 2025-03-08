@@ -1,21 +1,25 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Penalities;
-import com.michael_delivery.backend.domain.Riders;
-import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.PenalitiesDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.PenalitiesRepository;
 import com.michael_delivery.backend.repos.RidersRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class PenalitiesService {
+public class PenalitiesService extends BaseService<Penalities, PenalitiesDTO,Long, PenalitiesRepository> {
 
     private final PenalitiesRepository penalitiesRepository;
     private final RidersRepository ridersRepository;
@@ -23,42 +27,19 @@ public class PenalitiesService {
 
     public PenalitiesService(final PenalitiesRepository penalitiesRepository,
             final RidersRepository ridersRepository, final UsersRepository usersRepository) {
+        super(penalitiesRepository,"penalitieId");
         this.penalitiesRepository = penalitiesRepository;
         this.ridersRepository = ridersRepository;
         this.usersRepository = usersRepository;
     }
 
-    public List<PenalitiesDTO> findAll() {
-        final List<Penalities> penalitieses = penalitiesRepository.findAll(Sort.by("penalitieId"));
-        return penalitieses.stream()
-                .map(penalities -> mapToDTO(penalities, new PenalitiesDTO()))
-                .toList();
+    @Override
+    public Page<PenalitiesDTO> search(Specification<Penalities> query, Pageable pageable) {
+        return this.penalitiesRepository.findAll(query, pageable);
     }
 
-    public PenalitiesDTO get(final Long penalitieId) {
-        return penalitiesRepository.findById(penalitieId)
-                .map(penalities -> mapToDTO(penalities, new PenalitiesDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final PenalitiesDTO penalitiesDTO) {
-        final Penalities penalities = new Penalities();
-        mapToEntity(penalitiesDTO, penalities);
-        return penalitiesRepository.save(penalities).getPenalitieId();
-    }
-
-    public void update(final Long penalitieId, final PenalitiesDTO penalitiesDTO) {
-        final Penalities penalities = penalitiesRepository.findById(penalitieId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(penalitiesDTO, penalities);
-        penalitiesRepository.save(penalities);
-    }
-
-    public void delete(final Long penalitieId) {
-        penalitiesRepository.deleteById(penalitieId);
-    }
-
-    private PenalitiesDTO mapToDTO(final Penalities penalities, final PenalitiesDTO penalitiesDTO) {
+    @Override
+    protected PenalitiesDTO mapToDTO(final Penalities penalities, final PenalitiesDTO penalitiesDTO) {
         penalitiesDTO.setPenalitieId(penalities.getPenalitieId());
         penalitiesDTO.setReason(penalities.getReason());
         penalitiesDTO.setDeductedAmount(penalities.getDeductedAmount());
@@ -71,7 +52,8 @@ public class PenalitiesService {
         return penalitiesDTO;
     }
 
-    private Penalities mapToEntity(final PenalitiesDTO penalitiesDTO, final Penalities penalities) {
+    @Override
+    protected Penalities mapToEntity(final PenalitiesDTO penalitiesDTO, final Penalities penalities) {
         penalities.setReason(penalitiesDTO.getReason());
         penalities.setDeductedAmount(penalitiesDTO.getDeductedAmount());
         penalities.setDescription(penalitiesDTO.getDescription());
@@ -85,6 +67,16 @@ public class PenalitiesService {
                 .orElseThrow(() -> new NotFoundException("admin not found"));
         penalities.setAdmin(admin);
         return penalities;
+    }
+
+    @Override
+    protected PenalitiesDTO createDTO() {
+        return new PenalitiesDTO();
+    }
+
+    @Override
+    protected Penalities createEntity() {
+        return new Penalities();
     }
 
 }

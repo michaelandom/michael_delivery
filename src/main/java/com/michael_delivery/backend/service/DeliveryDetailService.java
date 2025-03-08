@@ -12,7 +12,10 @@ import com.michael_delivery.backend.repos.NoteDeliveryDetailRepository;
 import com.michael_delivery.backend.repos.OrdersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +35,11 @@ public class DeliveryDetailService extends BaseService<DeliveryDetail, DeliveryD
         this.deliveryDetailRepository = deliveryDetailRepository;
         this.ordersRepository = ordersRepository;
         this.noteDeliveryDetailRepository = noteDeliveryDetailRepository;
+    }
+
+    @Override
+    public Page<DeliveryDetailDTO> search(Specification<DeliveryDetail> query, Pageable pageable) {
+        return this.deliveryDetailRepository.findAll(query, pageable);
     }
 
     @Override

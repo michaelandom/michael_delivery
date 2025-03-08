@@ -1,15 +1,22 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.enums.CancellationStatusType;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Orders;
 import com.michael_delivery.backend.domain.Users;
-import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
 import com.michael_delivery.backend.repos.OrdersRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.service.CancellationRiderRequestService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +42,38 @@ public class CancellationRiderRequestResource {
         this.usersRepository = usersRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CancellationRiderRequestDTO>> getAllCancellationRiderRequests() {
+    @GetMapping("/all")
+    public ResponseEntity<List<CancellationRiderRequestDTO>> getAllCancellationRiderRequests(
+    ) {
         return ResponseEntity.ok(cancellationRiderRequestService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<CancellationRiderRequestDTO>> searchCancellationRiderRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "cancellationRiderRequestId:asc") String[] sortBy,
+            @RequestParam(required = false) CancellationStatusType status,
+            @RequestParam(required = false) String reason,
+            @RequestParam(required = false) String remark
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<CancellationRiderRequest> spec = new GenericSpecification<>();
+        Specification<CancellationRiderRequest> statusSpec = spec.equals("status", status);
+        Specification<CancellationRiderRequest> reasonSpec = spec.contains("reason", reason);
+        Specification<CancellationRiderRequest> remarkSpec = spec.contains("remark", remark);
+        Specification<CancellationRiderRequest> finalSpec = Specification.where(statusSpec).and(statusSpec).and(reasonSpec).and(remarkSpec).and(remarkSpec);
+        return ResponseEntity.ok(cancellationRiderRequestService.search(finalSpec,pageable.getPageable()));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<CancellationRiderRequestDTO>> getAllCancellationRiderRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "cancellationRiderRequestId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(cancellationRiderRequestService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{cancellationRiderRequestId}")

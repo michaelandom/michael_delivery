@@ -1,9 +1,7 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.EventGroups;
-import com.michael_delivery.backend.domain.GroupMembers;
-import com.michael_delivery.backend.domain.GroupPermissions;
-import com.michael_delivery.backend.domain.Groups;
+import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.GroupPermissionsDTO;
 import com.michael_delivery.backend.model.GroupsDTO;
 import com.michael_delivery.backend.repos.EventGroupsRepository;
@@ -12,7 +10,10 @@ import com.michael_delivery.backend.repos.GroupPermissionsRepository;
 import com.michael_delivery.backend.repos.GroupsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +40,10 @@ public class GroupsService extends BaseService<Groups, GroupsDTO,Long,GroupsRepo
 
 
 
+    @Override
+    public Page<GroupsDTO> search(Specification<Groups> query, Pageable pageable) {
+        return this.groupsRepository.findAll(query, pageable);
+    }
 
     protected GroupsDTO mapToDTO(final Groups groups, final GroupsDTO groupsDTO) {
         groupsDTO.setGroupId(groups.getGroupId());

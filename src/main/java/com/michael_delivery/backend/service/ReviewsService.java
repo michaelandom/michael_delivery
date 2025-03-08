@@ -1,23 +1,22 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Orders;
-import com.michael_delivery.backend.domain.Reviews;
-import com.michael_delivery.backend.domain.Riders;
-import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.ReviewsDTO;
-import com.michael_delivery.backend.repos.OrdersRepository;
-import com.michael_delivery.backend.repos.ReviewsRepository;
-import com.michael_delivery.backend.repos.RidersRepository;
-import com.michael_delivery.backend.repos.UsersRepository;
+import com.michael_delivery.backend.repos.*;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class ReviewsService {
+public class ReviewsService extends BaseService<Reviews, ReviewsDTO,Long, ReviewsRepository>{
 
     private final ReviewsRepository reviewsRepository;
     private final RidersRepository ridersRepository;
@@ -27,43 +26,21 @@ public class ReviewsService {
     public ReviewsService(final ReviewsRepository reviewsRepository,
             final RidersRepository ridersRepository, final UsersRepository usersRepository,
             final OrdersRepository ordersRepository) {
+        super(reviewsRepository,"reviewId");
+
         this.reviewsRepository = reviewsRepository;
         this.ridersRepository = ridersRepository;
         this.usersRepository = usersRepository;
         this.ordersRepository = ordersRepository;
     }
 
-    public List<ReviewsDTO> findAll() {
-        final List<Reviews> reviewses = reviewsRepository.findAll(Sort.by("reviewId"));
-        return reviewses.stream()
-                .map(reviews -> mapToDTO(reviews, new ReviewsDTO()))
-                .toList();
-    }
 
-    public ReviewsDTO get(final Long reviewId) {
-        return reviewsRepository.findById(reviewId)
-                .map(reviews -> mapToDTO(reviews, new ReviewsDTO()))
-                .orElseThrow(NotFoundException::new);
+    @Override
+    public Page<ReviewsDTO> search(Specification<Reviews> query, Pageable pageable) {
+        return this.reviewsRepository.findAll(query, pageable);
     }
-
-    public Long create(final ReviewsDTO reviewsDTO) {
-        final Reviews reviews = new Reviews();
-        mapToEntity(reviewsDTO, reviews);
-        return reviewsRepository.save(reviews).getReviewId();
-    }
-
-    public void update(final Long reviewId, final ReviewsDTO reviewsDTO) {
-        final Reviews reviews = reviewsRepository.findById(reviewId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(reviewsDTO, reviews);
-        reviewsRepository.save(reviews);
-    }
-
-    public void delete(final Long reviewId) {
-        reviewsRepository.deleteById(reviewId);
-    }
-
-    private ReviewsDTO mapToDTO(final Reviews reviews, final ReviewsDTO reviewsDTO) {
+    @Override
+    protected ReviewsDTO mapToDTO(final Reviews reviews, final ReviewsDTO reviewsDTO) {
         reviewsDTO.setReviewId(reviews.getReviewId());
         reviewsDTO.setReview(reviews.getReview());
         reviewsDTO.setRate(reviews.getRate());
@@ -73,7 +50,8 @@ public class ReviewsService {
         return reviewsDTO;
     }
 
-    private Reviews mapToEntity(final ReviewsDTO reviewsDTO, final Reviews reviews) {
+    @Override
+    protected Reviews mapToEntity(final ReviewsDTO reviewsDTO, final Reviews reviews) {
         reviews.setReview(reviewsDTO.getReview());
         reviews.setRate(reviewsDTO.getRate());
         final Riders rider = reviewsDTO.getRider() == null ? null : ridersRepository.findById(reviewsDTO.getRider())
@@ -86,6 +64,16 @@ public class ReviewsService {
                 .orElseThrow(() -> new NotFoundException("order not found"));
         reviews.setOrder(order);
         return reviews;
+    }
+
+    @Override
+    protected ReviewsDTO createDTO() {
+        return new ReviewsDTO();
+    }
+
+    @Override
+    protected Reviews createEntity() {
+        return new Reviews();
     }
 
 }

@@ -1,61 +1,46 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.ServiceArea;
 import com.michael_delivery.backend.domain.State;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.StateDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.ServiceAreaRepository;
 import com.michael_delivery.backend.repos.StateRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class StateService {
+public class StateService extends BaseService<State, StateDTO,Long, StateRepository> {
 
     private final StateRepository stateRepository;
     private final ServiceAreaRepository serviceAreaRepository;
 
     public StateService(final StateRepository stateRepository,
             final ServiceAreaRepository serviceAreaRepository) {
+        super(stateRepository,"stateId");
         this.stateRepository = stateRepository;
         this.serviceAreaRepository = serviceAreaRepository;
     }
 
-    public List<StateDTO> findAll() {
-        final List<State> states = stateRepository.findAll(Sort.by("stateId"));
-        return states.stream()
-                .map(state -> mapToDTO(state, new StateDTO()))
-                .toList();
+    @Override
+    public Page<StateDTO> search(Specification<State> query, Pageable pageable) {
+        return this.stateRepository.findAll(query, pageable);
     }
 
-    public StateDTO get(final Long stateId) {
-        return stateRepository.findById(stateId)
-                .map(state -> mapToDTO(state, new StateDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final StateDTO stateDTO) {
-        final State state = new State();
-        mapToEntity(stateDTO, state);
-        return stateRepository.save(state).getStateId();
-    }
-
-    public void update(final Long stateId, final StateDTO stateDTO) {
-        final State state = stateRepository.findById(stateId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(stateDTO, state);
-        stateRepository.save(state);
-    }
-
-    public void delete(final Long stateId) {
-        stateRepository.deleteById(stateId);
-    }
-
-    private StateDTO mapToDTO(final State state, final StateDTO stateDTO) {
+    @Override
+    protected StateDTO mapToDTO(final State state, final StateDTO stateDTO) {
         stateDTO.setStateId(state.getStateId());
         stateDTO.setName(state.getName());
         stateDTO.setCode(state.getCode());
@@ -63,11 +48,22 @@ public class StateService {
         return stateDTO;
     }
 
-    private State mapToEntity(final StateDTO stateDTO, final State state) {
+    @Override
+    protected State mapToEntity(final StateDTO stateDTO, final State state) {
         state.setName(stateDTO.getName());
         state.setCode(stateDTO.getCode());
         state.setLogoUrl(stateDTO.getLogoUrl());
         return state;
+    }
+
+    @Override
+    protected StateDTO createDTO() {
+        return new StateDTO();
+    }
+
+    @Override
+    protected State createEntity() {
+        return new State();
     }
 
     public ReferencedWarning getReferencedWarning(final Long stateId) {

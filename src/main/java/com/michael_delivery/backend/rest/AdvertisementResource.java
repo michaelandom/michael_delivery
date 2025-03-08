@@ -1,13 +1,14 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.Advertisement;
 import com.michael_delivery.backend.model.AdvertisementDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
 import com.michael_delivery.backend.service.AdvertisementService;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,18 +28,34 @@ public class AdvertisementResource {
 
     @GetMapping
     public ResponseEntity<Page<AdvertisementDTO>> getAllAdvertisements(
-            Pageable pageable
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "advertisementId:asc") String[] sortBy
     ) {
-        return ResponseEntity.ok(advertisementService.findAll(pageable));
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(advertisementService.findAll(pageable.getPageable()));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AdvertisementDTO>> getAllAdvertisements(
+    ) {
+        return ResponseEntity.ok(advertisementService.findAll());
     }
 
     @GetMapping("/search")
     public ResponseEntity<Page<AdvertisementDTO>> searchAdvertisements(
-            Pageable pageable,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "advertisementId:asc") String[] sortBy,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String content
     ) {
-        return ResponseEntity.ok(advertisementService.search(title,content,pageable));
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<Advertisement> spec = new GenericSpecification<>();
+        Specification<Advertisement> titleSpec = spec.contains("title", title);
+        Specification<Advertisement> contentSpec = spec.contains("content", content);
+        Specification<Advertisement> finalSpec = Specification.where(titleSpec).and(contentSpec);
+        return ResponseEntity.ok(advertisementService.search(finalSpec,pageable.getPageable()));
     }
 
     @GetMapping("/{advertisementId}")
@@ -71,7 +88,4 @@ public class AdvertisementResource {
         return ResponseEntity.noContent().build();
     }
 
-    private boolean isInvalidSort(Sort sort) {
-        return sort.stream().allMatch(order -> order.getProperty().isEmpty());
-    }
 }

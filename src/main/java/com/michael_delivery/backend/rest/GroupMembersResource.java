@@ -1,5 +1,9 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.GroupMembers;
+import com.michael_delivery.backend.model.GroupMembersDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Groups;
 import com.michael_delivery.backend.domain.Users;
@@ -9,7 +13,9 @@ import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.service.GroupMembersService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +40,21 @@ public class GroupMembersResource {
         this.usersRepository = usersRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<GroupMembersDTO>> getAllGroupMemberss() {
+    @GetMapping("/all")
+    public ResponseEntity<List<GroupMembersDTO>> getAllGroupMembers(
+    ) {
         return ResponseEntity.ok(groupMembersService.findAll());
+    }
+
+
+    @GetMapping
+    public ResponseEntity<Page<GroupMembersDTO>> getAllGroupMembers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "groupMemberId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(groupMembersService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{groupMemberId}")

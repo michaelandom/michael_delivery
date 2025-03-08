@@ -1,56 +1,51 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.PeakTimeRate;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.PeakTimeRateDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.PeakTimeRateRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class PeakTimeRateService {
+public class PeakTimeRateService extends BaseService<PeakTimeRate, PeakTimeRateDTO,Long, PeakTimeRateRepository> {
 
     private final PeakTimeRateRepository peakTimeRateRepository;
 
     public PeakTimeRateService(final PeakTimeRateRepository peakTimeRateRepository) {
+        super(peakTimeRateRepository,"peakTimeRateId");
         this.peakTimeRateRepository = peakTimeRateRepository;
     }
 
-    public List<PeakTimeRateDTO> findAll() {
-        final List<PeakTimeRate> peakTimeRates = peakTimeRateRepository.findAll(Sort.by("peakTimeRateId"));
-        return peakTimeRates.stream()
-                .map(peakTimeRate -> mapToDTO(peakTimeRate, new PeakTimeRateDTO()))
-                .toList();
+    @Override
+    public Page<PeakTimeRateDTO> search(Specification<PeakTimeRate> query, Pageable pageable) {
+        return this.peakTimeRateRepository.findAll(query, pageable);
     }
 
-    public PeakTimeRateDTO get(final Long peakTimeRateId) {
-        return peakTimeRateRepository.findById(peakTimeRateId)
-                .map(peakTimeRate -> mapToDTO(peakTimeRate, new PeakTimeRateDTO()))
-                .orElseThrow(NotFoundException::new);
+    @Override
+    protected PeakTimeRateDTO createDTO() {
+        return new PeakTimeRateDTO();
     }
 
-    public Long create(final PeakTimeRateDTO peakTimeRateDTO) {
-        final PeakTimeRate peakTimeRate = new PeakTimeRate();
-        mapToEntity(peakTimeRateDTO, peakTimeRate);
-        return peakTimeRateRepository.save(peakTimeRate).getPeakTimeRateId();
+    @Override
+    protected PeakTimeRate createEntity() {
+        return new PeakTimeRate();
     }
 
-    public void update(final Long peakTimeRateId, final PeakTimeRateDTO peakTimeRateDTO) {
-        final PeakTimeRate peakTimeRate = peakTimeRateRepository.findById(peakTimeRateId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(peakTimeRateDTO, peakTimeRate);
-        peakTimeRateRepository.save(peakTimeRate);
-    }
-
-    public void delete(final Long peakTimeRateId) {
-        peakTimeRateRepository.deleteById(peakTimeRateId);
-    }
-
-    private PeakTimeRateDTO mapToDTO(final PeakTimeRate peakTimeRate,
+    @Override
+    protected PeakTimeRateDTO mapToDTO(final PeakTimeRate peakTimeRate,
             final PeakTimeRateDTO peakTimeRateDTO) {
         peakTimeRateDTO.setPeakTimeRateId(peakTimeRate.getPeakTimeRateId());
         peakTimeRateDTO.setIsWeekend(peakTimeRate.getIsWeekend());
@@ -63,7 +58,8 @@ public class PeakTimeRateService {
         return peakTimeRateDTO;
     }
 
-    private PeakTimeRate mapToEntity(final PeakTimeRateDTO peakTimeRateDTO,
+    @Override
+    protected PeakTimeRate mapToEntity(final PeakTimeRateDTO peakTimeRateDTO,
             final PeakTimeRate peakTimeRate) {
         peakTimeRate.setIsWeekend(peakTimeRateDTO.getIsWeekend());
         peakTimeRate.setStartTime(peakTimeRateDTO.getStartTime());

@@ -1,58 +1,43 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.PickupTimeBasicPrices;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.PickupTimeBasicPricesDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.PickupTimeBasicPricesRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class PickupTimeBasicPricesService {
+public class PickupTimeBasicPricesService extends BaseService<PickupTimeBasicPrices, PickupTimeBasicPricesDTO,Long, PickupTimeBasicPricesRepository> {
 
     private final PickupTimeBasicPricesRepository pickupTimeBasicPricesRepository;
 
     public PickupTimeBasicPricesService(
             final PickupTimeBasicPricesRepository pickupTimeBasicPricesRepository) {
+        super(pickupTimeBasicPricesRepository,"pickupTimeBasicPriceId");
         this.pickupTimeBasicPricesRepository = pickupTimeBasicPricesRepository;
     }
 
-    public List<PickupTimeBasicPricesDTO> findAll() {
-        final List<PickupTimeBasicPrices> pickupTimeBasicPriceses = pickupTimeBasicPricesRepository.findAll(Sort.by("pickupTimeBasicPriceId"));
-        return pickupTimeBasicPriceses.stream()
-                .map(pickupTimeBasicPrices -> mapToDTO(pickupTimeBasicPrices, new PickupTimeBasicPricesDTO()))
-                .toList();
+
+    @Override
+    public Page<PickupTimeBasicPricesDTO> search(Specification<PickupTimeBasicPrices> query, Pageable pageable) {
+        return this.pickupTimeBasicPricesRepository.findAll(query, pageable);
     }
 
-    public PickupTimeBasicPricesDTO get(final Long pickupTimeBasicPriceId) {
-        return pickupTimeBasicPricesRepository.findById(pickupTimeBasicPriceId)
-                .map(pickupTimeBasicPrices -> mapToDTO(pickupTimeBasicPrices, new PickupTimeBasicPricesDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final PickupTimeBasicPricesDTO pickupTimeBasicPricesDTO) {
-        final PickupTimeBasicPrices pickupTimeBasicPrices = new PickupTimeBasicPrices();
-        mapToEntity(pickupTimeBasicPricesDTO, pickupTimeBasicPrices);
-        return pickupTimeBasicPricesRepository.save(pickupTimeBasicPrices).getPickupTimeBasicPriceId();
-    }
-
-    public void update(final Long pickupTimeBasicPriceId,
-            final PickupTimeBasicPricesDTO pickupTimeBasicPricesDTO) {
-        final PickupTimeBasicPrices pickupTimeBasicPrices = pickupTimeBasicPricesRepository.findById(pickupTimeBasicPriceId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(pickupTimeBasicPricesDTO, pickupTimeBasicPrices);
-        pickupTimeBasicPricesRepository.save(pickupTimeBasicPrices);
-    }
-
-    public void delete(final Long pickupTimeBasicPriceId) {
-        pickupTimeBasicPricesRepository.deleteById(pickupTimeBasicPriceId);
-    }
-
-    private PickupTimeBasicPricesDTO mapToDTO(final PickupTimeBasicPrices pickupTimeBasicPrices,
+    @Override
+    protected PickupTimeBasicPricesDTO mapToDTO(final PickupTimeBasicPrices pickupTimeBasicPrices,
             final PickupTimeBasicPricesDTO pickupTimeBasicPricesDTO) {
         pickupTimeBasicPricesDTO.setPickupTimeBasicPriceId(pickupTimeBasicPrices.getPickupTimeBasicPriceId());
         pickupTimeBasicPricesDTO.setPickupTime(pickupTimeBasicPrices.getPickupTime());
@@ -63,7 +48,8 @@ public class PickupTimeBasicPricesService {
         return pickupTimeBasicPricesDTO;
     }
 
-    private PickupTimeBasicPrices mapToEntity(
+    @Override
+    protected PickupTimeBasicPrices mapToEntity(
             final PickupTimeBasicPricesDTO pickupTimeBasicPricesDTO,
             final PickupTimeBasicPrices pickupTimeBasicPrices) {
         pickupTimeBasicPrices.setPickupTime(pickupTimeBasicPricesDTO.getPickupTime());
@@ -74,6 +60,16 @@ public class PickupTimeBasicPricesService {
                 .orElseThrow(() -> new NotFoundException("previous not found"));
         pickupTimeBasicPrices.setPrevious(previous);
         return pickupTimeBasicPrices;
+    }
+
+    @Override
+    protected PickupTimeBasicPricesDTO createDTO() {
+        return new PickupTimeBasicPricesDTO();
+    }
+
+    @Override
+    protected PickupTimeBasicPrices createEntity() {
+        return new PickupTimeBasicPrices();
     }
 
 

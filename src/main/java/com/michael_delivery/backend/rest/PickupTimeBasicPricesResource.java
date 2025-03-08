@@ -1,6 +1,11 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.PickupTimeBasicPrices;
 import com.michael_delivery.backend.enums.PickupTimeType;
+import com.michael_delivery.backend.enums.VehicleType;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.PickupTimeBasicPricesDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.PickupTimeBasicPrices;
 import com.michael_delivery.backend.model.PickupTimeBasicPricesDTO;
@@ -10,7 +15,9 @@ import com.michael_delivery.backend.util.CustomCollectors;
 import com.michael_delivery.backend.util.ReferencedException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +41,43 @@ public class PickupTimeBasicPricesResource {
         this.pickupTimeBasicPricesRepository = pickupTimeBasicPricesRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PickupTimeBasicPricesDTO>> getAllPickupTimeBasicPrices() {
+    @GetMapping("/all")
+    public ResponseEntity<List<PickupTimeBasicPricesDTO>> getAllPickupTimeBasicPrices(
+    ) {
         return ResponseEntity.ok(pickupTimeBasicPricesService.findAll());
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Page<PickupTimeBasicPricesDTO>> searchPickupTimeBasicPrices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "pickupTimeBasicPriceId:asc") String[] sortBy,
+            @RequestParam(required = false) PickupTimeType pickupTime,
+            @RequestParam(required = false) VehicleType vehicleType,
+            @RequestParam(required = false) Boolean isLatest
+
+
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<PickupTimeBasicPrices> spec = new GenericSpecification<>();
+        Specification<PickupTimeBasicPrices> pickupTimeSpec = spec.equals("pickupTime", pickupTime);
+        Specification<PickupTimeBasicPrices> vehicleTypeSpec = spec.equals("vehicleType", vehicleType);
+        Specification<PickupTimeBasicPrices> isLatestSpec = spec.equals("isLatest", isLatest);
+        Specification<PickupTimeBasicPrices> finalSpec = Specification.where(pickupTimeSpec)
+                .and(vehicleTypeSpec)
+                .and(isLatestSpec);
+        return ResponseEntity.ok(pickupTimeBasicPricesService.search(finalSpec,pageable.getPageable()));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PickupTimeBasicPricesDTO>> getAllPickupTimeBasicPrices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "pickupTimeBasicPriceId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(pickupTimeBasicPricesService.findAll(pageable.getPageable()));
+    }
     @GetMapping("/{pickupTimeBasicPriceId}")
     public ResponseEntity<PickupTimeBasicPricesDTO> getPickupTimeBasicPrices(
             @PathVariable(name = "pickupTimeBasicPriceId") final Long pickupTimeBasicPriceId) {

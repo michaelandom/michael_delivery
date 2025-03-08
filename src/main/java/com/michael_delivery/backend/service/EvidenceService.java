@@ -3,13 +3,17 @@ package com.michael_delivery.backend.service;
 import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.Events;
 import com.michael_delivery.backend.domain.Evidence;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.EventsDTO;
 import com.michael_delivery.backend.model.EvidenceDTO;
 import com.michael_delivery.backend.repos.DestinationRepository;
 import com.michael_delivery.backend.repos.EventsRepository;
 import com.michael_delivery.backend.repos.EvidenceRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +32,10 @@ public class EvidenceService extends BaseService<Evidence, EvidenceDTO,Long, Evi
         this.destinationRepository = destinationRepository;
     }
 
+    @Override
+    public Page<EvidenceDTO> search(Specification<Evidence> query, Pageable pageable) {
+        return this.evidenceRepository.findAll(query, pageable);
+    }
 @Override
     protected EvidenceDTO mapToDTO(final Evidence evidence, final EvidenceDTO evidenceDTO) {
         evidenceDTO.setEvidenceId(evidence.getEvidenceId());

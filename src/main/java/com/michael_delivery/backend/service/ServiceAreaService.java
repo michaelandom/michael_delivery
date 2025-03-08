@@ -1,60 +1,48 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.ServiceArea;
 import com.michael_delivery.backend.domain.State;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.ServiceAreaDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.ServiceAreaRepository;
 import com.michael_delivery.backend.repos.StateRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class ServiceAreaService {
+public class ServiceAreaService extends BaseService<ServiceArea, ServiceAreaDTO,Long, ServiceAreaRepository>{
 
     private final ServiceAreaRepository serviceAreaRepository;
     private final StateRepository stateRepository;
 
     public ServiceAreaService(final ServiceAreaRepository serviceAreaRepository,
             final StateRepository stateRepository) {
+        super(serviceAreaRepository,"serviceAreaId");
+
         this.serviceAreaRepository = serviceAreaRepository;
         this.stateRepository = stateRepository;
     }
 
-    public List<ServiceAreaDTO> findAll() {
-        final List<ServiceArea> serviceAreas = serviceAreaRepository.findAll(Sort.by("serviceAreaId"));
-        return serviceAreas.stream()
-                .map(serviceArea -> mapToDTO(serviceArea, new ServiceAreaDTO()))
-                .toList();
+
+
+    @Override
+    public Page<ServiceAreaDTO> search(Specification<ServiceArea> query, Pageable pageable) {
+        return this.serviceAreaRepository.findAll(query, pageable);
     }
 
-    public ServiceAreaDTO get(final Long serviceAreaId) {
-        return serviceAreaRepository.findById(serviceAreaId)
-                .map(serviceArea -> mapToDTO(serviceArea, new ServiceAreaDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final ServiceAreaDTO serviceAreaDTO) {
-        final ServiceArea serviceArea = new ServiceArea();
-        mapToEntity(serviceAreaDTO, serviceArea);
-        return serviceAreaRepository.save(serviceArea).getServiceAreaId();
-    }
-
-    public void update(final Long serviceAreaId, final ServiceAreaDTO serviceAreaDTO) {
-        final ServiceArea serviceArea = serviceAreaRepository.findById(serviceAreaId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(serviceAreaDTO, serviceArea);
-        serviceAreaRepository.save(serviceArea);
-    }
-
-    public void delete(final Long serviceAreaId) {
-        serviceAreaRepository.deleteById(serviceAreaId);
-    }
-
-    private ServiceAreaDTO mapToDTO(final ServiceArea serviceArea,
+    @Override
+    protected ServiceAreaDTO mapToDTO(final ServiceArea serviceArea,
             final ServiceAreaDTO serviceAreaDTO) {
         serviceAreaDTO.setServiceAreaId(serviceArea.getServiceAreaId());
         serviceAreaDTO.setName(serviceArea.getName());
@@ -64,7 +52,8 @@ public class ServiceAreaService {
         return serviceAreaDTO;
     }
 
-    private ServiceArea mapToEntity(final ServiceAreaDTO serviceAreaDTO,
+    @Override
+    protected ServiceArea mapToEntity(final ServiceAreaDTO serviceAreaDTO,
             final ServiceArea serviceArea) {
         serviceArea.setName(serviceAreaDTO.getName());
         serviceArea.setCode(serviceAreaDTO.getCode());
@@ -73,6 +62,16 @@ public class ServiceAreaService {
                 .orElseThrow(() -> new NotFoundException("State Not Found"));
         serviceArea.setState(state);
         return serviceArea;
+    }
+
+    @Override
+    protected ServiceAreaDTO createDTO() {
+        return new ServiceAreaDTO();
+    }
+
+    @Override
+    protected ServiceArea createEntity() {
+        return new ServiceArea();
     }
 
 }

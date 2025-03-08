@@ -1,60 +1,44 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
 import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.NoteDestination;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.NoteDestinationDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.DestinationRepository;
 import com.michael_delivery.backend.repos.NoteDestinationRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class NoteDestinationService {
+public class NoteDestinationService extends BaseService<NoteDestination, NoteDestinationDTO,Long, NoteDestinationRepository>{
 
     private final NoteDestinationRepository noteDestinationRepository;
     private final DestinationRepository destinationRepository;
 
     public NoteDestinationService(final NoteDestinationRepository noteDestinationRepository,
             final DestinationRepository destinationRepository) {
+        super(noteDestinationRepository,"noteDestinationId");
+
         this.noteDestinationRepository = noteDestinationRepository;
         this.destinationRepository = destinationRepository;
     }
 
-    public List<NoteDestinationDTO> findAll() {
-        final List<NoteDestination> noteDestinations = noteDestinationRepository.findAll(Sort.by("noteDestinationId"));
-        return noteDestinations.stream()
-                .map(noteDestination -> mapToDTO(noteDestination, new NoteDestinationDTO()))
-                .toList();
+    @Override
+    public Page<NoteDestinationDTO> search(Specification<NoteDestination> query, Pageable pageable) {
+        return this.noteDestinationRepository.findAll(query, pageable);
     }
-
-    public NoteDestinationDTO get(final Long noteDestinationId) {
-        return noteDestinationRepository.findById(noteDestinationId)
-                .map(noteDestination -> mapToDTO(noteDestination, new NoteDestinationDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final NoteDestinationDTO noteDestinationDTO) {
-        final NoteDestination noteDestination = new NoteDestination();
-        mapToEntity(noteDestinationDTO, noteDestination);
-        return noteDestinationRepository.save(noteDestination).getNoteDestinationId();
-    }
-
-    public void update(final Long noteDestinationId, final NoteDestinationDTO noteDestinationDTO) {
-        final NoteDestination noteDestination = noteDestinationRepository.findById(noteDestinationId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(noteDestinationDTO, noteDestination);
-        noteDestinationRepository.save(noteDestination);
-    }
-
-    public void delete(final Long noteDestinationId) {
-        noteDestinationRepository.deleteById(noteDestinationId);
-    }
-
-    private NoteDestinationDTO mapToDTO(final NoteDestination noteDestination,
+    @Override
+    protected NoteDestinationDTO mapToDTO(final NoteDestination noteDestination,
             final NoteDestinationDTO noteDestinationDTO) {
         noteDestinationDTO.setNoteDestinationId(noteDestination.getNoteDestinationId());
         noteDestinationDTO.setNote(noteDestination.getNote());
@@ -63,7 +47,8 @@ public class NoteDestinationService {
         return noteDestinationDTO;
     }
 
-    private NoteDestination mapToEntity(final NoteDestinationDTO noteDestinationDTO,
+    @Override
+    protected NoteDestination mapToEntity(final NoteDestinationDTO noteDestinationDTO,
             final NoteDestination noteDestination) {
         noteDestination.setNote(noteDestinationDTO.getNote());
         noteDestination.setPhotoUrls(noteDestinationDTO.getPhotoUrls());
@@ -71,6 +56,16 @@ public class NoteDestinationService {
                 .orElseThrow(() -> new NotFoundException("destination not found"));
         noteDestination.setDestination(destination);
         return noteDestination;
+    }
+
+    @Override
+    protected NoteDestinationDTO createDTO() {
+        return new NoteDestinationDTO();
+    }
+
+    @Override
+    protected NoteDestination createEntity() {
+        return new NoteDestination();
     }
 
 }

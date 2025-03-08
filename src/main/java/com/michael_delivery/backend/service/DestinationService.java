@@ -6,7 +6,10 @@ import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.repos.*;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +38,10 @@ public class DestinationService  extends BaseService<Destination, DestinationDTO
         this.noteDestinationRepository = noteDestinationRepository;
     }
 
+    @Override
+    public Page<DestinationDTO> search(Specification<Destination> query, Pageable pageable) {
+        return this.destinationRepository.findAll(query, pageable);
+    }
     protected DestinationDTO mapToDTO(final Destination destination,
             final DestinationDTO destinationDTO) {
         destinationDTO.setDestinationId(destination.getDestinationId());

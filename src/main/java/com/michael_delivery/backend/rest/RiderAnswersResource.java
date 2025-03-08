@@ -1,5 +1,10 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.RiderAnswers;
+import com.michael_delivery.backend.enums.QuizKeyType;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.RiderAnswersDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.QuestionOptions;
 import com.michael_delivery.backend.domain.Riders;
@@ -9,7 +14,9 @@ import com.michael_delivery.backend.repos.RidersRepository;
 import com.michael_delivery.backend.service.RiderAnswersService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +41,19 @@ public class RiderAnswersResource {
         this.ridersRepository = ridersRepository;
         this.questionOptionsRepository = questionOptionsRepository;
     }
-
-    @GetMapping
-    public ResponseEntity<List<RiderAnswersDTO>> getAllRiderAnswerss() {
+    @GetMapping("/all")
+    public ResponseEntity<List<RiderAnswersDTO>> getAllRiderAnswers(
+    ) {
         return ResponseEntity.ok(riderAnswersService.findAll());
+    }
+    @GetMapping
+    public ResponseEntity<Page<RiderAnswersDTO>> getAllRiderAnswers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "riderAnswerId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(riderAnswersService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{riderAnswerId}")

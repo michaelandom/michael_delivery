@@ -1,6 +1,12 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.Item;
+import com.michael_delivery.backend.enums.ItemClassificationType;
 import com.michael_delivery.backend.enums.SizeAndWeightType;
+import com.michael_delivery.backend.model.GroupsDTO;
+import com.michael_delivery.backend.model.ItemDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.SizeAndWeightDescriptions;
@@ -10,7 +16,9 @@ import com.michael_delivery.backend.repos.SizeAndWeightDescriptionsRepository;
 import com.michael_delivery.backend.service.ItemService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +44,36 @@ public class ItemResource {
         this.sizeAndWeightDescriptionsRepository = sizeAndWeightDescriptionsRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ItemDTO>> getAllItems() {
+    @GetMapping("/all")
+    public ResponseEntity<List<ItemDTO>> getAllItem(
+    ) {
         return ResponseEntity.ok(itemService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ItemDTO>> searchItem(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "itemId:asc") String[] sortBy,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<Item> spec = new GenericSpecification<>();
+        Specification<Item> nameSpec = spec.contains("name", name);
+        Specification<Item> descriptionSpec = spec.contains("description", description);
+        Specification<Item> finalSpec = Specification.where(nameSpec).and(descriptionSpec);
+        return ResponseEntity.ok(itemService.search(finalSpec,pageable.getPageable()));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ItemDTO>> getAllItem(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "itemId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(itemService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{itemId}")

@@ -1,11 +1,17 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.Questions;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.QuestionsDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.model.QuestionsDTO;
 import com.michael_delivery.backend.service.QuestionsService;
 import com.michael_delivery.backend.util.ReferencedException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +30,37 @@ public class QuestionsResource {
         this.questionsService = questionsService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<QuestionsDTO>> getAllQuestions() {
+    @GetMapping("/all")
+    public ResponseEntity<List<QuestionsDTO>> getAllQuestions(
+    ) {
         return ResponseEntity.ok(questionsService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<QuestionsDTO>> searchQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "questionId:asc") String[] sortBy,
+            @RequestParam(required = false) String questionText,
+            @RequestParam(required = false) String description
+
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<Questions> spec = new GenericSpecification<>();
+        Specification<Questions> questionTextSpec = spec.contains("questionText", questionText);
+        Specification<Questions> descriptionSpec = spec.equals("description", description);
+        Specification<Questions> finalSpec = Specification.where(questionTextSpec)
+                .and(descriptionSpec);
+        return ResponseEntity.ok(questionsService.search(finalSpec,pageable.getPageable()));
+    }
+    @GetMapping
+    public ResponseEntity<Page<QuestionsDTO>> getAllQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "questionId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(questionsService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{questionId}")

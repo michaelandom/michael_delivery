@@ -5,9 +5,11 @@ import org.springframework.data.domain.Pageable;
 
 public class ShareFunction {
     public static Pageable getPageable(Pageable pageable) {
-        if (pageable.getSort().isSorted() ) {
+        System.out.println("getPageable: " + pageable);
+        if (pageable.getSort().isEmpty()) {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         }
+        System.out.println("PageRequest: " + pageable);
         return pageable;
     }
 }

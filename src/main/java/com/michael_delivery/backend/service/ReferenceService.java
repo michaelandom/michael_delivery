@@ -1,55 +1,40 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.Reference;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.ReferenceDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.ReferenceRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class ReferenceService {
+public class ReferenceService extends BaseService<Reference, ReferenceDTO,Long, ReferenceRepository>{
 
     private final ReferenceRepository referenceRepository;
 
     public ReferenceService(final ReferenceRepository referenceRepository) {
+        super(referenceRepository,"referenceId");
+
         this.referenceRepository = referenceRepository;
     }
 
-    public List<ReferenceDTO> findAll() {
-        final List<Reference> references = referenceRepository.findAll(Sort.by("referenceId"));
-        return references.stream()
-                .map(reference -> mapToDTO(reference, new ReferenceDTO()))
-                .toList();
+    @Override
+    public Page<ReferenceDTO> search(Specification<Reference> query, Pageable pageable) {
+        return this.referenceRepository.findAll(query, pageable);
     }
-
-    public ReferenceDTO get(final Long referenceId) {
-        return referenceRepository.findById(referenceId)
-                .map(reference -> mapToDTO(reference, new ReferenceDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final ReferenceDTO referenceDTO) {
-        final Reference reference = new Reference();
-        mapToEntity(referenceDTO, reference);
-        return referenceRepository.save(reference).getReferenceId();
-    }
-
-    public void update(final Long referenceId, final ReferenceDTO referenceDTO) {
-        final Reference reference = referenceRepository.findById(referenceId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(referenceDTO, reference);
-        referenceRepository.save(reference);
-    }
-
-    public void delete(final Long referenceId) {
-        referenceRepository.deleteById(referenceId);
-    }
-
-    private ReferenceDTO mapToDTO(final Reference reference, final ReferenceDTO referenceDTO) {
+    @Override
+    protected ReferenceDTO mapToDTO(final Reference reference, final ReferenceDTO referenceDTO) {
         referenceDTO.setReferenceId(reference.getReferenceId());
 //        referenceDTO.setOrderIds(reference.getOrderIds());
         referenceDTO.setAmount(reference.getAmount());
@@ -60,7 +45,8 @@ public class ReferenceService {
         return referenceDTO;
     }
 
-    private Reference mapToEntity(final ReferenceDTO referenceDTO, final Reference reference) {
+    @Override
+    protected Reference mapToEntity(final ReferenceDTO referenceDTO, final Reference reference) {
 //        reference.setOrderIds(referenceDTO.getOrderIds());
         reference.setAmount(referenceDTO.getAmount());
         reference.setCurrency(referenceDTO.getCurrency());
@@ -68,6 +54,16 @@ public class ReferenceService {
         reference.setPaymentMethod(referenceDTO.getPaymentMethod());
         reference.setResultJson(referenceDTO.getResultJson());
         return reference;
+    }
+
+    @Override
+    protected ReferenceDTO createDTO() {
+        return new ReferenceDTO();
+    }
+
+    @Override
+    protected Reference createEntity() {
+        return new Reference();
     }
 
 }

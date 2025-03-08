@@ -1,6 +1,11 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.UserCoupon;
 import com.michael_delivery.backend.enums.DiscountType;
+import com.michael_delivery.backend.enums.VehicleType;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.UserCouponDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Coupons;
 import com.michael_delivery.backend.domain.Users;
@@ -10,7 +15,9 @@ import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.service.UserCouponService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +42,21 @@ public class UserCouponResource {
         this.couponsRepository = couponsRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserCouponDTO>> getAllUserCoupons() {
+    @GetMapping("/all")
+    public ResponseEntity<List<UserCouponDTO>> getAllUserCoupon(
+    ) {
         return ResponseEntity.ok(userCouponService.findAll());
     }
 
+    @GetMapping
+    public ResponseEntity<Page<UserCouponDTO>> getAllUserCoupon(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "userCouponId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(userCouponService.findAll(pageable.getPageable()));
+    }
     @GetMapping("/{userCouponId}")
     public ResponseEntity<UserCouponDTO> getUserCoupon(
             @PathVariable(name = "userCouponId") final Long userCouponId) {

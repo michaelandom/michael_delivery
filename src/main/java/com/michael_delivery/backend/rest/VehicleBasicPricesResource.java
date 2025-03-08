@@ -1,6 +1,11 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.UserFavoriteAddress;
+import com.michael_delivery.backend.enums.AddressType;
 import com.michael_delivery.backend.enums.VehicleType;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.UserFavoriteAddressDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.VehicleBasicPrices;
 import com.michael_delivery.backend.model.VehicleBasicPricesDTO;
@@ -10,7 +15,9 @@ import com.michael_delivery.backend.util.CustomCollectors;
 import com.michael_delivery.backend.util.ReferencedException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +40,35 @@ public class VehicleBasicPricesResource {
         this.vehicleBasicPricesRepository = vehicleBasicPricesRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<VehicleBasicPricesDTO>> getAllVehicleBasicPrices() {
+    @GetMapping("/all")
+    public ResponseEntity<List<VehicleBasicPricesDTO>> getAllUserFavoriteAddress(
+    ) {
         return ResponseEntity.ok(vehicleBasicPricesService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<VehicleBasicPricesDTO>> searchUserFavoriteAddress(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "vehicleBasicPriceId:asc") String[] sortBy,
+            @RequestParam(required = false) VehicleType vehicleType,
+            @RequestParam(required = false) Boolean isLatest
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<VehicleBasicPrices> spec = new GenericSpecification<>();
+        Specification<VehicleBasicPrices> vehicleTypeSpec = spec.equals("vehicleType", vehicleType);
+        Specification<VehicleBasicPrices> isLatestSpec = spec.equals("isLatest", isLatest);
+        Specification<VehicleBasicPrices> finalSpec = Specification.where(vehicleTypeSpec).and(isLatestSpec);
+        return ResponseEntity.ok(vehicleBasicPricesService.search(finalSpec,pageable.getPageable()));
+    }
+    @GetMapping
+    public ResponseEntity<Page<VehicleBasicPricesDTO>> getAllUserFavoriteAddress(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "vehicleBasicPriceId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(vehicleBasicPricesService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{vehicleBasicPriceId}")

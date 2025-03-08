@@ -1,21 +1,25 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.QuestionOptions;
-import com.michael_delivery.backend.domain.RiderAnswers;
-import com.michael_delivery.backend.domain.Riders;
+import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.RiderAnswersDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.QuestionOptionsRepository;
 import com.michael_delivery.backend.repos.RiderAnswersRepository;
 import com.michael_delivery.backend.repos.RidersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class RiderAnswersService {
+public class RiderAnswersService extends BaseService<RiderAnswers, RiderAnswersDTO,Long, RiderAnswersRepository> {
 
     private final RiderAnswersRepository riderAnswersRepository;
     private final RidersRepository ridersRepository;
@@ -24,42 +28,20 @@ public class RiderAnswersService {
     public RiderAnswersService(final RiderAnswersRepository riderAnswersRepository,
             final RidersRepository ridersRepository,
             final QuestionOptionsRepository questionOptionsRepository) {
+        super(riderAnswersRepository,"riderAnswerId");
         this.riderAnswersRepository = riderAnswersRepository;
         this.ridersRepository = ridersRepository;
         this.questionOptionsRepository = questionOptionsRepository;
     }
 
-    public List<RiderAnswersDTO> findAll() {
-        final List<RiderAnswers> riderAnswerses = riderAnswersRepository.findAll(Sort.by("riderAnswerId"));
-        return riderAnswerses.stream()
-                .map(riderAnswers -> mapToDTO(riderAnswers, new RiderAnswersDTO()))
-                .toList();
+    @Override
+    public Page<RiderAnswersDTO> search(Specification<RiderAnswers> query, Pageable pageable) {
+        return this.riderAnswersRepository.findAll(query, pageable);
     }
 
-    public RiderAnswersDTO get(final Long riderAnswerId) {
-        return riderAnswersRepository.findById(riderAnswerId)
-                .map(riderAnswers -> mapToDTO(riderAnswers, new RiderAnswersDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
 
-    public Long create(final RiderAnswersDTO riderAnswersDTO) {
-        final RiderAnswers riderAnswers = new RiderAnswers();
-        mapToEntity(riderAnswersDTO, riderAnswers);
-        return riderAnswersRepository.save(riderAnswers).getRiderAnswerId();
-    }
-
-    public void update(final Long riderAnswerId, final RiderAnswersDTO riderAnswersDTO) {
-        final RiderAnswers riderAnswers = riderAnswersRepository.findById(riderAnswerId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(riderAnswersDTO, riderAnswers);
-        riderAnswersRepository.save(riderAnswers);
-    }
-
-    public void delete(final Long riderAnswerId) {
-        riderAnswersRepository.deleteById(riderAnswerId);
-    }
-
-    private RiderAnswersDTO mapToDTO(final RiderAnswers riderAnswers,
+    @Override
+    protected RiderAnswersDTO mapToDTO(final RiderAnswers riderAnswers,
             final RiderAnswersDTO riderAnswersDTO) {
         riderAnswersDTO.setRiderAnswerId(riderAnswers.getRiderAnswerId());
         riderAnswersDTO.setQuizKey(riderAnswers.getQuizKey());
@@ -69,7 +51,8 @@ public class RiderAnswersService {
         return riderAnswersDTO;
     }
 
-    private RiderAnswers mapToEntity(final RiderAnswersDTO riderAnswersDTO,
+    @Override
+    protected RiderAnswers mapToEntity(final RiderAnswersDTO riderAnswersDTO,
             final RiderAnswers riderAnswers) {
         riderAnswers.setQuizKey(riderAnswersDTO.getQuizKey());
         riderAnswers.setIsCorrect(riderAnswersDTO.getIsCorrect());
@@ -80,6 +63,16 @@ public class RiderAnswersService {
                 .orElseThrow(() -> new NotFoundException("option not found"));
         riderAnswers.setOption(option);
         return riderAnswers;
+    }
+
+    @Override
+    protected RiderAnswersDTO createDTO() {
+        return new RiderAnswersDTO();
+    }
+
+    @Override
+    protected RiderAnswers createEntity() {
+        return new RiderAnswers();
     }
 
 }

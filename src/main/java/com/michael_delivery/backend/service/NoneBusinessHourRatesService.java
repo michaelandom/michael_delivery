@@ -1,19 +1,22 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.NoneBusinessHourRates;
 import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.NoneBusinessHourRatesDTO;
 import com.michael_delivery.backend.repos.NoneBusinessHourRatesRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 
 @Service
-public class NoneBusinessHourRatesService {
+public class NoneBusinessHourRatesService extends BaseService<NoneBusinessHourRates, NoneBusinessHourRatesDTO,Long, NoneBusinessHourRatesRepository> {
 
     private final NoneBusinessHourRatesRepository noneBusinessHourRatesRepository;
     private final UsersRepository usersRepository;
@@ -21,42 +24,17 @@ public class NoneBusinessHourRatesService {
     public NoneBusinessHourRatesService(
             final NoneBusinessHourRatesRepository noneBusinessHourRatesRepository,
             final UsersRepository usersRepository) {
+        super(noneBusinessHourRatesRepository,"noneBusinessHourRateId");
         this.noneBusinessHourRatesRepository = noneBusinessHourRatesRepository;
         this.usersRepository = usersRepository;
     }
-
-    public List<NoneBusinessHourRatesDTO> findAll() {
-        final List<NoneBusinessHourRates> noneBusinessHourRateses = noneBusinessHourRatesRepository.findAll(Sort.by("noneBusinessHourRateId"));
-        return noneBusinessHourRateses.stream()
-                .map(noneBusinessHourRates -> mapToDTO(noneBusinessHourRates, new NoneBusinessHourRatesDTO()))
-                .toList();
+    @Override
+    public Page<NoneBusinessHourRatesDTO> search(Specification<NoneBusinessHourRates> query, Pageable pageable) {
+        return this.noneBusinessHourRatesRepository.findAll(query, pageable);
     }
 
-    public NoneBusinessHourRatesDTO get(final Long noneBusinessHourRateId) {
-        return noneBusinessHourRatesRepository.findById(noneBusinessHourRateId)
-                .map(noneBusinessHourRates -> mapToDTO(noneBusinessHourRates, new NoneBusinessHourRatesDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final NoneBusinessHourRatesDTO noneBusinessHourRatesDTO) {
-        final NoneBusinessHourRates noneBusinessHourRates = new NoneBusinessHourRates();
-        mapToEntity(noneBusinessHourRatesDTO, noneBusinessHourRates);
-        return noneBusinessHourRatesRepository.save(noneBusinessHourRates).getNoneBusinessHourRateId();
-    }
-
-    public void update(final Long noneBusinessHourRateId,
-            final NoneBusinessHourRatesDTO noneBusinessHourRatesDTO) {
-        final NoneBusinessHourRates noneBusinessHourRates = noneBusinessHourRatesRepository.findById(noneBusinessHourRateId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(noneBusinessHourRatesDTO, noneBusinessHourRates);
-        noneBusinessHourRatesRepository.save(noneBusinessHourRates);
-    }
-
-    public void delete(final Long noneBusinessHourRateId) {
-        noneBusinessHourRatesRepository.deleteById(noneBusinessHourRateId);
-    }
-
-    private NoneBusinessHourRatesDTO mapToDTO(final NoneBusinessHourRates noneBusinessHourRates,
+    @Override
+    protected NoneBusinessHourRatesDTO mapToDTO(final NoneBusinessHourRates noneBusinessHourRates,
             final NoneBusinessHourRatesDTO noneBusinessHourRatesDTO) {
         noneBusinessHourRatesDTO.setNoneBusinessHourRateId(noneBusinessHourRates.getNoneBusinessHourRateId());
         noneBusinessHourRatesDTO.setStartTime(noneBusinessHourRates.getStartTime());
@@ -66,8 +44,8 @@ public class NoneBusinessHourRatesService {
         noneBusinessHourRatesDTO.setCreatedBy(noneBusinessHourRates.getCreatedBy() == null ? null : noneBusinessHourRates.getCreatedBy().getUserId());
         return noneBusinessHourRatesDTO;
     }
-
-    private NoneBusinessHourRates mapToEntity(
+    @Override
+    protected NoneBusinessHourRates mapToEntity(
             final NoneBusinessHourRatesDTO noneBusinessHourRatesDTO,
             final NoneBusinessHourRates noneBusinessHourRates) {
         noneBusinessHourRates.setStartTime(noneBusinessHourRatesDTO.getStartTime());
@@ -80,9 +58,15 @@ public class NoneBusinessHourRatesService {
         return noneBusinessHourRates;
     }
 
-//    public boolean uniqueStartTimeEndTimeCheckExists(final String uniqueStartTimeEndTimeCheck) {
-//
-//              return noneBusinessHourRatesRepository.existsByUniqueStartTimeEndTimeCheckIgnoreCase(uniqueStartTimeEndTimeCheck);
-//    }
+    @Override
+    protected NoneBusinessHourRatesDTO createDTO() {
+        return new NoneBusinessHourRatesDTO();
+    }
+
+    @Override
+    protected NoneBusinessHourRates createEntity() {
+        return new NoneBusinessHourRates();
+    }
+
 
 }

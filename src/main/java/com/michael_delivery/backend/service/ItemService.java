@@ -4,6 +4,7 @@ import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.Groups;
 import com.michael_delivery.backend.domain.Item;
 import com.michael_delivery.backend.domain.SizeAndWeightDescriptions;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.GroupsDTO;
 import com.michael_delivery.backend.model.ItemDTO;
 import com.michael_delivery.backend.repos.DestinationRepository;
@@ -11,7 +12,10 @@ import com.michael_delivery.backend.repos.GroupsRepository;
 import com.michael_delivery.backend.repos.ItemRepository;
 import com.michael_delivery.backend.repos.SizeAndWeightDescriptionsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +36,10 @@ public class ItemService extends BaseService<Item, ItemDTO,Long, ItemRepository>
         this.destinationRepository = destinationRepository;
         this.sizeAndWeightDescriptionsRepository = sizeAndWeightDescriptionsRepository;
     }
-
+    @Override
+    public Page<ItemDTO> search(Specification<Item> query, Pageable pageable) {
+        return this.itemRepository.findAll(query, pageable);
+    }
 
     protected ItemDTO mapToDTO(final Item item, final ItemDTO itemDTO) {
         itemDTO.setItemId(item.getItemId());

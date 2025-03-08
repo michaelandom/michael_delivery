@@ -1,5 +1,9 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.BussinessAccount;
+import com.michael_delivery.backend.model.BillingAddressDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.BillingAddress;
 import com.michael_delivery.backend.model.BussinessAccountDTO;
@@ -9,7 +13,10 @@ import com.michael_delivery.backend.util.CustomCollectors;
 import com.michael_delivery.backend.util.ReferencedException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +39,35 @@ public class BussinessAccountResource {
         this.billingAddressRepository = billingAddressRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<BussinessAccountDTO>> getAllBussinessAccounts() {
+    @GetMapping("/all")
+    public ResponseEntity<List<BussinessAccountDTO>> getAllBussinessAccount(
+    ) {
         return ResponseEntity.ok(bussinessAccountService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<BussinessAccountDTO>> searchBussinessAccount(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "bussinessAccountId:asc") String[] sortBy,
+            @RequestParam(required = false) String companyAbn,
+            @RequestParam(required = false) String companyName
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<BussinessAccount> spec = new GenericSpecification<>();
+        Specification<BussinessAccount> companyAbnSpec = spec.contains("companyAbn", companyAbn);
+        Specification<BussinessAccount> companyNameSpec = spec.contains("companyName", companyName);
+        Specification<BussinessAccount> finalSpec = Specification.where(companyAbnSpec).and(companyNameSpec);
+        return ResponseEntity.ok(bussinessAccountService.search(finalSpec,pageable.getPageable()));
+    }
+    @GetMapping
+    public ResponseEntity<Page<BussinessAccountDTO>> getAllBussinessAccount(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "bussinessAccountId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(bussinessAccountService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{bussinessAccountId}")

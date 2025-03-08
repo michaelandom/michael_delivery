@@ -1,57 +1,42 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.PaymentWebhookPayload;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.PaymentWebhookPayloadDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.PaymentWebhookPayloadRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class PaymentWebhookPayloadService {
+public class PaymentWebhookPayloadService extends BaseService<PaymentWebhookPayload, PaymentWebhookPayloadDTO,Long, PaymentWebhookPayloadRepository> {
 
     private final PaymentWebhookPayloadRepository paymentWebhookPayloadRepository;
 
     public PaymentWebhookPayloadService(
             final PaymentWebhookPayloadRepository paymentWebhookPayloadRepository) {
+        super(paymentWebhookPayloadRepository,"paymentWebhookPayloadId");
+
         this.paymentWebhookPayloadRepository = paymentWebhookPayloadRepository;
     }
 
-    public List<PaymentWebhookPayloadDTO> findAll() {
-        final List<PaymentWebhookPayload> paymentWebhookPayloads = paymentWebhookPayloadRepository.findAll(Sort.by("paymentWebhookPayloadId"));
-        return paymentWebhookPayloads.stream()
-                .map(paymentWebhookPayload -> mapToDTO(paymentWebhookPayload, new PaymentWebhookPayloadDTO()))
-                .toList();
+    @Override
+    public Page<PaymentWebhookPayloadDTO> search(Specification<PaymentWebhookPayload> query, Pageable pageable) {
+        return this.paymentWebhookPayloadRepository.findAll(query, pageable);
     }
 
-    public PaymentWebhookPayloadDTO get(final Long paymentWebhookPayloadId) {
-        return paymentWebhookPayloadRepository.findById(paymentWebhookPayloadId)
-                .map(paymentWebhookPayload -> mapToDTO(paymentWebhookPayload, new PaymentWebhookPayloadDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final PaymentWebhookPayloadDTO paymentWebhookPayloadDTO) {
-        final PaymentWebhookPayload paymentWebhookPayload = new PaymentWebhookPayload();
-        mapToEntity(paymentWebhookPayloadDTO, paymentWebhookPayload);
-        return paymentWebhookPayloadRepository.save(paymentWebhookPayload).getPaymentWebhookPayloadId();
-    }
-
-    public void update(final Long paymentWebhookPayloadId,
-            final PaymentWebhookPayloadDTO paymentWebhookPayloadDTO) {
-        final PaymentWebhookPayload paymentWebhookPayload = paymentWebhookPayloadRepository.findById(paymentWebhookPayloadId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(paymentWebhookPayloadDTO, paymentWebhookPayload);
-        paymentWebhookPayloadRepository.save(paymentWebhookPayload);
-    }
-
-    public void delete(final Long paymentWebhookPayloadId) {
-        paymentWebhookPayloadRepository.deleteById(paymentWebhookPayloadId);
-    }
-
-    private PaymentWebhookPayloadDTO mapToDTO(final PaymentWebhookPayload paymentWebhookPayload,
+    @Override
+    protected PaymentWebhookPayloadDTO mapToDTO(final PaymentWebhookPayload paymentWebhookPayload,
             final PaymentWebhookPayloadDTO paymentWebhookPayloadDTO) {
         paymentWebhookPayloadDTO.setPaymentWebhookPayloadId(paymentWebhookPayload.getPaymentWebhookPayloadId());
         paymentWebhookPayloadDTO.setPspReference(paymentWebhookPayload.getPspReference());
@@ -67,7 +52,8 @@ public class PaymentWebhookPayloadService {
         return paymentWebhookPayloadDTO;
     }
 
-    private PaymentWebhookPayload mapToEntity(
+    @Override
+    protected PaymentWebhookPayload mapToEntity(
             final PaymentWebhookPayloadDTO paymentWebhookPayloadDTO,
             final PaymentWebhookPayload paymentWebhookPayload) {
         paymentWebhookPayload.setPspReference(paymentWebhookPayloadDTO.getPspReference());
@@ -80,6 +66,16 @@ public class PaymentWebhookPayloadService {
         paymentWebhookPayload.setPayload(paymentWebhookPayloadDTO.getPayload());
         paymentWebhookPayload.setSuccess(paymentWebhookPayloadDTO.getSuccess());
         return paymentWebhookPayload;
+    }
+
+    @Override
+    protected PaymentWebhookPayloadDTO createDTO() {
+        return new PaymentWebhookPayloadDTO();
+    }
+
+    @Override
+    protected PaymentWebhookPayload createEntity() {
+        return new PaymentWebhookPayload();
     }
 
 }

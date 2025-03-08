@@ -1,5 +1,9 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.RiderPayments;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.model.RiderPaymentsDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Riders;
 import com.michael_delivery.backend.model.RiderPaymentsDTO;
@@ -7,7 +11,9 @@ import com.michael_delivery.backend.repos.RidersRepository;
 import com.michael_delivery.backend.service.RiderPaymentsService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +36,34 @@ public class RiderPaymentsResource {
         this.ridersRepository = ridersRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<RiderPaymentsDTO>> getAllRiderPayments() {
+    @GetMapping("/all")
+    public ResponseEntity<List<RiderPaymentsDTO>> getAllRiderPayments(
+    ) {
         return ResponseEntity.ok(riderPaymentsService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<RiderPaymentsDTO>> searchRiderPayments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "riderPaymentId:asc") String[] sortBy,
+            @RequestParam(required = false) Boolean isPaid
+
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<RiderPayments> spec = new GenericSpecification<>();
+        Specification<RiderPayments> isPaidSpec = spec.equals("isPaid", isPaid);
+        Specification<RiderPayments> finalSpec = Specification.where(isPaidSpec);
+        return ResponseEntity.ok(riderPaymentsService.search(finalSpec,pageable.getPageable()));
+    }
+    @GetMapping
+    public ResponseEntity<Page<RiderPaymentsDTO>> getAllRiderPayments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "riderPaymentId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(riderPaymentsService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{riderPaymentId}")

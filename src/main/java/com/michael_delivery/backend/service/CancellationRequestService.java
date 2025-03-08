@@ -11,7 +11,10 @@ import com.michael_delivery.backend.repos.CancellationRequestRepository;
 import com.michael_delivery.backend.repos.OrdersRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +36,10 @@ public class CancellationRequestService extends BaseService<CancellationRequest,
         this.usersRepository = usersRepository;
     }
 
+    @Override
+    public Page<CancellationRequestDTO> search(Specification<CancellationRequest> query, Pageable pageable) {
+        return this.cancellationRequestRepository.findAll(query, pageable);
+    }
     @Override
     protected CancellationRequestDTO createDTO() {
         return new CancellationRequestDTO();

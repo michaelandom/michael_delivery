@@ -1,5 +1,11 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.PasswordReset;
+import com.michael_delivery.backend.enums.OrderStatusType;
+import com.michael_delivery.backend.enums.VehicleType;
+import com.michael_delivery.backend.model.PasswordResetDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Users;
 import com.michael_delivery.backend.model.PasswordResetDTO;
@@ -7,7 +13,9 @@ import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.service.PasswordResetService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +38,20 @@ public class PasswordResetResource {
         this.usersRepository = usersRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PasswordResetDTO>> getAllPasswordResets() {
+    @GetMapping("/all")
+    public ResponseEntity<List<PasswordResetDTO>> getAllPasswordReset(
+    ) {
         return ResponseEntity.ok(passwordResetService.findAll());
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PasswordResetDTO>> getAllPasswordReset(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "orderId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(passwordResetService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{passwordResetId}")

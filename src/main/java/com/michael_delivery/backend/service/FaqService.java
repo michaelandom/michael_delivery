@@ -1,13 +1,18 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.ExtrFee;
 import com.michael_delivery.backend.domain.Faq;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.ExtrFeeDTO;
 import com.michael_delivery.backend.model.FaqDTO;
 import com.michael_delivery.backend.repos.ExtrFeeRepository;
 import com.michael_delivery.backend.repos.FaqRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +29,11 @@ public class FaqService extends BaseService<Faq, FaqDTO,Long, FaqRepository>{
         this.faqRepository = faqRepository;
     }
 
+
+    @Override
+    public Page<FaqDTO> search(Specification<Faq> query, Pageable pageable) {
+        return this.faqRepository.findAll(query, pageable);
+    }
     @Override
     protected FaqDTO mapToDTO(final Faq faq, final FaqDTO faqDTO) {
         faqDTO.setId(faq.getId());

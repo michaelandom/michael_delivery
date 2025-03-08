@@ -1,15 +1,20 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.Evidence;
 import com.michael_delivery.backend.domain.ExtrFee;
 import com.michael_delivery.backend.domain.Orders;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.EvidenceDTO;
 import com.michael_delivery.backend.model.ExtrFeeDTO;
 import com.michael_delivery.backend.repos.EvidenceRepository;
 import com.michael_delivery.backend.repos.ExtrFeeRepository;
 import com.michael_delivery.backend.repos.OrdersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +31,11 @@ public class ExtrFeeService extends BaseService<ExtrFee, ExtrFeeDTO,Long, ExtrFe
         super(extrFeeRepository,"extrFeeId");
         this.extrFeeRepository = extrFeeRepository;
         this.ordersRepository = ordersRepository;
+    }
+
+    @Override
+    public Page<ExtrFeeDTO> search(Specification<ExtrFee> query, Pageable pageable) {
+        return this.extrFeeRepository.findAll(query, pageable);
     }
 
     protected ExtrFeeDTO mapToDTO(final ExtrFee extrFee, final ExtrFeeDTO extrFeeDTO) {

@@ -1,9 +1,15 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.PaymentWebhookPayload;
+import com.michael_delivery.backend.model.PaymentWebhookPayloadDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.model.PaymentWebhookPayloadDTO;
 import com.michael_delivery.backend.service.PaymentWebhookPayloadService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +28,46 @@ public class PaymentWebhookPayloadResource {
             final PaymentWebhookPayloadService paymentWebhookPayloadService) {
         this.paymentWebhookPayloadService = paymentWebhookPayloadService;
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<PaymentWebhookPayloadDTO>> getAllPaymentWebhookPayload(
+    ) {
+        return ResponseEntity.ok(paymentWebhookPayloadService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<PaymentWebhookPayloadDTO>> searchPaymentWebhookPayload(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "paymentWebhookPayloadId:asc") String[] sortBy,
+            @RequestParam(required = false) String pspReference,
+            @RequestParam(required = false) String merchantReference,
+            @RequestParam(required = false) String originalReference,
+            @RequestParam(required = false) String eventCode,
+            @RequestParam(required = false) String paymentMethod
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<PaymentWebhookPayload> spec = new GenericSpecification<>();
+        Specification<PaymentWebhookPayload> pspReferenceSpec = spec.contains("pspReference", pspReference);
+        Specification<PaymentWebhookPayload> merchantReferenceSpec = spec.contains("merchantReference", merchantReference);
+        Specification<PaymentWebhookPayload> originalReferenceSpec = spec.contains("originalReference", originalReference);
+        Specification<PaymentWebhookPayload> eventCodeSpec = spec.contains("eventCode", eventCode);
+        Specification<PaymentWebhookPayload> paymentMethodSpec = spec.contains("paymentMethod", paymentMethod);
+        Specification<PaymentWebhookPayload> finalSpec = Specification.where(pspReferenceSpec)
+                .and(merchantReferenceSpec)
+                .and(originalReferenceSpec)
+                .and(eventCodeSpec)
+                .and(paymentMethodSpec);
+        return ResponseEntity.ok(paymentWebhookPayloadService.search(finalSpec,pageable.getPageable()));
+    }
 
     @GetMapping
-    public ResponseEntity<List<PaymentWebhookPayloadDTO>> getAllPaymentWebhookPayloads() {
-        return ResponseEntity.ok(paymentWebhookPayloadService.findAll());
+    public ResponseEntity<Page<PaymentWebhookPayloadDTO>> getAllPaymentWebhookPayload(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "paymentWebhookPayloadId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(paymentWebhookPayloadService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{paymentWebhookPayloadId}")

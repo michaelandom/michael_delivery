@@ -1,5 +1,9 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.PeakTimeRate;
+import com.michael_delivery.backend.model.PeakTimeRateDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.PeakTimeRate;
 import com.michael_delivery.backend.model.PeakTimeRateDTO;
@@ -9,7 +13,9 @@ import com.michael_delivery.backend.util.CustomCollectors;
 import com.michael_delivery.backend.util.ReferencedException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +39,20 @@ public class PeakTimeRateResource {
         this.peakTimeRateRepository = peakTimeRateRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PeakTimeRateDTO>> getAllPeakTimeRates() {
+    @GetMapping("/all")
+    public ResponseEntity<List<PeakTimeRateDTO>> getAllPeakTimeRate(
+    ) {
         return ResponseEntity.ok(peakTimeRateService.findAll());
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PeakTimeRateDTO>> getAllPeakTimeRate(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "peakTimeRateId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(peakTimeRateService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{peakTimeRateId}")

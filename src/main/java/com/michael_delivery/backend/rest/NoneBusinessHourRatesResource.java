@@ -1,13 +1,18 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.NoneBusinessHourRates;
+import com.michael_delivery.backend.model.NoneBusinessHourRatesDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.Users;
-import com.michael_delivery.backend.model.NoneBusinessHourRatesDTO;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.service.NoneBusinessHourRatesService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +36,20 @@ public class NoneBusinessHourRatesResource {
         this.usersRepository = usersRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<NoneBusinessHourRatesDTO>> getAllNoneBusinessHourRatess() {
+    @GetMapping("/all")
+    public ResponseEntity<List<NoneBusinessHourRatesDTO>> getAllNoneBusinessHourRates(
+    ) {
         return ResponseEntity.ok(noneBusinessHourRatesService.findAll());
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<NoneBusinessHourRatesDTO>> getAllNoneBusinessHourRates(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "noneBusinessHourRateId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(noneBusinessHourRatesService.findAll(pageable.getPageable()));
     }
 
     @GetMapping("/{noneBusinessHourRateId}")

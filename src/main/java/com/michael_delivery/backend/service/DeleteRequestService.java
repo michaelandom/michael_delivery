@@ -9,7 +9,10 @@ import com.michael_delivery.backend.repos.CouponsRepository;
 import com.michael_delivery.backend.repos.DeleteRequestRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +31,11 @@ public class DeleteRequestService extends BaseService<DeleteRequest, DeleteReque
         this.usersRepository = usersRepository;
     }
 
+
+    @Override
+    public Page<DeleteRequestDTO> search(Specification<DeleteRequest> query, Pageable pageable) {
+        return this.deleteRequestRepository.findAll(query, pageable);
+    }
 
     @Override
     protected DeleteRequestDTO mapToDTO(final DeleteRequest deleteRequest,

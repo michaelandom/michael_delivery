@@ -1,61 +1,47 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.GroupPermissions;
 import com.michael_delivery.backend.domain.Permissions;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.PermissionsDTO;
+import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
 import com.michael_delivery.backend.repos.GroupPermissionsRepository;
 import com.michael_delivery.backend.repos.PermissionsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class PermissionsService {
+public class PermissionsService extends BaseService<Permissions, PermissionsDTO,Long, PermissionsRepository>{
 
     private final PermissionsRepository permissionsRepository;
     private final GroupPermissionsRepository groupPermissionsRepository;
 
     public PermissionsService(final PermissionsRepository permissionsRepository,
                               final GroupPermissionsRepository groupPermissionsRepository) {
+        super(permissionsRepository,"permissionId");
         this.permissionsRepository = permissionsRepository;
         this.groupPermissionsRepository = groupPermissionsRepository;
     }
 
-    public List<PermissionsDTO> findAll() {
-        final List<Permissions> permissionses = permissionsRepository.findAll(Sort.by("permissionId"));
-        return permissionses.stream()
-                .map(permissions -> mapToDTO(permissions, new PermissionsDTO()))
-                .toList();
+
+    @Override
+    public Page<PermissionsDTO> search(Specification<Permissions> query, Pageable pageable) {
+        return this.permissionsRepository.findAll(query, pageable);
     }
 
-    public PermissionsDTO get(final Long permissionId) {
-        return permissionsRepository.findById(permissionId)
-                .map(permissions -> mapToDTO(permissions, new PermissionsDTO()))
-                .orElseThrow(NotFoundException::new);
-    }
-
-    public Long create(final PermissionsDTO permissionsDTO) {
-        final Permissions permissions = new Permissions();
-        mapToEntity(permissionsDTO, permissions);
-        return permissionsRepository.save(permissions).getPermissionId();
-    }
-
-    public void update(final Long permissionId, final PermissionsDTO permissionsDTO) {
-        final Permissions permissions = permissionsRepository.findById(permissionId)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(permissionsDTO, permissions);
-        permissionsRepository.save(permissions);
-    }
-
-    public void delete(final Long permissionId) {
-        permissionsRepository.deleteById(permissionId);
-    }
-
-    private PermissionsDTO mapToDTO(final Permissions permissions,
+    @Override
+    protected PermissionsDTO mapToDTO(final Permissions permissions,
             final PermissionsDTO permissionsDTO) {
         permissionsDTO.setPermissionId(permissions.getPermissionId());
         permissionsDTO.setPermissionName(permissions.getPermissionName());
@@ -63,11 +49,22 @@ public class PermissionsService {
         return permissionsDTO;
     }
 
-    private Permissions mapToEntity(final PermissionsDTO permissionsDTO,
+    @Override
+    protected Permissions mapToEntity(final PermissionsDTO permissionsDTO,
             final Permissions permissions) {
         permissions.setPermissionName(permissionsDTO.getPermissionName());
         permissions.setDescription(permissionsDTO.getDescription());
         return permissions;
+    }
+
+    @Override
+    protected PermissionsDTO createDTO() {
+        return new PermissionsDTO();
+    }
+
+    @Override
+    protected Permissions createEntity() {
+        return new Permissions();
     }
 
     public ReferencedWarning getReferencedWarning(final Long permissionId) {

@@ -7,7 +7,10 @@ import com.michael_delivery.backend.model.AppVersionDTO;
 import com.michael_delivery.backend.repos.AnnouncementRepository;
 import com.michael_delivery.backend.repos.AppVersionRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,10 @@ public class AppVersionService extends BaseService<AppVersion, AppVersionDTO,Int
        this.appVersionRepository = appVersionRepository;
     }
 
+    @Override
+    public Page<AppVersionDTO> search(Specification<AppVersion> query, Pageable pageable) {
+        return  this.appVersionRepository.findAll(query, pageable);
+    }
     @Override
     protected AppVersionDTO mapToDTO(final AppVersion appVersion, final AppVersionDTO appVersionDTO) {
         appVersionDTO.setAppVersionId(appVersion.getAppVersionId());

@@ -1,6 +1,10 @@
 package com.michael_delivery.backend.rest;
 
+import com.michael_delivery.backend.domain.NoteDeliveryDetail;
 import com.michael_delivery.backend.enums.PickupTimeType;
+import com.michael_delivery.backend.model.NoteDeliveryDetailDTO;
+import com.michael_delivery.backend.model.PageableBodyDTO;
+import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.DeliveryDetail;
 import com.michael_delivery.backend.model.NoteDeliveryDetailDTO;
@@ -8,7 +12,9 @@ import com.michael_delivery.backend.repos.DeliveryDetailRepository;
 import com.michael_delivery.backend.service.NoteDeliveryDetailService;
 import com.michael_delivery.backend.util.CustomCollectors;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +37,36 @@ public class NoteDeliveryDetailResource {
         this.deliveryDetailRepository = deliveryDetailRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<NoteDeliveryDetailDTO>> getAllNoteDeliveryDetails() {
+    @GetMapping("/all")
+    public ResponseEntity<List<NoteDeliveryDetailDTO>> getAllNoteDeliveryDetail(
+    ) {
         return ResponseEntity.ok(noteDeliveryDetailService.findAll());
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<NoteDeliveryDetailDTO>> searchNoteDeliveryDetail(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "noteDeliveryDetailId:asc") String[] sortBy,
+            @RequestParam(required = false) String note
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        GenericSpecification<NoteDeliveryDetail> spec = new GenericSpecification<>();
+        Specification<NoteDeliveryDetail> noteSpec = spec.contains("note", note);
+        Specification<NoteDeliveryDetail> finalSpec = Specification.where(noteSpec);
+        return ResponseEntity.ok(noteDeliveryDetailService.search(finalSpec,pageable.getPageable()));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<NoteDeliveryDetailDTO>> getAllNoteDeliveryDetail(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "noteDeliveryDetailId:asc") String[] sortBy
+    ) {
+        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
+        return ResponseEntity.ok(noteDeliveryDetailService.findAll(pageable.getPageable()));
+    }
+
 
     @GetMapping("/{noteDeliveryDetailId}")
     public ResponseEntity<NoteDeliveryDetailDTO> getNoteDeliveryDetail(

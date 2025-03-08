@@ -1,15 +1,20 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.CancellationRiderRequest;
 import com.michael_delivery.backend.domain.Coupons;
 import com.michael_delivery.backend.domain.UserCoupon;
 import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
 import com.michael_delivery.backend.model.CouponsDTO;
 import com.michael_delivery.backend.repos.CouponsRepository;
 import com.michael_delivery.backend.repos.UserCouponRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +45,10 @@ public class CouponsService extends BaseService<Coupons, CouponsDTO,Long, Coupon
     protected Coupons createEntity() {
         return new Coupons();
     }
-
+    @Override
+    public Page<CouponsDTO> search(Specification<Coupons> query, Pageable pageable) {
+        return this.couponsRepository.findAll(query, pageable);
+    }
     @Override
     protected CouponsDTO mapToDTO(final Coupons coupons, final CouponsDTO couponsDTO) {
         couponsDTO.setCouponId(coupons.getCouponId());

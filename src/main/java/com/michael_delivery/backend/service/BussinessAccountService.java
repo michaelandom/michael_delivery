@@ -10,7 +10,10 @@ import com.michael_delivery.backend.repos.BussinessAccountRepository;
 import com.michael_delivery.backend.repos.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +44,11 @@ public class BussinessAccountService extends BaseService<BussinessAccount, Bussi
         bussinessAccountDTO.setLogoUrl(bussinessAccount.getLogoUrl());
         bussinessAccountDTO.setIsActive(bussinessAccount.getIsActive());
         return bussinessAccountDTO;
+    }
+
+    @Override
+    public Page<BussinessAccountDTO> search(Specification<BussinessAccount> query, Pageable pageable) {
+        return this.bussinessAccountRepository.findAll(query, pageable);
     }
     @Override
     protected BussinessAccount mapToEntity(final BussinessAccountDTO bussinessAccountDTO,

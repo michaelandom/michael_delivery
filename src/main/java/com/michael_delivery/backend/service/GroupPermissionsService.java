@@ -1,14 +1,19 @@
 package com.michael_delivery.backend.service;
 
+import com.michael_delivery.backend.domain.Destination;
 import com.michael_delivery.backend.domain.GroupPermissions;
 import com.michael_delivery.backend.domain.Groups;
 import com.michael_delivery.backend.domain.Permissions;
+import com.michael_delivery.backend.model.DestinationDTO;
 import com.michael_delivery.backend.model.GroupPermissionsDTO;
 import com.michael_delivery.backend.repos.GroupPermissionsRepository;
 import com.michael_delivery.backend.repos.GroupsRepository;
 import com.michael_delivery.backend.repos.PermissionsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +36,12 @@ public class GroupPermissionsService extends BaseService<GroupPermissions,GroupP
         this.permissionsRepository = permissionsRepository;
     }
 
+
+
+    @Override
+    public Page<GroupPermissionsDTO> search(Specification<GroupPermissions> query, Pageable pageable) {
+        return this.groupPermissionsRepository.findAll(query, pageable);
+    }
     @Override
     protected GroupPermissionsDTO mapToDTO(final GroupPermissions groupPermissions,
             final GroupPermissionsDTO groupPermissionsDTO) {

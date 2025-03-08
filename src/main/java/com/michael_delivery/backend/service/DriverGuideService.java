@@ -7,7 +7,10 @@ import com.michael_delivery.backend.model.DriverGuideDTO;
 import com.michael_delivery.backend.repos.DestinationRepository;
 import com.michael_delivery.backend.repos.DriverGuideRepository;
 import com.michael_delivery.backend.util.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +34,11 @@ public class DriverGuideService extends BaseService<DriverGuide, DriverGuideDTO,
     @Override
     protected DriverGuide createEntity() {
         return new DriverGuide();
+    }
+
+    @Override
+    public Page<DriverGuideDTO> search(Specification<DriverGuide> query, Pageable pageable) {
+        return this.driverGuideRepository.findAll(query, pageable);
     }
 
     @Override
