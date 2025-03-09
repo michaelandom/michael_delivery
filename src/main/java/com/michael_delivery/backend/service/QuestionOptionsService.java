@@ -48,7 +48,6 @@ public class QuestionOptionsService extends BaseService<QuestionOptions, Questio
         questionOptionsDTO.setQuestionOptionId(questionOptions.getQuestionOptionId());
         questionOptionsDTO.setQuestionOption(questionOptions.getQuestionOption());
         questionOptionsDTO.setDescription(questionOptions.getDescription());
-        questionOptionsDTO.setIsCorrect(questionOptions.getIsCorrect());
         questionOptionsDTO.setQuestion(questionOptions.getQuestion() == null ? null : questionOptions.getQuestion().getQuestionId());
         return questionOptionsDTO;
     }
@@ -58,7 +57,6 @@ public class QuestionOptionsService extends BaseService<QuestionOptions, Questio
             final QuestionOptions questionOptions) {
         questionOptions.setQuestionOption(questionOptionsDTO.getQuestionOption());
         questionOptions.setDescription(questionOptionsDTO.getDescription());
-        questionOptions.setIsCorrect(questionOptionsDTO.getIsCorrect());
         final Questions question = questionOptionsDTO.getQuestion() == null ? null : questionsRepository.findById(questionOptionsDTO.getQuestion())
                 .orElseThrow(() -> new NotFoundException("question not found"));
         questionOptions.setQuestion(question);

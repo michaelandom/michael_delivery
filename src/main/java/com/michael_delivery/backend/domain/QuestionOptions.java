@@ -25,11 +25,6 @@ public class QuestionOptions extends BaseModel<Long> {
     @Column(columnDefinition = "longtext")
     private String description;
 
-    @Column(columnDefinition = "tinyint", length = 1)
-    private Boolean isCorrect;
-
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Questions question;
@@ -68,15 +63,6 @@ public class QuestionOptions extends BaseModel<Long> {
     public void setDescription(final String description) {
         this.description = description;
     }
-
-    public Boolean getIsCorrect() {
-        return isCorrect;
-    }
-
-    public void setIsCorrect(final Boolean isCorrect) {
-        this.isCorrect = isCorrect;
-    }
-
 
     public Questions getQuestion() {
         return question;

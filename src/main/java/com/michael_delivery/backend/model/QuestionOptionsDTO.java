@@ -17,9 +17,6 @@ public class QuestionOptionsDTO {
 
     private String description;
 
-    @NotNull
-    private Boolean isCorrect;
-
 
     @NotNull
     private Long question;
@@ -46,14 +43,6 @@ public class QuestionOptionsDTO {
 
     public void setDescription(final String description) {
         this.description = description;
-    }
-
-    public Boolean getIsCorrect() {
-        return isCorrect;
-    }
-
-    public void setIsCorrect(final Boolean isCorrect) {
-        this.isCorrect = isCorrect;
     }
 
     public Long getQuestion() {
