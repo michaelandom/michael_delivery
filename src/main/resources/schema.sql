@@ -322,7 +322,6 @@ CREATE TABLE IF NOT EXISTS `Rider_Answers` (
                                                `rider_id` BIGINT NOT NULL,
                                                `option_id` BIGINT NOT NULL,
                                                `quiz_key` ENUM('INITIAL_QUIZ', 'SECOND_QUIZ', 'FINAL_QUIZ', 'UNAVAILABLE') DEFAULT 'INITIAL_QUIZ',
-    `is_correct` BOOLEAN DEFAULT FALSE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE (`rider_id`,`option_id`,`quiz_key`),
