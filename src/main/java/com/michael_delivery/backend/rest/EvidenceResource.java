@@ -47,7 +47,7 @@ public class EvidenceResource {
     public ResponseEntity<Page<EvidenceDTO>> searchEvidence(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "eventId:asc") String[] sortBy,
+            @RequestParam(defaultValue = "evidenceId:asc") String[] sortBy,
             @RequestParam(required = false) String recipientName,
             @RequestParam(required = false) Date recipientDob
     ) {
@@ -63,7 +63,7 @@ public class EvidenceResource {
     public ResponseEntity<Page<EvidenceDTO>> getAllEvidence(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "eventId:asc") String[] sortBy
+            @RequestParam(defaultValue = "evidenceId:asc") String[] sortBy
     ) {
         PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
         return ResponseEntity.ok(evidenceService.findAll(pageable.getPageable()));

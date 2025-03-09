@@ -41,13 +41,13 @@ public class VehiclesResource {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<VehiclesDTO>> getAllUserFavoriteAddress(
+    public ResponseEntity<List<VehiclesDTO>> getAllVehicles(
     ) {
         return ResponseEntity.ok(vehiclesService.findAll());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<VehiclesDTO>> searchUserFavoriteAddress(
+    public ResponseEntity<Page<VehiclesDTO>> searchVehicles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "vehicleId:asc") String[] sortBy,
@@ -60,12 +60,12 @@ public class VehiclesResource {
             @RequestParam(required = false) OffsetDateTime insurancePolicyValidFrom,
             @RequestParam(required = false) OffsetDateTime insurancePolicyValidTo,
             @RequestParam(required = false) OffsetDateTime expiryDate,
-            @RequestParam(required = false) Boolean isCurrentVehicle,
-            @RequestParam(required = false) Boolean driverLicenseValidFromIsAfter,
-            @RequestParam(required = false) Boolean driverLicenseValidToIsAfter,
-            @RequestParam(required = false) Boolean insurancePolicyValidFromIsAfter,
-            @RequestParam(required = false) Boolean insurancePolicyValidToIsAfter,
-            @RequestParam(required = false) Boolean expiryDateIsAfter
+            @RequestParam(required = false) boolean isCurrentVehicle,
+            @RequestParam(required = false) boolean driverLicenseValidFromIsAfter,
+            @RequestParam(required = false) boolean driverLicenseValidToIsAfter,
+            @RequestParam(required = false) boolean insurancePolicyValidFromIsAfter,
+            @RequestParam(required = false) boolean insurancePolicyValidToIsAfter,
+            @RequestParam(required = false) boolean expiryDateIsAfter
 
     ) {
         PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
@@ -92,8 +92,8 @@ public class VehiclesResource {
         return ResponseEntity.ok(vehiclesService.search(finalSpec,pageable.getPageable()));
     }
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('manage_riders')")
-    public ResponseEntity<Page<VehiclesDTO>> getAllUserFavoriteAddress(
+   // @PreAuthorize("hasAnyAuthority('manage_riders')")
+    public ResponseEntity<Page<VehiclesDTO>> getAllVehicles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "vehicleId:asc") String[] sortBy

@@ -58,7 +58,7 @@ public class DestinationResource {
             @RequestParam(required = false) Double destinationLatitude,
             @RequestParam(required = false) Double destinationLongitude,
             @RequestParam(required = false) String destinationAddressText,
-            @RequestParam(required = false) int sequence,
+            @RequestParam(required = false) Integer sequence,
             @RequestParam(required = false) String recipientPhoneNumber,
             @RequestParam(required = false) Double price,
             @RequestParam(required = false) String recipientName,

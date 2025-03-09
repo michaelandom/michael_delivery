@@ -48,7 +48,7 @@ public class PasswordResetResource {
     public ResponseEntity<Page<PasswordResetDTO>> getAllPasswordReset(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "orderId:asc") String[] sortBy
+            @RequestParam(defaultValue = "passwordResetId:asc") String[] sortBy
     ) {
         PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
         return ResponseEntity.ok(passwordResetService.findAll(pageable.getPageable()));

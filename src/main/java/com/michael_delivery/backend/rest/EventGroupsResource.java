@@ -46,21 +46,6 @@ public class EventGroupsResource {
         return ResponseEntity.ok(eventGroupsService.findAll());
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<EventGroupsDTO>> searchEventGroups(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "eventGroupId:asc") String[] sortBy,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) boolean isImportant
-    ) {
-        PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
-        GenericSpecification<EventGroups> spec = new GenericSpecification<>();
-        Specification<EventGroups> descriptionSpec = spec.equals("description", description);
-        Specification<EventGroups> isImportantSpec = spec.equals("isImportant", isImportant);
-        Specification<EventGroups> finalSpec = Specification.where(descriptionSpec).and(isImportantSpec);
-        return ResponseEntity.ok(eventGroupsService.search(finalSpec,pageable.getPageable()));
-    }
 
     @GetMapping
     public ResponseEntity<Page<EventGroupsDTO>> getAllEventGroups(

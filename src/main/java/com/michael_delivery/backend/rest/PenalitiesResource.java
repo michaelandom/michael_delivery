@@ -54,9 +54,9 @@ public class PenalitiesResource {
             @RequestParam(required = false) String deductedAmount,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String orderNumber,
-            @RequestParam(required = false) Boolean isActive,
-            @RequestParam(required = false) Boolean isWarning,
-            @RequestParam(required = false) Boolean deductedAmountIsGreaterThan
+            @RequestParam(required = false) boolean isActive,
+            @RequestParam(required = false) boolean isWarning,
+            @RequestParam(required = false) boolean deductedAmountIsGreaterThan
     ) {
         PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
         GenericSpecification<Penalities> spec = new GenericSpecification<>();

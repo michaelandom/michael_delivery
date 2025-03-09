@@ -1,10 +1,10 @@
 package com.michael_delivery.backend.rest;
 
-import com.michael_delivery.backend.domain.UserFavoriteAddress;
+import com.michael_delivery.backend.domain.VehicleBasicPrices;
 import com.michael_delivery.backend.enums.AddressType;
 import com.michael_delivery.backend.enums.VehicleType;
 import com.michael_delivery.backend.model.PageableBodyDTO;
-import com.michael_delivery.backend.model.UserFavoriteAddressDTO;
+import com.michael_delivery.backend.model.VehicleBasicPricesDTO;
 import com.michael_delivery.backend.specification.GenericSpecification;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import com.michael_delivery.backend.domain.VehicleBasicPrices;
@@ -41,18 +41,18 @@ public class VehicleBasicPricesResource {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<VehicleBasicPricesDTO>> getAllUserFavoriteAddress(
+    public ResponseEntity<List<VehicleBasicPricesDTO>> getAllVehicleBasicPrices(
     ) {
         return ResponseEntity.ok(vehicleBasicPricesService.findAll());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<VehicleBasicPricesDTO>> searchUserFavoriteAddress(
+    public ResponseEntity<Page<VehicleBasicPricesDTO>> searchVehicleBasicPrices(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "vehicleBasicPriceId:asc") String[] sortBy,
             @RequestParam(required = false) VehicleType vehicleType,
-            @RequestParam(required = false) Boolean isLatest
+            @RequestParam(required = false) boolean isLatest
     ) {
         PageableBodyDTO pageable = new PageableBodyDTO(page, size, sortBy);
         GenericSpecification<VehicleBasicPrices> spec = new GenericSpecification<>();
@@ -62,7 +62,7 @@ public class VehicleBasicPricesResource {
         return ResponseEntity.ok(vehicleBasicPricesService.search(finalSpec,pageable.getPageable()));
     }
     @GetMapping
-    public ResponseEntity<Page<VehicleBasicPricesDTO>> getAllUserFavoriteAddress(
+    public ResponseEntity<Page<VehicleBasicPricesDTO>> getAllVehicleBasicPrices(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "vehicleBasicPriceId:asc") String[] sortBy
