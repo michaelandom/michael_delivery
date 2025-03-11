@@ -38,6 +38,8 @@ public class VehiclesService extends BaseService<Vehicles, VehiclesDTO,Long, Veh
         return this.vehiclesRepository.findAll(query, pageable);
     }
 
+
+
     @Override
     protected VehiclesDTO mapToDTO(final Vehicles vehicles, final VehiclesDTO vehiclesDTO) {
         vehiclesDTO.setVehicleId(vehicles.getVehicleId());
