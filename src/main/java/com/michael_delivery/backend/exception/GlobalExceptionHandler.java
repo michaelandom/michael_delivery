@@ -126,10 +126,10 @@ public class GlobalExceptionHandler implements AuthenticationEntryPoint {
         int statusCode;
 
         if (authException.getMessage().contains("Invalid or expired JWT token")) {
-            statusCode = HttpServletResponse.SC_UNAUTHORIZED; // 401 Unauthorized
+            statusCode = HttpServletResponse.SC_UNAUTHORIZED;
             errorMessage = "Authentication failed: Invalid or expired JWT token.";
         } else {
-            statusCode = HttpServletResponse.SC_FORBIDDEN; // 403 Forbidden
+            statusCode = HttpServletResponse.SC_FORBIDDEN;
             errorMessage = "Access Denied: You do not have the necessary authority to access this resource.";
         }
 
@@ -162,6 +162,7 @@ public class GlobalExceptionHandler implements AuthenticationEntryPoint {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> handleException(Exception ex,WebRequest request) {
         String errorMessage = "An unexpected error occurred. Please try again later.";
+        System.err.println(ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
                 OffsetDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
