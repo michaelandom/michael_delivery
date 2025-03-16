@@ -334,13 +334,6 @@ INSERT INTO `Permissions` (`permission_name`, `description`) VALUES
                                                                  ('DELETE_MA_GROUP_ONE', 'Delete ma group'),
                                                                  ('DELETE_MA_GROUP_MANY', 'Delete multiple ma groups'),
 
-                                                                 ('MANAGE_Event_Groups', 'Create, update, and delete Event_Groups'),
-                                                                 ('VIEW_Event_Groups', 'View ma group'),
-                                                                 ('VIEW_Event_Groups_MANY', 'View multiple ma groups'),
-                                                                 ('UPDATE_Event_Groups_ONE', 'Update ma group'),
-                                                                 ('UPDATE_Event_Groups_MANY', 'Update multiple Event_Groups'),
-                                                                 ('DELETE_Event_Groups_ONE', 'Delete Event_Groups'),
-                                                                 ('DELETE_Event_Groups_MANY', 'Delete multiple Event_Groups'),
 
 
 
@@ -622,8 +615,7 @@ INSERT INTO `Group_Permissions` (`group_id`, `permission_id`) VALUES
                                                                   (1, 323),
                                                                   (1, 330),
                                                                   (1, 337),
-                                                                  (1, 344),
-                                                                  (1, 351);
+                                                                  (1, 344);
 
 
 -- Insert data into Riders table
