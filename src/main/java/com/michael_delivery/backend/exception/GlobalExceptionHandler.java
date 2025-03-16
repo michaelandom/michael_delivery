@@ -1,10 +1,12 @@
 package com.michael_delivery.backend.exception;
 
+import com.michael_delivery.backend.util.ConflictException;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.UnauthorizedException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.ws.rs.ForbiddenException;
 import javax.xml.registry.InvalidRequestException;
 import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -29,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
+@Order(1)
 public class GlobalExceptionHandler implements AuthenticationEntryPoint {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -157,21 +161,46 @@ public class GlobalExceptionHandler implements AuthenticationEntryPoint {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<Object> handleException(Exception ex,WebRequest request) {
-        String errorMessage = "An unexpected error occurred. Please try again later.";
-        System.err.println(ex.getMessage());
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 OffsetDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                errorMessage,
+                HttpStatus.FORBIDDEN.value(),  // Status 403
+                ex.getMessage(),
                 null,
-                request.getDescription(false).replace("uri=","")
+                request.getDescription(false).replace("uri=", "")
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Object> handleConflictException(ConflictException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                OffsetDateTime.now(),
+                HttpStatus.CONFLICT.value(),  // Status 403
+                ex.getMessage(),
+                null,
+                request.getDescription(false).replace("uri=", "")
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+
+
+//    @ExceptionHandler(Exception.class)
+//    @Order(2)
+//    public ResponseEntity<Object> handleException(Exception ex,WebRequest request) {
+//        String errorMessage = "An unexpected error occurred. Please try again later.";
+//        System.err.println(ex.getMessage());
+//        ErrorResponse errorResponse = new ErrorResponse(
+//                OffsetDateTime.now(),
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                errorMessage,
+//                null,
+//                request.getDescription(false).replace("uri=","")
+//        );
+//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }
 
 class ErrorResponse {
