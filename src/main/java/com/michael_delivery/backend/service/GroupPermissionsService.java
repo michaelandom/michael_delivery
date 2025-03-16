@@ -1,22 +1,17 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Destination;
-import com.michael_delivery.backend.domain.GroupPermissions;
-import com.michael_delivery.backend.domain.Groups;
-import com.michael_delivery.backend.domain.Permissions;
-import com.michael_delivery.backend.model.DestinationDTO;
-import com.michael_delivery.backend.model.GroupPermissionsDTO;
-import com.michael_delivery.backend.repos.GroupPermissionsRepository;
-import com.michael_delivery.backend.repos.GroupsRepository;
-import com.michael_delivery.backend.repos.PermissionsRepository;
+import com.michael_delivery.backend.model.GroupPermissions;
+import com.michael_delivery.backend.model.Groups;
+import com.michael_delivery.backend.model.Permissions;
+import com.michael_delivery.backend.dto.GroupPermissionsDTO;
+import com.michael_delivery.backend.repository.GroupPermissionsRepository;
+import com.michael_delivery.backend.repository.GroupsRepository;
+import com.michael_delivery.backend.repository.PermissionsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service

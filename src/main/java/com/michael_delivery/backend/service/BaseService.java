@@ -1,8 +1,6 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Advertisement;
-import com.michael_delivery.backend.domain.BaseModel;
-import com.michael_delivery.backend.model.AdvertisementDTO;
+import com.michael_delivery.backend.model.BaseModel;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ShareFunction;
 import org.springframework.data.domain.Page;

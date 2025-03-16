@@ -1,9 +1,8 @@
 package com.michael_delivery.backend.service;
 
 
-import com.michael_delivery.backend.domain.ActivityLog;
-import com.michael_delivery.backend.repos.ActivityLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.michael_delivery.backend.model.ActivityLog;
+import com.michael_delivery.backend.repository.ActivityLogRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

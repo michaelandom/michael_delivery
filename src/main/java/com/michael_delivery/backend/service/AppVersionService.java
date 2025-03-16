@@ -1,19 +1,12 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Announcement;
-import com.michael_delivery.backend.domain.AppVersion;
-import com.michael_delivery.backend.model.AnnouncementDTO;
-import com.michael_delivery.backend.model.AppVersionDTO;
-import com.michael_delivery.backend.repos.AnnouncementRepository;
-import com.michael_delivery.backend.repos.AppVersionRepository;
-import com.michael_delivery.backend.util.NotFoundException;
+import com.michael_delivery.backend.model.AppVersion;
+import com.michael_delivery.backend.dto.AppVersionDTO;
+import com.michael_delivery.backend.repository.AppVersionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service

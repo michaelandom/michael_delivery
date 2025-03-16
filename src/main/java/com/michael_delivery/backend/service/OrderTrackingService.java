@@ -1,7 +1,7 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.OrderTracking;
-import com.michael_delivery.backend.repos.OrderTrackingRepository;
+import com.michael_delivery.backend.model.OrderTracking;
+import com.michael_delivery.backend.repository.OrderTrackingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

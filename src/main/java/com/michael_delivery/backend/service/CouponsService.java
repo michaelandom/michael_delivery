@@ -1,23 +1,18 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.CancellationRiderRequest;
-import com.michael_delivery.backend.domain.Coupons;
-import com.michael_delivery.backend.domain.UserCoupon;
-import com.michael_delivery.backend.domain.Users;
-import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
-import com.michael_delivery.backend.model.CouponsDTO;
-import com.michael_delivery.backend.repos.CouponsRepository;
-import com.michael_delivery.backend.repos.UserCouponRepository;
-import com.michael_delivery.backend.repos.UsersRepository;
+import com.michael_delivery.backend.model.Coupons;
+import com.michael_delivery.backend.model.UserCoupon;
+import com.michael_delivery.backend.model.Users;
+import com.michael_delivery.backend.dto.CouponsDTO;
+import com.michael_delivery.backend.repository.CouponsRepository;
+import com.michael_delivery.backend.repository.UserCouponRepository;
+import com.michael_delivery.backend.repository.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service

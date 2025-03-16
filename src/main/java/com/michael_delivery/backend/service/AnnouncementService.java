@@ -1,9 +1,7 @@
 package com.michael_delivery.backend.service;
-import com.michael_delivery.backend.domain.Advertisement;
-import com.michael_delivery.backend.domain.Announcement;
-import com.michael_delivery.backend.model.AdvertisementDTO;
-import com.michael_delivery.backend.model.AnnouncementDTO;
-import com.michael_delivery.backend.repos.AnnouncementRepository;
+import com.michael_delivery.backend.model.Announcement;
+import com.michael_delivery.backend.dto.AnnouncementDTO;
+import com.michael_delivery.backend.repository.AnnouncementRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

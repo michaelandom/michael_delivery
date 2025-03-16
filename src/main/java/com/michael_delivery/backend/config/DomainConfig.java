@@ -13,8 +13,8 @@ import java.util.Optional;
 
 
 @Configuration
-@EntityScan("com.michael_delivery.backend.domain")
-@EnableJpaRepositories("com.michael_delivery.backend.repos")
+@EntityScan("com.michael_delivery.backend.model")
+@EnableJpaRepositories("com.michael_delivery.backend.repository")
 @EnableTransactionManagement
 @EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class DomainConfig {

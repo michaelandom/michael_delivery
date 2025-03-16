@@ -1,21 +1,15 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.*;
-import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
-import com.michael_delivery.backend.model.DestinationDTO;
-import com.michael_delivery.backend.model.SuspensionsDTO;
-import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
-import com.michael_delivery.backend.repos.RidersRepository;
-import com.michael_delivery.backend.repos.SuspensionsRepository;
-import com.michael_delivery.backend.repos.UsersRepository;
+import com.michael_delivery.backend.model.*;
+import com.michael_delivery.backend.dto.SuspensionsDTO;
+import com.michael_delivery.backend.repository.RidersRepository;
+import com.michael_delivery.backend.repository.SuspensionsRepository;
+import com.michael_delivery.backend.repository.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service

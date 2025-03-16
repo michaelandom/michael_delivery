@@ -1,35 +1,21 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.*;
+import com.michael_delivery.backend.model.*;
 import com.michael_delivery.backend.enums.AccountType;
-import com.michael_delivery.backend.model.AdvertisementDTO;
-import com.michael_delivery.backend.model.DestinationDTO;
-import com.michael_delivery.backend.model.UsernameAndPasswordLoginDTO;
-import com.michael_delivery.backend.model.UsersDTO;
-import com.michael_delivery.backend.model.response.UserResponse;
-import com.michael_delivery.backend.repos.*;
+import com.michael_delivery.backend.dto.UsersDTO;
+import com.michael_delivery.backend.dto.response.UserResponse;
+import com.michael_delivery.backend.repository.*;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.ValidationException;
-import javax.validation.executable.ValidateOnExecution;
 import javax.ws.rs.BadRequestException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

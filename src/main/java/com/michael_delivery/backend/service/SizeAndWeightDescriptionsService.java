@@ -1,24 +1,16 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.CancellationRiderRequest;
-import com.michael_delivery.backend.domain.Destination;
-import com.michael_delivery.backend.domain.Item;
-import com.michael_delivery.backend.domain.SizeAndWeightDescriptions;
-import com.michael_delivery.backend.model.CancellationRiderRequestDTO;
-import com.michael_delivery.backend.model.DestinationDTO;
-import com.michael_delivery.backend.model.SizeAndWeightDescriptionsDTO;
-import com.michael_delivery.backend.repos.CancellationRiderRequestRepository;
-import com.michael_delivery.backend.repos.ItemRepository;
-import com.michael_delivery.backend.repos.SizeAndWeightDescriptionsRepository;
+import com.michael_delivery.backend.model.Item;
+import com.michael_delivery.backend.model.SizeAndWeightDescriptions;
+import com.michael_delivery.backend.dto.SizeAndWeightDescriptionsDTO;
+import com.michael_delivery.backend.repository.ItemRepository;
+import com.michael_delivery.backend.repository.SizeAndWeightDescriptionsRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import com.michael_delivery.backend.util.ReferencedWarning;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service

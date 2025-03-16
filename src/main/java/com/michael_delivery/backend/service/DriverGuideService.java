@@ -1,19 +1,12 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Destination;
-import com.michael_delivery.backend.domain.DriverGuide;
-import com.michael_delivery.backend.model.DestinationDTO;
-import com.michael_delivery.backend.model.DriverGuideDTO;
-import com.michael_delivery.backend.repos.DestinationRepository;
-import com.michael_delivery.backend.repos.DriverGuideRepository;
-import com.michael_delivery.backend.util.NotFoundException;
+import com.michael_delivery.backend.model.DriverGuide;
+import com.michael_delivery.backend.dto.DriverGuideDTO;
+import com.michael_delivery.backend.repository.DriverGuideRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service

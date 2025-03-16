@@ -1,10 +1,8 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Advertisement;
-import com.michael_delivery.backend.model.AdvertisementDTO;
-import com.michael_delivery.backend.repos.AdvertisementRepository;
-import com.michael_delivery.backend.specification.AdvertisementSpecification;
-import com.michael_delivery.backend.util.ShareFunction;
+import com.michael_delivery.backend.model.Advertisement;
+import com.michael_delivery.backend.dto.AdvertisementDTO;
+import com.michael_delivery.backend.repository.AdvertisementRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

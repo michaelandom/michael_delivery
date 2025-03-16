@@ -33,8 +33,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/test/**","/swagger-ui/**", "/v3/api-docs/**","/api/auth/login","/api/auth/register").permitAll()
                         .anyRequest().authenticated()
-
-
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -44,15 +42,12 @@ public class SecurityConfig {
                         httpSecurityExceptionHandlingConfigurer
                                 .authenticationEntryPoint(this.globalExceptionHandler)
                 );
-
         return http.build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {

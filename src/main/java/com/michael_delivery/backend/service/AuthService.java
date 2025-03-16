@@ -1,8 +1,8 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Users;
+import com.michael_delivery.backend.model.Users;
 import com.michael_delivery.backend.enums.AccountType;
-import com.michael_delivery.backend.repos.UsersRepository;
+import com.michael_delivery.backend.repository.UsersRepository;
 import com.michael_delivery.backend.util.UnauthorizedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

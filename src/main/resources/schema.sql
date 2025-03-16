@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `Billing_Address` (
     `billing_street_address` TEXT,
     `billing_street_address2` TEXT,
     `billing_state_id` BIGINT,
-    `billing_postcode` VARCHAR(10), -- Use VARCHAR for postal codes
+    `billing_postcode` VARCHAR(10),
     `billing_suburb` VARCHAR(255),
     `user_id` BIGINT NOT NULL UNIQUE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS `Billing_Address` (
     );
 
 CREATE TABLE IF NOT EXISTS `Ma_Groups` (
-                                        `group_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                        `name` VARCHAR(255) NOT NULL UNIQUE,
+                                           `group_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                           `name` VARCHAR(255) NOT NULL UNIQUE,
     `description` TEXT NOT NULL,
     `group_type` ENUM('PERMISSION','EVENT') NOT NULL DEFAULT 'PERMISSION',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `Group_Permissions` (
                                                    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                                    `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
                                                    UNIQUE (`group_id`,`permission_id`),
-                                                   FOREIGN KEY (`group_id`) REFERENCES `Ma_Groups`(`group_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`group_id`) REFERENCES `Ma_Groups`(`group_id`) ON DELETE CASCADE,
     FOREIGN KEY (`permission_id`) REFERENCES `Permissions`(`permission_id`) ON DELETE CASCADE
     );
 
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `User_Coupons` (
                                               `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                               `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
                                               UNIQUE (`coupon_id`,`user_id`),
-                                              FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`) ON DELETE CASCADE,
     FOREIGN KEY (`coupon_id`) REFERENCES `Coupons`(`coupon_id`) ON DELETE CASCADE
     );
 
@@ -528,10 +528,10 @@ CREATE TABLE IF NOT EXISTS `Evidences` (
     );
 
 CREATE TABLE IF NOT EXISTS `Ma_References` (
-                                            `reference_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                            `order_ids` JSON NOT NULL,
-                                            `amount` FLOAT NOT NULL,
-                                            `currency` VARCHAR(255) NOT NULL,
+                                               `reference_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                               `order_ids` JSON NOT NULL,
+                                               `amount` FLOAT NOT NULL,
+                                               `currency` VARCHAR(255) NOT NULL,
     `psp_reference` VARCHAR(255),
     `payment_method` VARCHAR(255),
     `result_json` JSON NOT NULL,
@@ -687,9 +687,9 @@ CREATE TABLE IF NOT EXISTS `Transport_Basic_Prices` (
     `unique_transport_basic_prices_size_check` VARCHAR(50) GENERATED ALWAYS AS (
                                                                                    CASE WHEN is_latest = TRUE
                                                                                    THEN CONCAT(vehicle_type, '_', "LATEST")
-                                                                                   ELSE NULL
-                                                                                   END
-                                                                               ) STORED,
+    ELSE NULL
+    END
+    ) STORED,
     UNIQUE (`unique_transport_basic_prices_size_check`),
     FOREIGN KEY (`previous_id`) REFERENCES `Transport_Basic_Prices`(`transport_basic_price_id`)
     );
@@ -800,8 +800,8 @@ CREATE TABLE IF NOT EXISTS `None_Business_Hour_Rates` (
 
 
 CREATE TABLE IF NOT EXISTS `Payment_Webhook_Payloads` (
-                                                         `payment_webhook_payload_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                                         `psp_reference` VARCHAR(255) NOT NULL,
+                                                          `payment_webhook_payload_id` BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                                          `psp_reference` VARCHAR(255) NOT NULL,
     `merchant_reference` VARCHAR(255) NOT NULL,
     `original_reference` VARCHAR(255),
     `event_code` VARCHAR(255) NOT NULL,
@@ -813,8 +813,6 @@ CREATE TABLE IF NOT EXISTS `Payment_Webhook_Payloads` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
     );
-
-
 
 
 

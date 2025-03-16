@@ -1,8 +1,8 @@
 package com.michael_delivery.backend.service;
 
 
-import com.michael_delivery.backend.domain.LocationTracking;
-import com.michael_delivery.backend.repos.LocationTrackingRepository;
+import com.michael_delivery.backend.model.LocationTracking;
+import com.michael_delivery.backend.repository.LocationTrackingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

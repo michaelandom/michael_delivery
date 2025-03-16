@@ -1,12 +1,10 @@
 package com.michael_delivery.backend.service;
 
-import com.michael_delivery.backend.domain.Destination;
-import com.michael_delivery.backend.domain.NoneBusinessHourRates;
-import com.michael_delivery.backend.domain.Users;
-import com.michael_delivery.backend.model.DestinationDTO;
-import com.michael_delivery.backend.model.NoneBusinessHourRatesDTO;
-import com.michael_delivery.backend.repos.NoneBusinessHourRatesRepository;
-import com.michael_delivery.backend.repos.UsersRepository;
+import com.michael_delivery.backend.model.NoneBusinessHourRates;
+import com.michael_delivery.backend.model.Users;
+import com.michael_delivery.backend.dto.NoneBusinessHourRatesDTO;
+import com.michael_delivery.backend.repository.NoneBusinessHourRatesRepository;
+import com.michael_delivery.backend.repository.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
