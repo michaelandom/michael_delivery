@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.VehicleType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -30,12 +32,13 @@ public class VehicleBasicPrices extends BaseModel<Long>{
     @Column(columnDefinition = "tinyint", length = 1)
     private Boolean isLatest;
 
-    
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_id")
     private VehicleBasicPrices previous;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "previous")
     private Set<VehicleBasicPrices> previousVehicleBasicPrices;
 

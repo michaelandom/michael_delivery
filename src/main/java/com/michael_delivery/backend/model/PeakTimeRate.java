@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -38,11 +40,12 @@ public class PeakTimeRate extends BaseModel<Long> {
     private Boolean isDeleted;
 
 
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_id")
     private PeakTimeRate previous;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "previous")
     private Set<PeakTimeRate> previousPeakTimeRates;
 

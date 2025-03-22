@@ -1,5 +1,6 @@
 package com.michael_delivery.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michael_delivery.backend.enums.PickupTimeType;
 import com.michael_delivery.backend.enums.VehicleType;
 import jakarta.persistence.*;
@@ -39,6 +40,7 @@ public class PickupTimeBasicPrices extends BaseModel<Long> {
     @JoinColumn(name = "previous_id")
     private PickupTimeBasicPrices previous;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "previous")
     private Set<PickupTimeBasicPrices> previousPickupTimeBasicPrices;
 

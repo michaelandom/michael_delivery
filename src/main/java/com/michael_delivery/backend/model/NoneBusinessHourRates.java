@@ -1,12 +1,15 @@
 package com.michael_delivery.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 
 @Entity
@@ -20,16 +23,26 @@ public class NoneBusinessHourRates extends BaseModel<Long> {
     private Long noneBusinessHourRateId;
 
     @Column(nullable = false)
-    private OffsetDateTime startTime;
+    private String startTime;
 
     @Column(nullable = false)
-    private OffsetDateTime endTime;
+    private String endTime;
 
     @Column(nullable = false)
     private Double rate;
 
     @Column(columnDefinition = "tinyint", length = 1)
     private Boolean isLatest;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "previous_id")
+    private NoneBusinessHourRates previous;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "previous")
+    private Set<NoneBusinessHourRates> previousNoneBusinessHourRates;
+
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,19 +65,18 @@ public class NoneBusinessHourRates extends BaseModel<Long> {
         this.noneBusinessHourRateId = noneBusinessHourRateId;
     }
 
-    public OffsetDateTime getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(final OffsetDateTime startTime) {
+    public void setStartTime(final String startTime) {
         this.startTime = startTime;
     }
-
-    public OffsetDateTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(final OffsetDateTime endTime) {
+    public void setEndTime(final String endTime) {
         this.endTime = endTime;
     }
 
@@ -92,7 +104,22 @@ public class NoneBusinessHourRates extends BaseModel<Long> {
         this.createdBy = createdBy;
     }
 
+    public NoneBusinessHourRates getPrevious() {
+        return previous;
+    }
 
+    public void setPrevious(final NoneBusinessHourRates previous) {
+        this.previous = previous;
+    }
+
+    public Set<NoneBusinessHourRates> getNoneBusinessHourRates() {
+        return previousNoneBusinessHourRates;
+    }
+
+    public void setNoneBusinessHourRates(
+            final Set<NoneBusinessHourRates> previousNoneBusinessHourRates) {
+        this.previousNoneBusinessHourRates = previousNoneBusinessHourRates;
+    }
     @Override
     public Long getId() {
         return noneBusinessHourRateId;

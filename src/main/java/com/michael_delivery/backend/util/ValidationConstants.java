@@ -14,6 +14,12 @@ public final class ValidationConstants {
 
         public static final String RESTRICTED_DOMAINS_PATTERN = "^(https?://)?([\\w-]+\\.)+(com|org|net)(/[\\w-./?%&=]*)?$";
     }
+
+    public static final class TIME{
+        private TIME() {}
+        public static final String TIME_PATTERN = "^([0-1]\\d|2[0-3]):[0-5]\\d$";
+
+    }
     public static final class StrongPasswordValidator{
 
         public static final String STRONG_PASSWORD_REGEX =

@@ -3,6 +3,7 @@ package com.michael_delivery.backend.service;
 import com.michael_delivery.backend.model.NoneBusinessHourRates;
 import com.michael_delivery.backend.model.Users;
 import com.michael_delivery.backend.dto.NoneBusinessHourRatesDTO;
+import com.michael_delivery.backend.model.VehicleBasicPrices;
 import com.michael_delivery.backend.repository.NoneBusinessHourRatesRepository;
 import com.michael_delivery.backend.repository.UsersRepository;
 import com.michael_delivery.backend.util.NotFoundException;
@@ -39,6 +40,7 @@ public class NoneBusinessHourRatesService extends BaseService<NoneBusinessHourRa
         noneBusinessHourRatesDTO.setEndTime(noneBusinessHourRates.getEndTime());
         noneBusinessHourRatesDTO.setRate(noneBusinessHourRates.getRate());
         noneBusinessHourRatesDTO.setIsLatest(noneBusinessHourRates.getIsLatest());
+        noneBusinessHourRatesDTO.setPrevious(noneBusinessHourRates.getPrevious() == null ? null : noneBusinessHourRates.getPrevious().getNoneBusinessHourRateId());
         noneBusinessHourRatesDTO.setCreatedBy(noneBusinessHourRates.getCreatedBy() == null ? null : noneBusinessHourRates.getCreatedBy().getUserId());
         return noneBusinessHourRatesDTO;
     }
@@ -50,6 +52,9 @@ public class NoneBusinessHourRatesService extends BaseService<NoneBusinessHourRa
         noneBusinessHourRates.setEndTime(noneBusinessHourRatesDTO.getEndTime());
         noneBusinessHourRates.setRate(noneBusinessHourRatesDTO.getRate());
         noneBusinessHourRates.setIsLatest(noneBusinessHourRatesDTO.getIsLatest());
+        final NoneBusinessHourRates previous = noneBusinessHourRatesDTO.getPrevious() == null ? null : noneBusinessHourRatesRepository.findById(noneBusinessHourRatesDTO.getPrevious())
+                .orElseThrow(() -> new NotFoundException("previous not found"));
+        noneBusinessHourRates.setPrevious(previous);
         final Users createdBy = noneBusinessHourRatesDTO.getCreatedBy() == null ? null : usersRepository.findById(noneBusinessHourRatesDTO.getCreatedBy())
                 .orElseThrow(() -> new NotFoundException("createdBy not found"));
         noneBusinessHourRates.setCreatedBy(createdBy);

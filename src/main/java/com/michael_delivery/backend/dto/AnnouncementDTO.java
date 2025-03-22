@@ -18,7 +18,6 @@ public class AnnouncementDTO {
     private String title;
 
     @NotBlank(message = "Content is required")
-    @NotNull
     private String content;
 
     @URL(message = "Must be a valid URL")

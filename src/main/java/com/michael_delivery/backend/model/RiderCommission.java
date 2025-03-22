@@ -1,5 +1,7 @@
 package com.michael_delivery.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,11 +32,12 @@ public class RiderCommission extends BaseModel<Long> {
 
     @Column(columnDefinition = "tinyint", length = 1)
     private Boolean isLatest;
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_id")
     private RiderCommission previous;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "previous")
     private Set<RiderCommission> previousRiderCommissions;
 

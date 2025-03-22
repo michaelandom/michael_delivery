@@ -1,29 +1,30 @@
 package com.michael_delivery.backend.dto;
 
 import jakarta.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.OffsetDateTime;
+import jakarta.validation.constraints.Pattern;
+import static com.michael_delivery.backend.util.ValidationConstants.TIME.TIME_PATTERN;
 
 
 public class NoneBusinessHourRatesDTO {
 
     private Long noneBusinessHourRateId;
 
-    @NotNull
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private OffsetDateTime startTime;
+    @NotNull(message = "startTime is required")
+    @Pattern(regexp = TIME_PATTERN, message = "startTime must be in HH:mm format")
+    private String startTime;
 
 
-    @NotNull
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private OffsetDateTime endTime;
+    @NotNull(message = "endTime is required")
+    @Pattern(regexp = TIME_PATTERN, message = "endTime must be in HH:mm format")
+    private String endTime;
 
     @NotNull(message = "rate is required")
     private Double rate;
 
     @NotNull
     private Boolean isLatest;
+
+    private Long previous;
 
     private Long createdBy;
 
@@ -35,19 +36,26 @@ public class NoneBusinessHourRatesDTO {
         this.noneBusinessHourRateId = noneBusinessHourRateId;
     }
 
-    public OffsetDateTime getStartTime() {
+    public Long getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(Long previous) {
+        this.previous = previous;
+    }
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(final OffsetDateTime startTime) {
+    public void setStartTime(final String startTime) {
         this.startTime = startTime;
     }
 
-    public OffsetDateTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(final OffsetDateTime endTime) {
+    public void setEndTime(final String endTime) {
         this.endTime = endTime;
     }
 

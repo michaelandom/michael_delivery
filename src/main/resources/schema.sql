@@ -1,4 +1,3 @@
-CREATE DATABASE IF NOT EXISTS db;
 USE db;
 
 CREATE TABLE IF NOT EXISTS `Sso_Providers` (
@@ -785,6 +784,7 @@ CREATE TABLE IF NOT EXISTS `None_Business_Hour_Rates` (
     `end_time` VARCHAR(255) NOT NULL,
     `rate` FLOAT NOT NULL,
     `created_by` BIGINT NULL,
+    `previous_id` BIGINT NULL,
     `is_latest` BOOLEAN DEFAULT TRUE,
     `unique_start_time_end_time_check` VARCHAR(50) GENERATED ALWAYS AS (
                                                                            CASE WHEN is_latest = TRUE
@@ -795,6 +795,7 @@ CREATE TABLE IF NOT EXISTS `None_Business_Hour_Rates` (
     UNIQUE (`unique_start_time_end_time_check`),
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`previous_id`) REFERENCES `None_Business_Hour_Rates`(`none_business_hour_rate_id`),
     FOREIGN KEY (`created_by`) REFERENCES `Users`(`user_id`) ON DELETE SET NULL
     );
 
