@@ -37,7 +37,7 @@ services:
     expose:
       - '3307'
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./docker/mysql_data:/var/lib/mysql
     networks:
       - michael-delivery-network
   mongodb:
